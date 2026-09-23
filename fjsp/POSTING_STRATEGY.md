@@ -14,7 +14,7 @@
 
 > **Calibrated Surrogate Screening of Machine Assignments for Flexible Job Shop Scheduling under Limited Verification Budgets**
 
-如果校准实验没有稳定收益，则使用保守题目：
+根据当前 1 秒、10 实例 × 3 seed 结果，校准实验暂未显示稳定收益，因此当前稿件应使用保守题目：
 
 > **Random-Forest-Assisted Candidate Screening for Flexible Job Shop Scheduling: A Budget-Matched Empirical Study**
 
@@ -67,11 +67,11 @@ r(x)=C^{MIP}_{max}(x)-H(x),
 - calibration labels 为 0、15、30 的敏感性；
 - Top-K 为 1、3、5、8 的成本—收益曲线。
 
-指标报告均值、标准差、最好值、Regret@K、相对 Balanced 的改善、总时间、可行解比例和 MIP gap。主结论以 Regret@5 和 equal-wall-clock 结果为准。
+指标报告均值、标准差、最好值、相对 Balanced 的改善、总时间、可行解比例和 MIP gap。只有在额外评估完整测试池、得到可靠池内 oracle 时才报告 Regret@K；当前小规模协议使用“selected Top-K 的最佳可行 incumbent”作为主要质量指标，避免把未验证候选误当作真值。
 
 ### 5. Go / No-Go 规则
 
-- 如果 CRF 在至少 6/10 实例上降低 Regret@5，且平均总时间没有明显恶化：以“少量精确标签校准代理筛选”为方法贡献；
+- 如果 CRF 在至少 6/10 实例上降低 Top-K 最佳可行 makespan，且平均总时间没有明显恶化：以“少量精确标签校准代理筛选”为方法贡献；
 - 如果 CRF 只改善少数实例：以“识别校准有效的结构条件”为贡献；
 - 如果 CRF 没有收益：删除校准方法的主张，改投 budget-matched empirical study，不反复调参追求有利结果。
 
@@ -151,7 +151,11 @@ r(x)=C^{MIP}_{max}(x)-H(x),
 
 在正式投稿前建立一张可审计表，至少包含：官方投稿链接、核验日期、EI/Scopus 状态、最近相关论文、首次决定时间定义、APC/注册费、页数、是否开放获取、单位认可情况、主投理由和备投理由。任何“快速录用”“保证 EI”的第三方宣传都不能作为依据。
 
-## 六、决策门槛
+## 六、当前决策
+
+截至 2026-09-24 的正式小规模结果（MK01–MK10、3 seeds、Top-5、1 秒验证）中，CRF 与 RF-H 的选中候选完全一致；CRF 在 30 个组合中有 26 个因低 gap 标签不足而回退。该结果支持“预算匹配实证研究”的定位，不支持声称 CRF 已经稳定改善 RF-H。5 秒预算复核只用于检查这一结论是否由过短时限造成。
+
+## 七、决策门槛
 
 第 2 周结束时做一次硬决策：
 

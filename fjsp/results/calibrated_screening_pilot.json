@@ -1,0 +1,1544 @@
+[
+  {
+    "instance": "mk01",
+    "seed": 42,
+    "top_k": 3,
+    "verify_time": 2.0,
+    "wall_time": 22.373476499924436,
+    "balanced": {
+      "assignment_id": "df75c751a64bb06d",
+      "has_solution": true,
+      "status": "OPTIMAL",
+      "makespan": 42.0,
+      "gap": 0.0,
+      "wall_time": 0.259807825088501
+    },
+    "scorers": [
+      {
+        "instance": "mk01",
+        "seed": 42,
+        "scorer": "LB",
+        "top_k": 3,
+        "best_selected_makespan": 48.0,
+        "selected": [
+          {
+            "prediction": 48.0,
+            "assignment_id": "45d679afa47650f3",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.19185376167297363
+          },
+          {
+            "prediction": 48.0,
+            "assignment_id": "eb18a422fb33c48a",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.19110584259033203
+          },
+          {
+            "prediction": 48.0,
+            "assignment_id": "8fa23a83630db22a",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.2242603302001953
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 42,
+        "scorer": "RF-H",
+        "top_k": 3,
+        "best_selected_makespan": 48.0,
+        "selected": [
+          {
+            "prediction": 54.80034413831781,
+            "assignment_id": "676348190d25ad17",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.20580816268920898
+          },
+          {
+            "prediction": 54.820731340297115,
+            "assignment_id": "8fa23a83630db22a",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.2242603302001953
+          },
+          {
+            "prediction": 54.91731545063121,
+            "assignment_id": "45d679afa47650f3",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.19185376167297363
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 42,
+        "scorer": "CRF",
+        "top_k": 3,
+        "best_selected_makespan": 48.0,
+        "selected": [
+          {
+            "prediction": 46.54033753753043,
+            "assignment_id": "676348190d25ad17",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.20580816268920898
+          },
+          {
+            "prediction": 46.56072473950973,
+            "assignment_id": "8fa23a83630db22a",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.2242603302001953
+          },
+          {
+            "prediction": 46.65730884984382,
+            "assignment_id": "45d679afa47650f3",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.19185376167297363
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 42,
+        "scorer": "HeurSeq",
+        "top_k": 3,
+        "best_selected_makespan": 47.99999999509939,
+        "selected": [
+          {
+            "prediction": 50.0,
+            "assignment_id": "d4d75c3b1f47c7eb",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 47.999999999991054,
+            "gap": 0.0,
+            "wall_time": 0.19357895851135254
+          },
+          {
+            "prediction": 50.0,
+            "assignment_id": "626bc8f3f7d51db3",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 47.99999999509939,
+            "gap": 0.0,
+            "wall_time": 0.27161431312561035
+          },
+          {
+            "prediction": 54.0,
+            "assignment_id": "0f83da29698e4bff",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 48.0,
+            "gap": 0.0,
+            "wall_time": 0.20650219917297363
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 42,
+        "scorer": "Random",
+        "top_k": 3,
+        "best_selected_makespan": 54.99999998878084,
+        "selected": [
+          {
+            "prediction": 0.0,
+            "assignment_id": "e8c9bf75a7dd714d",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 73.99999999249964,
+            "gap": 0.41891891886002397,
+            "wall_time": 2.0095460414886475
+          },
+          {
+            "prediction": 1.0,
+            "assignment_id": "6b12f75684cd0740",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 77.99999999208964,
+            "gap": 0.29487179480028475,
+            "wall_time": 2.0159049034118652
+          },
+          {
+            "prediction": 2.0,
+            "assignment_id": "5a828ffbacb56cb7",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 54.99999998878084,
+            "gap": 0.2545454543933934,
+            "wall_time": 2.0046582221984863
+          }
+        ]
+      }
+    ],
+    "calibration": {
+      "features": [
+        "num_used_machines",
+        "max_machine_load",
+        "load_imbalance",
+        "max_ops_on_machine",
+        "max_job_time",
+        "load_std",
+        "load_0",
+        "used_0",
+        "ops_0",
+        "load_1",
+        "used_1",
+        "ops_1",
+        "load_2",
+        "used_2",
+        "ops_2",
+        "load_3",
+        "used_3",
+        "ops_3",
+        "load_4",
+        "used_4",
+        "ops_4",
+        "load_5",
+        "used_5",
+        "ops_5"
+      ],
+      "n_train": 100,
+      "n_test": 80,
+      "calibration_requested": 10,
+      "calibration_solved": 10,
+      "calibration_accepted": 4,
+      "calibration_rows": [
+        {
+          "idx": 7,
+          "heuristic": 49.0,
+          "assignment_id": "e7a40598562f6bb6",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 42.0,
+          "gap": 0.0,
+          "wall_time": 0.1737501621246338
+        },
+        {
+          "idx": 28,
+          "heuristic": 52.0,
+          "assignment_id": "968c7cc001e23425",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.999999995092445,
+          "gap": 0.0,
+          "wall_time": 0.19781804084777832
+        },
+        {
+          "idx": 31,
+          "heuristic": 55.0,
+          "assignment_id": "e0fe3cf82429715f",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.999978005039274,
+          "gap": 0.0,
+          "wall_time": 0.18128657341003418
+        },
+        {
+          "idx": 10,
+          "heuristic": 60.0,
+          "assignment_id": "6c3d22d8fe382aa8",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 42.99999999559501,
+          "gap": 0.0,
+          "wall_time": 0.4289422035217285
+        },
+        {
+          "idx": 44,
+          "heuristic": 79.0,
+          "assignment_id": "6db4ade25ffd2a7e",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 74.99999999239999,
+          "gap": 0.45333333327793773,
+          "wall_time": 2.0101375579833984
+        },
+        {
+          "idx": 85,
+          "heuristic": 82.0,
+          "assignment_id": "77fba980344f9535",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 67.99999999288848,
+          "gap": 0.3382352940484396,
+          "wall_time": 2.0056276321411133
+        },
+        {
+          "idx": 62,
+          "heuristic": 87.0,
+          "assignment_id": "e80c036ac5072a4b",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 85.9999457234395,
+          "gap": 0.5581392560153329,
+          "wall_time": 2.0091712474823
+        },
+        {
+          "idx": 25,
+          "heuristic": 90.0,
+          "assignment_id": "a3124b0884d9c53d",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 84.99999999139999,
+          "gap": 0.4941176470076412,
+          "wall_time": 2.0129551887512207
+        },
+        {
+          "idx": 8,
+          "heuristic": 100.0,
+          "assignment_id": "8868e0278aae0ace",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 97.99999999009998,
+          "gap": 0.5969387754694865,
+          "wall_time": 2.017035961151123
+        },
+        {
+          "idx": 43,
+          "heuristic": 119.0,
+          "assignment_id": "f723b88bdc19168c",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 114.99999998837924,
+          "gap": 0.6608695651831221,
+          "wall_time": 2.0014305114746094
+        }
+      ],
+      "rf_h_train_r2": 0.9709492657770113,
+      "cache": {
+        "e7a40598562f6bb6": {
+          "assignment_id": "e7a40598562f6bb6",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 42.0,
+          "gap": 0.0,
+          "wall_time": 0.1737501621246338
+        },
+        "968c7cc001e23425": {
+          "assignment_id": "968c7cc001e23425",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.999999995092445,
+          "gap": 0.0,
+          "wall_time": 0.19781804084777832
+        },
+        "e0fe3cf82429715f": {
+          "assignment_id": "e0fe3cf82429715f",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.999978005039274,
+          "gap": 0.0,
+          "wall_time": 0.18128657341003418
+        },
+        "6c3d22d8fe382aa8": {
+          "assignment_id": "6c3d22d8fe382aa8",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 42.99999999559501,
+          "gap": 0.0,
+          "wall_time": 0.4289422035217285
+        },
+        "6db4ade25ffd2a7e": {
+          "assignment_id": "6db4ade25ffd2a7e",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 74.99999999239999,
+          "gap": 0.45333333327793773,
+          "wall_time": 2.0101375579833984
+        },
+        "77fba980344f9535": {
+          "assignment_id": "77fba980344f9535",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 67.99999999288848,
+          "gap": 0.3382352940484396,
+          "wall_time": 2.0056276321411133
+        },
+        "e80c036ac5072a4b": {
+          "assignment_id": "e80c036ac5072a4b",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 85.9999457234395,
+          "gap": 0.5581392560153329,
+          "wall_time": 2.0091712474823
+        },
+        "a3124b0884d9c53d": {
+          "assignment_id": "a3124b0884d9c53d",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 84.99999999139999,
+          "gap": 0.4941176470076412,
+          "wall_time": 2.0129551887512207
+        },
+        "8868e0278aae0ace": {
+          "assignment_id": "8868e0278aae0ace",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 97.99999999009998,
+          "gap": 0.5969387754694865,
+          "wall_time": 2.017035961151123
+        },
+        "f723b88bdc19168c": {
+          "assignment_id": "f723b88bdc19168c",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 114.99999998837924,
+          "gap": 0.6608695651831221,
+          "wall_time": 2.0014305114746094
+        },
+        "df75c751a64bb06d": {
+          "assignment_id": "df75c751a64bb06d",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 42.0,
+          "gap": 0.0,
+          "wall_time": 0.259807825088501
+        },
+        "45d679afa47650f3": {
+          "assignment_id": "45d679afa47650f3",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 48.0,
+          "gap": 0.0,
+          "wall_time": 0.19185376167297363
+        },
+        "eb18a422fb33c48a": {
+          "assignment_id": "eb18a422fb33c48a",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 48.0,
+          "gap": 0.0,
+          "wall_time": 0.19110584259033203
+        },
+        "8fa23a83630db22a": {
+          "assignment_id": "8fa23a83630db22a",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 48.0,
+          "gap": 0.0,
+          "wall_time": 0.2242603302001953
+        },
+        "676348190d25ad17": {
+          "assignment_id": "676348190d25ad17",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 48.0,
+          "gap": 0.0,
+          "wall_time": 0.20580816268920898
+        },
+        "d4d75c3b1f47c7eb": {
+          "assignment_id": "d4d75c3b1f47c7eb",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.999999999991054,
+          "gap": 0.0,
+          "wall_time": 0.19357895851135254
+        },
+        "626bc8f3f7d51db3": {
+          "assignment_id": "626bc8f3f7d51db3",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 47.99999999509939,
+          "gap": 0.0,
+          "wall_time": 0.27161431312561035
+        },
+        "0f83da29698e4bff": {
+          "assignment_id": "0f83da29698e4bff",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 48.0,
+          "gap": 0.0,
+          "wall_time": 0.20650219917297363
+        },
+        "e8c9bf75a7dd714d": {
+          "assignment_id": "e8c9bf75a7dd714d",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 73.99999999249964,
+          "gap": 0.41891891886002397,
+          "wall_time": 2.0095460414886475
+        },
+        "6b12f75684cd0740": {
+          "assignment_id": "6b12f75684cd0740",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 77.99999999208964,
+          "gap": 0.29487179480028475,
+          "wall_time": 2.0159049034118652
+        },
+        "5a828ffbacb56cb7": {
+          "assignment_id": "5a828ffbacb56cb7",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 54.99999998878084,
+          "gap": 0.2545454543933934,
+          "wall_time": 2.0046582221984863
+        }
+      }
+    }
+  },
+  {
+    "instance": "mk04",
+    "seed": 42,
+    "top_k": 3,
+    "verify_time": 2.0,
+    "wall_time": 47.61854619998485,
+    "balanced": {
+      "assignment_id": "4deb45ce87cccbbb",
+      "has_solution": true,
+      "status": "TIME_LIMIT",
+      "makespan": 70.99999999270011,
+      "gap": 0.11267605624679757,
+      "wall_time": 2.020329713821411
+    },
+    "scorers": [
+      {
+        "instance": "mk04",
+        "seed": 42,
+        "scorer": "LB",
+        "top_k": 3,
+        "best_selected_makespan": 66.99999999319989,
+        "selected": [
+          {
+            "prediction": 67.0,
+            "assignment_id": "9d9c4d6cc519a4b1",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 66.99999999319989,
+            "gap": 0.0,
+            "wall_time": 1.9000153541564941
+          },
+          {
+            "prediction": 67.0,
+            "assignment_id": "005b5b1f57aa9d36",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 67.99999999308994,
+            "gap": 0.10294117637943152,
+            "wall_time": 2.015732765197754
+          },
+          {
+            "prediction": 67.0,
+            "assignment_id": "0583a47600dcc93a",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 66.99999999320002,
+            "gap": 0.014925373034350728,
+            "wall_time": 2.016915798187256
+          }
+        ]
+      },
+      {
+        "instance": "mk04",
+        "seed": 42,
+        "scorer": "RF-H",
+        "top_k": 3,
+        "best_selected_makespan": 66.99999999999997,
+        "selected": [
+          {
+            "prediction": 100.71661835305217,
+            "assignment_id": "606b764d53a1f878",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 66.99999999999997,
+            "gap": 0.10447761194030215,
+            "wall_time": 2.014470338821411
+          },
+          {
+            "prediction": 100.87430879414701,
+            "assignment_id": "63373d2f1785791d",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 69.99999999289977,
+            "gap": 0.1244147156302514,
+            "wall_time": 2.0091562271118164
+          },
+          {
+            "prediction": 101.23955185664008,
+            "assignment_id": "343c5839e4828ca5",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 72.99999999259991,
+            "gap": 0.17808219169750478,
+            "wall_time": 2.011464834213257
+          }
+        ]
+      },
+      {
+        "instance": "mk04",
+        "seed": 42,
+        "scorer": "CRF",
+        "top_k": 3,
+        "best_selected_makespan": 66.99999999999997,
+        "selected": [
+          {
+            "prediction": 100.71661835305217,
+            "assignment_id": "606b764d53a1f878",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 66.99999999999997,
+            "gap": 0.10447761194030215,
+            "wall_time": 2.014470338821411
+          },
+          {
+            "prediction": 100.87430879414701,
+            "assignment_id": "63373d2f1785791d",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 69.99999999289977,
+            "gap": 0.1244147156302514,
+            "wall_time": 2.0091562271118164
+          },
+          {
+            "prediction": 101.23955185664008,
+            "assignment_id": "343c5839e4828ca5",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 72.99999999259991,
+            "gap": 0.17808219169750478,
+            "wall_time": 2.011464834213257
+          }
+        ]
+      },
+      {
+        "instance": "mk04",
+        "seed": 42,
+        "scorer": "HeurSeq",
+        "top_k": 3,
+        "best_selected_makespan": 66.99999999319989,
+        "selected": [
+          {
+            "prediction": 75.0,
+            "assignment_id": "9d9c4d6cc519a4b1",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 66.99999999319989,
+            "gap": 0.0,
+            "wall_time": 1.9000153541564941
+          },
+          {
+            "prediction": 75.0,
+            "assignment_id": "716f6ffbf970232a",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 72.99999999258353,
+            "gap": 0.19032966858181605,
+            "wall_time": 2.0135319232940674
+          },
+          {
+            "prediction": 75.0,
+            "assignment_id": "79fd6e084162ad7a",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 67.0,
+            "gap": 0.029850746268656716,
+            "wall_time": 2.0216727256774902
+          }
+        ]
+      },
+      {
+        "instance": "mk04",
+        "seed": 42,
+        "scorer": "Random",
+        "top_k": 3,
+        "best_selected_makespan": 66.99999999319989,
+        "selected": [
+          {
+            "prediction": 0.0,
+            "assignment_id": "c51bd3cd5de2ec5e",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 93.99999999049969,
+            "gap": 0.3224822696179976,
+            "wall_time": 2.011368989944458
+          },
+          {
+            "prediction": 1.0,
+            "assignment_id": "63e6ee6f00b79162",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 110.99999998875786,
+            "gap": 0.38625772273751846,
+            "wall_time": 2.0154356956481934
+          },
+          {
+            "prediction": 2.0,
+            "assignment_id": "9d9c4d6cc519a4b1",
+            "has_solution": true,
+            "status": "OPTIMAL",
+            "makespan": 66.99999999319989,
+            "gap": 0.0,
+            "wall_time": 1.9000153541564941
+          }
+        ]
+      }
+    ],
+    "calibration": {
+      "features": [
+        "num_used_machines",
+        "max_machine_load",
+        "load_imbalance",
+        "max_ops_on_machine",
+        "max_job_time",
+        "load_std",
+        "load_0",
+        "used_0",
+        "ops_0",
+        "load_1",
+        "used_1",
+        "ops_1",
+        "load_2",
+        "used_2",
+        "ops_2",
+        "load_3",
+        "used_3",
+        "ops_3",
+        "load_4",
+        "used_4",
+        "ops_4",
+        "load_5",
+        "used_5",
+        "ops_5",
+        "load_6",
+        "used_6",
+        "ops_6",
+        "load_7",
+        "used_7",
+        "ops_7"
+      ],
+      "n_train": 100,
+      "n_test": 80,
+      "calibration_requested": 10,
+      "calibration_solved": 10,
+      "calibration_accepted": 0,
+      "calibration_rows": [
+        {
+          "idx": 61,
+          "heuristic": 89.0,
+          "assignment_id": "44a7311e5ce75e79",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 73.00000000000001,
+          "gap": 0.11706102117061157,
+          "wall_time": 2.0129873752593994
+        },
+        {
+          "idx": 47,
+          "heuristic": 102.0,
+          "assignment_id": "82efa9eee6de402c",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 69.0,
+          "gap": 0.08695652173913043,
+          "wall_time": 2.0100631713867188
+        },
+        {
+          "idx": 36,
+          "heuristic": 103.0,
+          "assignment_id": "74ac83f147aa77be",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 68.99999999290006,
+          "gap": 0.08695652164517995,
+          "wall_time": 2.0205435752868652
+        },
+        {
+          "idx": 32,
+          "heuristic": 105.0,
+          "assignment_id": "f7c8a3eb2e6e9c9a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 72.9999999925995,
+          "gap": 0.1934879972197393,
+          "wall_time": 2.011367082595825
+        },
+        {
+          "idx": 93,
+          "heuristic": 107.0,
+          "assignment_id": "3ed0c3a4996c7003",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 95.99999999029984,
+          "gap": 0.33130784589399165,
+          "wall_time": 2.009308338165283
+        },
+        {
+          "idx": 57,
+          "heuristic": 109.0,
+          "assignment_id": "df1806ee263317e3",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 70.0,
+          "gap": 0.1000000000000001,
+          "wall_time": 2.013638973236084
+        },
+        {
+          "idx": 64,
+          "heuristic": 111.0,
+          "assignment_id": "16bb324ce149dd45",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 102.99999997919997,
+          "gap": 0.34543954262961896,
+          "wall_time": 2.009967088699341
+        },
+        {
+          "idx": 66,
+          "heuristic": 117.0,
+          "assignment_id": "36ed688d9cb290ed",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 79.99999999189997,
+          "gap": 0.13749999991267153,
+          "wall_time": 2.0088577270507812
+        },
+        {
+          "idx": 23,
+          "heuristic": 127.0,
+          "assignment_id": "f0aa9bb53b7a89a3",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 118.99999998791556,
+          "gap": 0.3994708185881937,
+          "wall_time": 2.0160229206085205
+        },
+        {
+          "idx": 22,
+          "heuristic": 140.0,
+          "assignment_id": "c118067cac220556",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 137.99999998609974,
+          "gap": 0.4478765043187039,
+          "wall_time": 2.012464761734009
+        }
+      ],
+      "rf_h_train_r2": 0.8816521238914512,
+      "cache": {
+        "44a7311e5ce75e79": {
+          "assignment_id": "44a7311e5ce75e79",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 73.00000000000001,
+          "gap": 0.11706102117061157,
+          "wall_time": 2.0129873752593994
+        },
+        "82efa9eee6de402c": {
+          "assignment_id": "82efa9eee6de402c",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 69.0,
+          "gap": 0.08695652173913043,
+          "wall_time": 2.0100631713867188
+        },
+        "74ac83f147aa77be": {
+          "assignment_id": "74ac83f147aa77be",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 68.99999999290006,
+          "gap": 0.08695652164517995,
+          "wall_time": 2.0205435752868652
+        },
+        "f7c8a3eb2e6e9c9a": {
+          "assignment_id": "f7c8a3eb2e6e9c9a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 72.9999999925995,
+          "gap": 0.1934879972197393,
+          "wall_time": 2.011367082595825
+        },
+        "3ed0c3a4996c7003": {
+          "assignment_id": "3ed0c3a4996c7003",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 95.99999999029984,
+          "gap": 0.33130784589399165,
+          "wall_time": 2.009308338165283
+        },
+        "df1806ee263317e3": {
+          "assignment_id": "df1806ee263317e3",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 70.0,
+          "gap": 0.1000000000000001,
+          "wall_time": 2.013638973236084
+        },
+        "16bb324ce149dd45": {
+          "assignment_id": "16bb324ce149dd45",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 102.99999997919997,
+          "gap": 0.34543954262961896,
+          "wall_time": 2.009967088699341
+        },
+        "36ed688d9cb290ed": {
+          "assignment_id": "36ed688d9cb290ed",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 79.99999999189997,
+          "gap": 0.13749999991267153,
+          "wall_time": 2.0088577270507812
+        },
+        "f0aa9bb53b7a89a3": {
+          "assignment_id": "f0aa9bb53b7a89a3",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 118.99999998791556,
+          "gap": 0.3994708185881937,
+          "wall_time": 2.0160229206085205
+        },
+        "c118067cac220556": {
+          "assignment_id": "c118067cac220556",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 137.99999998609974,
+          "gap": 0.4478765043187039,
+          "wall_time": 2.012464761734009
+        },
+        "4deb45ce87cccbbb": {
+          "assignment_id": "4deb45ce87cccbbb",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 70.99999999270011,
+          "gap": 0.11267605624679757,
+          "wall_time": 2.020329713821411
+        },
+        "9d9c4d6cc519a4b1": {
+          "assignment_id": "9d9c4d6cc519a4b1",
+          "has_solution": true,
+          "status": "OPTIMAL",
+          "makespan": 66.99999999319989,
+          "gap": 0.0,
+          "wall_time": 1.9000153541564941
+        },
+        "005b5b1f57aa9d36": {
+          "assignment_id": "005b5b1f57aa9d36",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 67.99999999308994,
+          "gap": 0.10294117637943152,
+          "wall_time": 2.015732765197754
+        },
+        "0583a47600dcc93a": {
+          "assignment_id": "0583a47600dcc93a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 66.99999999320002,
+          "gap": 0.014925373034350728,
+          "wall_time": 2.016915798187256
+        },
+        "606b764d53a1f878": {
+          "assignment_id": "606b764d53a1f878",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 66.99999999999997,
+          "gap": 0.10447761194030215,
+          "wall_time": 2.014470338821411
+        },
+        "63373d2f1785791d": {
+          "assignment_id": "63373d2f1785791d",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 69.99999999289977,
+          "gap": 0.1244147156302514,
+          "wall_time": 2.0091562271118164
+        },
+        "343c5839e4828ca5": {
+          "assignment_id": "343c5839e4828ca5",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 72.99999999259991,
+          "gap": 0.17808219169750478,
+          "wall_time": 2.011464834213257
+        },
+        "716f6ffbf970232a": {
+          "assignment_id": "716f6ffbf970232a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 72.99999999258353,
+          "gap": 0.19032966858181605,
+          "wall_time": 2.0135319232940674
+        },
+        "79fd6e084162ad7a": {
+          "assignment_id": "79fd6e084162ad7a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 67.0,
+          "gap": 0.029850746268656716,
+          "wall_time": 2.0216727256774902
+        },
+        "c51bd3cd5de2ec5e": {
+          "assignment_id": "c51bd3cd5de2ec5e",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 93.99999999049969,
+          "gap": 0.3224822696179976,
+          "wall_time": 2.011368989944458
+        },
+        "63e6ee6f00b79162": {
+          "assignment_id": "63e6ee6f00b79162",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 110.99999998875786,
+          "gap": 0.38625772273751846,
+          "wall_time": 2.0154356956481934
+        }
+      }
+    }
+  },
+  {
+    "instance": "mk06",
+    "seed": 42,
+    "top_k": 3,
+    "verify_time": 2.0,
+    "wall_time": 55.95282810006756,
+    "balanced": {
+      "assignment_id": "57919efb4a8669d0",
+      "has_solution": true,
+      "status": "TIME_LIMIT",
+      "makespan": 121.99999999999851,
+      "gap": 0.24590163934425424,
+      "wall_time": 2.001394271850586
+    },
+    "scorers": [
+      {
+        "instance": "mk06",
+        "seed": 42,
+        "scorer": "LB",
+        "top_k": 3,
+        "best_selected_makespan": 116.0,
+        "selected": [
+          {
+            "prediction": 80.0,
+            "assignment_id": "28b9dfc87e51f644",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 116.0,
+            "gap": 0.22451274362818588,
+            "wall_time": 2.004884719848633
+          },
+          {
+            "prediction": 81.0,
+            "assignment_id": "c1965fb10b1d5e74",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 119.99999999999157,
+            "gap": 0.24166666666661318,
+            "wall_time": 2.012723684310913
+          },
+          {
+            "prediction": 82.0,
+            "assignment_id": "f7a83a0673cbcbef",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 119.99999999998967,
+            "gap": 0.266666190845908,
+            "wall_time": 2.004361867904663
+          }
+        ]
+      },
+      {
+        "instance": "mk06",
+        "seed": 42,
+        "scorer": "RF-H",
+        "top_k": 3,
+        "best_selected_makespan": 114.0,
+        "selected": [
+          {
+            "prediction": 126.59711288711289,
+            "assignment_id": "f7a83a0673cbcbef",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 119.99999999998967,
+            "gap": 0.266666190845908,
+            "wall_time": 2.004361867904663
+          },
+          {
+            "prediction": 126.80071112221114,
+            "assignment_id": "a60dcbf16776ea01",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 115.99999999999946,
+            "gap": 0.21745436937647467,
+            "wall_time": 2.0220696926116943
+          },
+          {
+            "prediction": 127.01651282051283,
+            "assignment_id": "f454bbc7d8e49c6f",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 114.0,
+            "gap": 0.1578947368421044,
+            "wall_time": 2.0059585571289062
+          }
+        ]
+      },
+      {
+        "instance": "mk06",
+        "seed": 42,
+        "scorer": "CRF",
+        "top_k": 3,
+        "best_selected_makespan": 114.0,
+        "selected": [
+          {
+            "prediction": 126.59711288711289,
+            "assignment_id": "f7a83a0673cbcbef",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 119.99999999998967,
+            "gap": 0.266666190845908,
+            "wall_time": 2.004361867904663
+          },
+          {
+            "prediction": 126.80071112221114,
+            "assignment_id": "a60dcbf16776ea01",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 115.99999999999946,
+            "gap": 0.21745436937647467,
+            "wall_time": 2.0220696926116943
+          },
+          {
+            "prediction": 127.01651282051283,
+            "assignment_id": "f454bbc7d8e49c6f",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 114.0,
+            "gap": 0.1578947368421044,
+            "wall_time": 2.0059585571289062
+          }
+        ]
+      },
+      {
+        "instance": "mk06",
+        "seed": 42,
+        "scorer": "HeurSeq",
+        "top_k": 3,
+        "best_selected_makespan": 113.9999999999998,
+        "selected": [
+          {
+            "prediction": 132.0,
+            "assignment_id": "f454bbc7d8e49c6f",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 114.0,
+            "gap": 0.1578947368421044,
+            "wall_time": 2.0059585571289062
+          },
+          {
+            "prediction": 136.0,
+            "assignment_id": "c7c50095c0d0d71a",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 131.9999999866949,
+            "gap": 0.29438955028018854,
+            "wall_time": 2.0182998180389404
+          },
+          {
+            "prediction": 138.0,
+            "assignment_id": "dae539d3b041179a",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 113.9999999999998,
+            "gap": 0.22895328929279,
+            "wall_time": 2.012002944946289
+          }
+        ]
+      },
+      {
+        "instance": "mk06",
+        "seed": 42,
+        "scorer": "Random",
+        "top_k": 3,
+        "best_selected_makespan": 116.0,
+        "selected": [
+          {
+            "prediction": 0.0,
+            "assignment_id": "00cbb8341b8ac67e",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 193.99999999975475,
+            "gap": 0.4123316547846731,
+            "wall_time": 2.0142323970794678
+          },
+          {
+            "prediction": 1.0,
+            "assignment_id": "0faff5d7a650be9e",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 162.99999999999972,
+            "gap": 0.3444201849989125,
+            "wall_time": 2.018805742263794
+          },
+          {
+            "prediction": 2.0,
+            "assignment_id": "0edbefde965ede65",
+            "has_solution": true,
+            "status": "TIME_LIMIT",
+            "makespan": 116.0,
+            "gap": 0.21509644675101874,
+            "wall_time": 2.003282308578491
+          }
+        ]
+      }
+    ],
+    "calibration": {
+      "features": [
+        "num_used_machines",
+        "max_machine_load",
+        "load_imbalance",
+        "max_ops_on_machine",
+        "max_job_time",
+        "load_std",
+        "load_0",
+        "used_0",
+        "ops_0",
+        "load_1",
+        "used_1",
+        "ops_1",
+        "load_2",
+        "used_2",
+        "ops_2",
+        "load_3",
+        "used_3",
+        "ops_3",
+        "load_4",
+        "used_4",
+        "ops_4",
+        "load_5",
+        "used_5",
+        "ops_5",
+        "load_6",
+        "used_6",
+        "ops_6",
+        "load_7",
+        "used_7",
+        "ops_7",
+        "load_8",
+        "used_8",
+        "ops_8",
+        "load_9",
+        "used_9",
+        "ops_9",
+        "load_10",
+        "used_10",
+        "ops_10",
+        "load_11",
+        "used_11",
+        "ops_11",
+        "load_12",
+        "used_12",
+        "ops_12",
+        "load_13",
+        "used_13",
+        "ops_13",
+        "load_14",
+        "used_14",
+        "ops_14"
+      ],
+      "n_train": 100,
+      "n_test": 80,
+      "calibration_requested": 10,
+      "calibration_solved": 10,
+      "calibration_accepted": 0,
+      "calibration_rows": [
+        {
+          "idx": 98,
+          "heuristic": 116.0,
+          "assignment_id": "dedc24a0ac57dea4",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 120.0,
+          "gap": 0.2616161616156899,
+          "wall_time": 2.024770498275757
+        },
+        {
+          "idx": 54,
+          "heuristic": 128.0,
+          "assignment_id": "a9ed0a0b6c55f042",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 120.99999998779352,
+          "gap": 0.23966942141090183,
+          "wall_time": 2.0115344524383545
+        },
+        {
+          "idx": 69,
+          "heuristic": 138.0,
+          "assignment_id": "56724027d1d96d7f",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 119.99999999998379,
+          "gap": 0.2249999999998947,
+          "wall_time": 2.0167651176452637
+        },
+        {
+          "idx": 39,
+          "heuristic": 142.0,
+          "assignment_id": "de7b9538fd4c89d0",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 137.99999999999505,
+          "gap": 0.27327046255859627,
+          "wall_time": 2.0169522762298584
+        },
+        {
+          "idx": 75,
+          "heuristic": 152.0,
+          "assignment_id": "a659a2985d41bd2b",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 133.99999999999974,
+          "gap": 0.28352750671672017,
+          "wall_time": 2.0288071632385254
+        },
+        {
+          "idx": 43,
+          "heuristic": 162.0,
+          "assignment_id": "01c6d72fd2199297",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 136.99999999996774,
+          "gap": 0.30969066186916977,
+          "wall_time": 2.013749361038208
+        },
+        {
+          "idx": 36,
+          "heuristic": 168.0,
+          "assignment_id": "b2e02a4eda96e453",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 139.99999998589956,
+          "gap": 0.29616680014120256,
+          "wall_time": 2.0265960693359375
+        },
+        {
+          "idx": 9,
+          "heuristic": 173.0,
+          "assignment_id": "604bd374ad9a78f8",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 150.9999999847792,
+          "gap": 0.3969349631667082,
+          "wall_time": 2.0278701782226562
+        },
+        {
+          "idx": 0,
+          "heuristic": 179.0,
+          "assignment_id": "90a11fb67efb6e47",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 138.99999999999943,
+          "gap": 0.2973280505600158,
+          "wall_time": 2.0213663578033447
+        },
+        {
+          "idx": 89,
+          "heuristic": 204.0,
+          "assignment_id": "c620e3429d1607c6",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 157.0,
+          "gap": 0.3186763934060165,
+          "wall_time": 2.028919219970703
+        }
+      ],
+      "rf_h_train_r2": 0.8840421499640745,
+      "cache": {
+        "dedc24a0ac57dea4": {
+          "assignment_id": "dedc24a0ac57dea4",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 120.0,
+          "gap": 0.2616161616156899,
+          "wall_time": 2.024770498275757
+        },
+        "a9ed0a0b6c55f042": {
+          "assignment_id": "a9ed0a0b6c55f042",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 120.99999998779352,
+          "gap": 0.23966942141090183,
+          "wall_time": 2.0115344524383545
+        },
+        "56724027d1d96d7f": {
+          "assignment_id": "56724027d1d96d7f",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 119.99999999998379,
+          "gap": 0.2249999999998947,
+          "wall_time": 2.0167651176452637
+        },
+        "de7b9538fd4c89d0": {
+          "assignment_id": "de7b9538fd4c89d0",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 137.99999999999505,
+          "gap": 0.27327046255859627,
+          "wall_time": 2.0169522762298584
+        },
+        "a659a2985d41bd2b": {
+          "assignment_id": "a659a2985d41bd2b",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 133.99999999999974,
+          "gap": 0.28352750671672017,
+          "wall_time": 2.0288071632385254
+        },
+        "01c6d72fd2199297": {
+          "assignment_id": "01c6d72fd2199297",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 136.99999999996774,
+          "gap": 0.30969066186916977,
+          "wall_time": 2.013749361038208
+        },
+        "b2e02a4eda96e453": {
+          "assignment_id": "b2e02a4eda96e453",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 139.99999998589956,
+          "gap": 0.29616680014120256,
+          "wall_time": 2.0265960693359375
+        },
+        "604bd374ad9a78f8": {
+          "assignment_id": "604bd374ad9a78f8",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 150.9999999847792,
+          "gap": 0.3969349631667082,
+          "wall_time": 2.0278701782226562
+        },
+        "90a11fb67efb6e47": {
+          "assignment_id": "90a11fb67efb6e47",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 138.99999999999943,
+          "gap": 0.2973280505600158,
+          "wall_time": 2.0213663578033447
+        },
+        "c620e3429d1607c6": {
+          "assignment_id": "c620e3429d1607c6",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 157.0,
+          "gap": 0.3186763934060165,
+          "wall_time": 2.028919219970703
+        },
+        "57919efb4a8669d0": {
+          "assignment_id": "57919efb4a8669d0",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 121.99999999999851,
+          "gap": 0.24590163934425424,
+          "wall_time": 2.001394271850586
+        },
+        "28b9dfc87e51f644": {
+          "assignment_id": "28b9dfc87e51f644",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 116.0,
+          "gap": 0.22451274362818588,
+          "wall_time": 2.004884719848633
+        },
+        "c1965fb10b1d5e74": {
+          "assignment_id": "c1965fb10b1d5e74",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 119.99999999999157,
+          "gap": 0.24166666666661318,
+          "wall_time": 2.012723684310913
+        },
+        "f7a83a0673cbcbef": {
+          "assignment_id": "f7a83a0673cbcbef",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 119.99999999998967,
+          "gap": 0.266666190845908,
+          "wall_time": 2.004361867904663
+        },
+        "a60dcbf16776ea01": {
+          "assignment_id": "a60dcbf16776ea01",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 115.99999999999946,
+          "gap": 0.21745436937647467,
+          "wall_time": 2.0220696926116943
+        },
+        "f454bbc7d8e49c6f": {
+          "assignment_id": "f454bbc7d8e49c6f",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 114.0,
+          "gap": 0.1578947368421044,
+          "wall_time": 2.0059585571289062
+        },
+        "c7c50095c0d0d71a": {
+          "assignment_id": "c7c50095c0d0d71a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 131.9999999866949,
+          "gap": 0.29438955028018854,
+          "wall_time": 2.0182998180389404
+        },
+        "dae539d3b041179a": {
+          "assignment_id": "dae539d3b041179a",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 113.9999999999998,
+          "gap": 0.22895328929279,
+          "wall_time": 2.012002944946289
+        },
+        "00cbb8341b8ac67e": {
+          "assignment_id": "00cbb8341b8ac67e",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 193.99999999975475,
+          "gap": 0.4123316547846731,
+          "wall_time": 2.0142323970794678
+        },
+        "0faff5d7a650be9e": {
+          "assignment_id": "0faff5d7a650be9e",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 162.99999999999972,
+          "gap": 0.3444201849989125,
+          "wall_time": 2.018805742263794
+        },
+        "0edbefde965ede65": {
+          "assignment_id": "0edbefde965ede65",
+          "has_solution": true,
+          "status": "TIME_LIMIT",
+          "makespan": 116.0,
+          "gap": 0.21509644675101874,
+          "wall_time": 2.003282308578491
+        }
+      }
+    }
+  }
+]

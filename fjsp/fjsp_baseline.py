@@ -136,10 +136,10 @@ class PureFJSPMakespanModel:
     def solve(self):
         m, x, s, c, delta, Cmax = self.build()
 
+        m.setParam("OutputFlag", 0)
         if self.time_limit is not None:
             m.setParam("TimeLimit", self.time_limit)
         m.setParam("MIPGap", self.mip_gap)
-        m.setParam("OutputFlag", 0)
 
         t0 = time.time()
         m.optimize()
@@ -148,12 +148,18 @@ class PureFJSPMakespanModel:
         result = {
             "has_solution": m.SolCount > 0,
             "status": m.Status,
+            "status_code": int(m.Status),
+            "sol_count": int(m.SolCount),
             "wall_time": wall_time,
         }
 
         if m.SolCount > 0:
             result["makespan"] = Cmax.X
             result["gap"] = m.MIPGap
+        # ObjBound is available for feasible time-limited runs and is useful
+        # for reporting what the solver actually certified.
+        if m.SolCount > 0 or m.Status in (GRB.OPTIMAL, GRB.TIME_LIMIT):
+            result["best_bound"] = float(m.ObjBound)
             result["node_count"] = int(m.NodeCount)
             result["assignments"] = []
             for (j, p) in self.inst.all_ops:
@@ -246,10 +252,10 @@ class FixedAssignmentSequencingModel:
     def solve(self):
         m, s, c, Cmax = self.build()
 
+        m.setParam("OutputFlag", 0)
         if self.time_limit is not None:
             m.setParam("TimeLimit", self.time_limit)
         m.setParam("MIPGap", self.mip_gap)
-        m.setParam("OutputFlag", 0)
 
         t0 = time.time()
         m.optimize()
@@ -258,12 +264,16 @@ class FixedAssignmentSequencingModel:
         result = {
             "has_solution": m.SolCount > 0,
             "status": m.Status,
+            "status_code": int(m.Status),
+            "sol_count": int(m.SolCount),
             "wall_time": wall_time,
         }
 
         if m.SolCount > 0:
             result["makespan"] = Cmax.X
             result["gap"] = m.MIPGap
+        if m.SolCount > 0 or m.Status in (GRB.OPTIMAL, GRB.TIME_LIMIT):
+            result["best_bound"] = float(m.ObjBound)
 
         return result
 

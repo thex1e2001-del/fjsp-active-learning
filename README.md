@@ -12,6 +12,8 @@
 - 已修复 RF 扰动采样的随机种子，以及公平基线中“被评分候选”和“被保留候选”不一致的问题。
 - OR 环境中的 Gurobi 10.0.1 可用；mk01、mk04、mk06 已通过小规模真实求解和机器分配可行性检查。
 - 投稿目标：优先选择正规 EI 会议或 EI 期刊，计划在 2026-11-23 前完成投稿并争取获得首轮回复。这个时间目标不等于录用、见刊或 EI 检索承诺。
+- 正式小规模实验已完成：`LB`、`RF-H`、`CRF`、`HeurSeq` 和 `Random` 共享候选池、Top-K 和限时固定分配 MIP 预算；结果同时保存可行解、solver status、best bound、gap 和耗时。
+- 10 个 Brandimarte 实例 × 3 seeds 的 1 秒验证协议已完成：CRF 与 RF-H 的 Top-5 选择完全一致，26/30 个组合因低 gap 校准标签不足回退，因此暂不声称 CRF 有稳定收益。MK01/MK04 的 5 秒复核已完成，MK06 复核留待下一次运行。
 
 ### 当前历史结果的口径
 
@@ -36,6 +38,8 @@
     ├── experiments_final.py       # RF 训练、束搜索和主实验入口
     ├── final_experiments.py       # 统计、代理验证和基线实验脚本
     ├── reproduce_audit.py          # 主结果审计与统计复算
+    ├── calibrated_screening.py     # 训练/测试分离的 CRF 公平筛选协议
+    ├── summarize_calibrated.py     # 自动生成汇总 CSV/Markdown
     ├── PAPER_OUTLINE.md
     ├── TODO.md
     └── WORKFLOW.md
@@ -65,6 +69,16 @@ python reproduce_audit.py
 3. 修复并重新生成 candidate-level failure analysis，确保特征和 makespan 属于同一个候选。
 4. 从同一份结果自动生成论文表格，核对 BKS 来源、数据版本、参考文献和作者信息。
 5. 核验当期 EI 会议/期刊的官方投稿窗口、费用、首轮决定时间、收录承诺和单位认可要求。
+
+CRF 小规模实验可复现命令：
+
+```powershell
+cd fjsp
+python calibrated_screening.py --instances mk01 mk04 mk06 --seeds 42 43 44 `
+  --n-train 300 --n-test 150 --calibration 15 --verify-time 1 --k 5 `
+  --output results/calibrated_screening_formal_small.json
+python summarize_calibrated.py results/calibrated_screening_formal_small.json
+```
 
 详细安排见 [`SUBMISSION_PLAN.md`](SUBMISSION_PLAN.md)，论文草稿见 [`fjsp/paper/manuscript.tex`](fjsp/paper/manuscript.tex)。
 
