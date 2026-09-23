@@ -24,6 +24,7 @@
 ├── README.md
 ├── SUBMISSION_PLAN.md              # 投稿目标、审计发现和执行计划
 ├── fjsp/PAPER_REVIEW.md            # 论文与实验的系统性审阅意见
+├── fjsp/POSTING_STRATEGY.md        # 改进方法、实验协议和目标刊物/会议
 ├── paper_analysis.md               # 项目分析记录
 └── fjsp/
     ├── data/instances/             # FJSP JSON 基准实例
