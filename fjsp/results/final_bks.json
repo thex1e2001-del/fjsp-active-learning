@@ -1,0 +1,82 @@
+[
+  {
+    "instance": "mk01",
+    "rf": 49,
+    "rf_gap": 22.5,
+    "bal": 49,
+    "bal_gap": 22.5,
+    "bks": 40
+  },
+  {
+    "instance": "mk02",
+    "rf": 42,
+    "rf_gap": 61.5,
+    "bal": 44,
+    "bal_gap": 69.2,
+    "bks": 26
+  },
+  {
+    "instance": "mk03",
+    "rf": 218,
+    "rf_gap": 6.9,
+    "bal": 230,
+    "bal_gap": 12.7,
+    "bks": 204
+  },
+  {
+    "instance": "mk04",
+    "rf": 78,
+    "rf_gap": 30.0,
+    "bal": 68,
+    "bal_gap": 13.3,
+    "bks": 60
+  },
+  {
+    "instance": "mk05",
+    "rf": 193,
+    "rf_gap": 12.2,
+    "bal": 210,
+    "bal_gap": 22.1,
+    "bks": 172
+  },
+  {
+    "instance": "mk06",
+    "rf": 100,
+    "rf_gap": 75.4,
+    "bal": 108,
+    "bal_gap": 89.5,
+    "bks": 57
+  },
+  {
+    "instance": "mk07",
+    "rf": 178,
+    "rf_gap": 28.1,
+    "bal": 206,
+    "bal_gap": 48.2,
+    "bks": 139
+  },
+  {
+    "instance": "mk08",
+    "rf": 523,
+    "rf_gap": 0.0,
+    "bal": 523,
+    "bal_gap": 0.0,
+    "bks": 523
+  },
+  {
+    "instance": "mk09",
+    "rf": 332,
+    "rf_gap": 8.1,
+    "bal": 354,
+    "bal_gap": 15.3,
+    "bks": 307
+  },
+  {
+    "instance": "mk10",
+    "rf": 277,
+    "rf_gap": 43.5,
+    "bal": 285,
+    "bal_gap": 47.7,
+    "bks": 193
+  }
+]

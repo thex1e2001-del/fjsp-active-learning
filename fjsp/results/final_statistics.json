@@ -1,0 +1,15 @@
+{
+  "wdl": "7/2/1",
+  "avg_imp_all": 3.32,
+  "avg_imp_win": 6.84,
+  "avg_ranks": {
+    "r": 3.9,
+    "s": 3.35,
+    "l": 4.6,
+    "b": 1.9,
+    "f": 1.25
+  },
+  "friedman_p": 2e-06,
+  "wilcoxon_two_sided_p": 0.0391,
+  "wilcoxon_one_sided_p": 0.0195
+}

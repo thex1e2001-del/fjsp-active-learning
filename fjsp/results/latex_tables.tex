@@ -1,0 +1,55 @@
+% Table: Instance characteristics and best-known bounds
+\begin{table}[htbp]
+\centering
+\caption{Instance characteristics and gap to best-known solutions.}
+\begin{tabular}{lrrrrrr}
+\toprule
+Instance & $n \times m$ & RF Search & RF Gap\% & Balanced & Bal Gap\% & BKS \\
+\midrule
+mk01 & -- & 49 & +22.5 & 49 & +22.5 & 40 \\
+mk02 & -- & 42 & +61.5 & 44 & +69.2 & 26 \\
+mk03 & -- & 218 & +6.9 & 230 & +12.7 & 204 \\
+mk04 & -- & 78 & +30.0 & 68 & +13.3 & 60 \\
+mk05 & -- & 193 & +12.2 & 210 & +22.1 & 172 \\
+mk06 & -- & 100 & +75.4 & 108 & +89.5 & 57 \\
+mk07 & -- & 178 & +28.1 & 206 & +48.2 & 139 \\
+mk08 & -- & 523 & +0.0 & 523 & +0.0 & 523 \\
+mk09 & -- & 332 & +8.1 & 354 & +15.3 & 307 \\
+mk10 & -- & 277 & +43.5 & 285 & +47.7 & 193 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table: Fair Baselines
+\begin{table}[htbp]
+\centering
+\caption{Fair comparison under equal candidate-verification budget.}
+\begin{tabular}{lrrrrrr}
+\toprule
+Instance & Balanced & Random-MS & MaxLoad & HeurSeq & Bal+LS & RF \\
+\midrule
+mk09 & 353 & 397 & 349 & -- & -- & 352 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table: Ablation
+\begin{table}[htbp]
+\centering
+\caption{Surrogate model ablation.}
+\begin{tabular}{llr}
+\toprule
+Instance & Surrogate & Makespan \\
+\midrule
+mk01 & MaxLoad & 42 \\
+mk01 & LinearReg & 72 \\
+mk01 & RF & 60 \\
+mk04 & MaxLoad & 67 \\
+mk04 & LinearReg & 65 \\
+mk04 & RF & 109 \\
+mk07 & MaxLoad & 174 \\
+mk07 & LinearReg & 172 \\
+mk07 & RF & 203 \\
+\bottomrule
+\end{tabular}
+\end{table}

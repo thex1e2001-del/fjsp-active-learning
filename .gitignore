@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Local environments and IDE files
+.venv/
+venv/
+.conda/
+.vscode/
+
+# Generated local files
+*.log
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
+fjsp/run_*.py
+fjsp/check_*.py
+
+# Keep the separate delivery optimization project out of this repository.
+/refer/

@@ -1,0 +1,47 @@
+[
+  {
+    "instance": "mk01",
+    "surrogate": "MaxLoad",
+    "makespan": 41.99999999999996
+  },
+  {
+    "instance": "mk01",
+    "surrogate": "LinearReg",
+    "makespan": 71.99999599269998
+  },
+  {
+    "instance": "mk01",
+    "surrogate": "RF",
+    "makespan": 59.99999999389999
+  },
+  {
+    "instance": "mk04",
+    "surrogate": "MaxLoad",
+    "makespan": 66.9999999931972
+  },
+  {
+    "instance": "mk04",
+    "surrogate": "LinearReg",
+    "makespan": 65.0
+  },
+  {
+    "instance": "mk04",
+    "surrogate": "RF",
+    "makespan": 108.99999998895244
+  },
+  {
+    "instance": "mk07",
+    "surrogate": "MaxLoad",
+    "makespan": 173.99999992999247
+  },
+  {
+    "instance": "mk07",
+    "surrogate": "LinearReg",
+    "makespan": 171.999999982699
+  },
+  {
+    "instance": "mk07",
+    "surrogate": "RF",
+    "makespan": 202.9999999589924
+  }
+]

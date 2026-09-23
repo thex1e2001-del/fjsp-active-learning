@@ -1,0 +1,77 @@
+[
+  {
+    "instance": "mk01",
+    "beam_width": 5,
+    "makespan": 42.99999999999999
+  },
+  {
+    "instance": "mk01",
+    "beam_width": 10,
+    "makespan": 42.99999999999999
+  },
+  {
+    "instance": "mk01",
+    "beam_width": 15,
+    "makespan": 42.99999999999999
+  },
+  {
+    "instance": "mk01",
+    "beam_width": 30,
+    "makespan": 42.99999999999999
+  },
+  {
+    "instance": "mk01",
+    "beam_width": 50,
+    "makespan": 42.99999999999999
+  },
+  {
+    "instance": "mk04",
+    "beam_width": 5,
+    "makespan": 77.99999995063455
+  },
+  {
+    "instance": "mk04",
+    "beam_width": 10,
+    "makespan": 77.99997130233616
+  },
+  {
+    "instance": "mk04",
+    "beam_width": 15,
+    "makespan": 77.99997130233616
+  },
+  {
+    "instance": "mk04",
+    "beam_width": 30,
+    "makespan": 77.99997130233616
+  },
+  {
+    "instance": "mk04",
+    "beam_width": 50,
+    "makespan": 77.99997130233616
+  },
+  {
+    "instance": "mk07",
+    "beam_width": 5,
+    "makespan": 214.99999597839425
+  },
+  {
+    "instance": "mk07",
+    "beam_width": 10,
+    "makespan": 214.99999597839425
+  },
+  {
+    "instance": "mk07",
+    "beam_width": 15,
+    "makespan": 214.99999597839425
+  },
+  {
+    "instance": "mk07",
+    "beam_width": 30,
+    "makespan": 214.99999597839425
+  },
+  {
+    "instance": "mk07",
+    "beam_width": 50,
+    "makespan": 214.99999597839425
+  }
+]

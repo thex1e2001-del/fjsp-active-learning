@@ -1,0 +1,97 @@
+{
+  "source": "results/exp1_main.json",
+  "n_instances": 10,
+  "tie_tolerance": 0.001,
+  "win_draw_loss_rf_vs_balanced": [
+    6,
+    2,
+    2
+  ],
+  "avg_improvement_all_pct": 1.8125,
+  "avg_improvement_winning_instances_pct": 5.7145,
+  "wilcoxon": {
+    "rounded_makespans": true,
+    "zero_method": "pratt",
+    "alternative": "two-sided",
+    "statistic": 11.0,
+    "p_value": 0.12356498312705609
+  },
+  "instances": [
+    {
+      "instance": "mk01",
+      "balanced": 49,
+      "rf": 49,
+      "bks": 40,
+      "delta_pct": 0.0
+    },
+    {
+      "instance": "mk02",
+      "balanced": 44,
+      "rf": 42,
+      "bks": 26,
+      "delta_pct": 4.5455
+    },
+    {
+      "instance": "mk03",
+      "balanced": 230,
+      "rf": 218,
+      "bks": 204,
+      "delta_pct": 5.2174
+    },
+    {
+      "instance": "mk04",
+      "balanced": 68,
+      "rf": 78,
+      "bks": 60,
+      "delta_pct": -14.7058
+    },
+    {
+      "instance": "mk05",
+      "balanced": 210,
+      "rf": 193,
+      "bks": 172,
+      "delta_pct": 8.0952
+    },
+    {
+      "instance": "mk06",
+      "balanced": 108,
+      "rf": 100,
+      "bks": 58,
+      "delta_pct": 7.4074
+    },
+    {
+      "instance": "mk07",
+      "balanced": 206,
+      "rf": 209,
+      "bks": 139,
+      "delta_pct": -1.4563
+    },
+    {
+      "instance": "mk08",
+      "balanced": 523,
+      "rf": 523,
+      "bks": 523,
+      "delta_pct": 0.0
+    },
+    {
+      "instance": "mk09",
+      "balanced": 354,
+      "rf": 332,
+      "bks": 307,
+      "delta_pct": 6.2147
+    },
+    {
+      "instance": "mk10",
+      "balanced": 285,
+      "rf": 277,
+      "bks": 198,
+      "delta_pct": 2.807
+    }
+  ],
+  "environment": {
+    "python": "3.12.7 | packaged by Anaconda, Inc. | (main, Oct  4 2024, 13:17:27) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "1.26.4",
+    "scipy": "1.13.1"
+  }
+}

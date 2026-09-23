@@ -1,0 +1,112 @@
+[
+  {
+    "instance": "mk01",
+    "n": 40,
+    "pearson": 0.9512,
+    "spearman": 0.9272,
+    "kendall": 0.7847,
+    "mae": 4.7,
+    "mape": 6.3,
+    "recall5": 0.8,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk02",
+    "n": 40,
+    "pearson": 0.8526,
+    "spearman": 0.7714,
+    "kendall": 0.5933,
+    "mae": 4.2,
+    "mape": 7.6,
+    "recall5": 0.2,
+    "regret5": 2.0
+  },
+  {
+    "instance": "mk03",
+    "n": 40,
+    "pearson": 0.808,
+    "spearman": 0.6797,
+    "kendall": 0.516,
+    "mae": 43.8,
+    "mape": 15.1,
+    "recall5": 0.6,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk04",
+    "n": 40,
+    "pearson": 0.9052,
+    "spearman": 0.8684,
+    "kendall": 0.7059,
+    "mae": 6.1,
+    "mape": 6.1,
+    "recall5": 0.6,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk05",
+    "n": 40,
+    "pearson": 0.9603,
+    "spearman": 0.954,
+    "kendall": 0.8753,
+    "mae": 3.2,
+    "mape": 1.4,
+    "recall5": 0.6,
+    "regret5": 11.0
+  },
+  {
+    "instance": "mk06",
+    "n": 40,
+    "pearson": 0.7202,
+    "spearman": 0.683,
+    "kendall": 0.5179,
+    "mae": 26.9,
+    "mape": 19.8,
+    "recall5": 0.4,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk07",
+    "n": 40,
+    "pearson": 0.9274,
+    "spearman": 0.8967,
+    "kendall": 0.7453,
+    "mae": 20.6,
+    "mape": 7.6,
+    "recall5": 0.6,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk08",
+    "n": 40,
+    "pearson": 0.8448,
+    "spearman": 0.8255,
+    "kendall": 0.6392,
+    "mae": 25.1,
+    "mape": 4.0,
+    "recall5": 0.6,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk09",
+    "n": 40,
+    "pearson": 0.8689,
+    "spearman": 0.8738,
+    "kendall": 0.6916,
+    "mae": 44.5,
+    "mape": 8.7,
+    "recall5": 0.6,
+    "regret5": 0.0
+  },
+  {
+    "instance": "mk10",
+    "n": 40,
+    "pearson": 0.8711,
+    "spearman": 0.778,
+    "kendall": 0.5963,
+    "mae": 51.5,
+    "mape": 12.2,
+    "recall5": 0.6,
+    "regret5": 0.0
+  }
+]

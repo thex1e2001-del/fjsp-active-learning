@@ -1,0 +1,16 @@
+{
+  "win_draw_loss": "8/0/2",
+  "avg_improvement_all": 1.81,
+  "avg_improvement_winning": 4.29,
+  "avg_ranks": {
+    "random": 3.9,
+    "spt": 3.4,
+    "lpt": 4.6,
+    "balanced": 1.9,
+    "rf_best": 1.2
+  },
+  "friedman_p": 2e-06,
+  "wilcoxon_two_sided_p": 0.1055,
+  "wilcoxon_one_sided_p": 0.0527,
+  "n_zero_diffs": 0
+}
