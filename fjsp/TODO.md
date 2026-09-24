@@ -1,180 +1,51 @@
-# TODO — Final Revision (Based on 审阅意见建议 2026-06-15)
+# 当前 TODO：迁移后补实验与投稿
 
-## 🔴 P0: 硬伤 — 数据和结论矛盾（不修直接拒）
+更新：2026-09-24。详细参数、输出和判断标准见 [实验路线](../EXPERIMENT_ROADMAP.md)，新机器步骤见 [迁移交接](../MIGRATION_HANDOFF.md)。旧TODO已完整保存在 [TODO_legacy_20260615.md](TODO_legacy_20260615.md)，其中存在错误数字，不能按旧版执行。
 
-### 1. 统一所有实验表 — 同一 protocol/seed/settings
-- [ ] Table 3/4/5/6/7 必须来自同一实验设置
-- [ ] 所有方法：相同候选生成上限、相同 top-K verification、相同 30s/60s/120s、相同 seeds、相同 solver
-- [ ] 表中不允许有缺失值，不能只有部分实例
+## 已完成、可直接接手
 
-### 2. 重算所有 summary 数字
-- [ ] 按 Table 3 重算全样本平均改善 → 应为 ~3.32%（当前写 1.81% 不对）
-- [ ] 按 Table 3 重算 winning-instance 改善 → 应为 ~6.84%（当前写 4.29% 不对）
-- [ ] Friedman rank 重算 → RF≈1.25, Balanced≈1.90（当前写 RF=1.20 需确认 tie-handling）
-- [ ] Wilcoxon 透明化：报告 two-sided/one-sided/zero-handling (wilcox/Pratt/zsplit)/exact or normal/effect size
-- [ ] 删掉 "p=0.053" 单一句式
+- [x] MK01–MK10 × seeds 42–46，共50组一秒验证实验，原始两批均保留。
+- [x] 合并与自动CSV/Markdown/TeX表，CRF回退及候选集合审计。
+- [x] 重建50组train/test池，交集为0，已有selected/calibration ID均核对；保存可复跑审计脚本和JSON。
+- [x] MK06两个seed五秒探索，单独保存，不能当作只改变时限的对照。
+- [x] 论文已部分收敛为预算匹配实证研究，CRF不作为有效新方法宣称。
+- [x] 核心依赖版本和迁移时环境快照；不含Gurobi许可与Git凭据。
+- [x] 后续E0–E6详细实验、成本估计、停止条件与Overleaf交接文档。
 
-### 3. 补完整 Proxy Ranking Validation — 全 10 实例
-- [ ] 每实例三类采样：random / heuristic-neighborhood / beam-generated
-- [ ] 每实例报告：Pearson, Spearman, Kendall, Pairwise accuracy, MAE, MAPE, Recall@5, Recall@10, Regret@5, Regret@10
-- [ ] 正面讨论 mk01 Recall@5=0.20：说明 top-tail ranking 在某些实例有问题
-- [ ] 核心指标改为 Regret@K
+## P0：先保证下一轮实验能回答问题
 
-### 4. 补完整 Fair Baselines — 全 10 实例
-- [ ] Random-MS, MaxLoad, LB, Imbalance, HeurSeq, Balanced-LS, RF — 全 10 实例
-- [ ] 统一 candidate budget 和 verification budget
-- [ ] 诚实报告：简单 workload scorer 在多数实例上 ≈ RF
+- [ ] E0：强制train/test跨池去重，保存完整有序assignment快照、实例哈希、solver Seed/Threads、代码与环境身份。
+- [ ] E0：完整记录校准失败尝试；只接受有限gap≤0.05；修正feature_matrix重复提取性能问题。
+- [ ] E0：逐方法、逐阶段计时，区分求解/建模/端到端；缓存不能使某方法账面免费。
+- [ ] E0：断点恢复、协议指纹、逐组原子写入；旧runner不支持resume，不覆盖历史文件。
+- [ ] E0：输出heuristic/MIP排程并做独立可行性检查；所有方法统一warm-start/初始解政策。
+- [ ] E0：修复完整MIP在无incumbent超时时读取变量.X的边界问题，再启用该外部参照。
+- [ ] E1A：新机同池同选择、MK04/MK06/MK08–10×5seeds，1/5/10秒冷启动对照。
+- [ ] E2：RF对H的独立测试指标，预先抽样子池的H/RF/MIP区间诊断；无oracle不写全池regret。
+- [ ] E1B：冻结合理预算后全10实例完整流程确认，明确与历史协议的差别。
+- [ ] E3：计入标签/训练/校准的完整成本和等总墙钟预算结果。
 
-### 5. 补 MIP Verification Status 表
-- [ ] Per instance: #verified, #optimal, #feasible-only, avg gap, max gap, best candidate status
-- [ ] 30s verification 到底求到了什么必须说清楚
+## P1：形成可审阅内容
 
-### 6. 改结论
-- [ ] 从 "RF consistently improves" → "RF is competitive; simple workload scorers remain strong; RF helps only under certain conditions"
-- [ ] Abstract 删除任何 SOTA 暗示，加入 "simple workload-based scores remain strong"
+- [ ] E4：MK04/MK06/MK08候选级失败案例；区分拟合、标签和求解局限，不先编结构解释。
+- [ ] E5：按论文主张增加CP-SAT/完整MIP/可信简单搜索参照，独立排程验证，预算公平。
+- [ ] 实例为统计配对单位；预先冻结缺失值处理、平局容差、比较对和校正方式。
+- [ ] 所有表从JSON生成，sample/population std定义一致，成功次数随条件均值同时报告。
+- [ ] 核验实际硬件与稿件旧CPU描述、BKS、实例规模、数据许可、文献和DOI。
+- [ ] 清理稿件剩余旧表/旧强主张；完成Overleaf编译和PDF视觉检查。
+- [ ] 核验当期EI目标渠道、截止日/决定日、APC/注册费、模板和单位认可要求。
+- [ ] 提交前确认作者、单位、署名顺序、基金与利益冲突等占位信息；未正式投稿。
 
-### 7. 补定量 Failure Analysis
-- [ ] mk04/mk06/mk10 完整诊断表：Balanced/MaxLoad/HeurSeq/RF/RF+precedence features 各列
-- [ ] 指标：makespan, max_load, max_jobtime, load_std, speedloss_mean, same-job transitions, critical machine load, MIP gap, heuristic label, RF score
-- [ ] mk04: 证明 RF 选了负载更好但 sequencing 兼容性更差的 assignment
+## P2：有明确收益假说才加
 
----
+- [ ] K=1/3/5/10、训练量100/300/600、简单模型/特征消融。
+- [ ] 校准0/15/30仅在可靠标签可得且有实际潜力时继续；否则停止CRF投入。
+- [ ] 第二基准在看结果前按明确规则抽取，核验数据来源。
 
-## 🟠 P1: 方法补强
+## 暂不做
 
-### 8. 特征扩展 — 从 3m+4 扩到四组
-- [ ] A. Machine workload: load_k, ops_k, used_k, max_load, load_std, load_Gini
-- [ ] B. Job-path: jobTime_j, max/mean/std/top-3/Gini, bottleneck_ratio
-- [ ] C. Routing-efficiency: speedLoss mean/max/std, fastest-machine ratio, total detour cost
-- [ ] D. Precedence-aware: same-job consecutive same/different machine count, stage-level load, critical-job concentration
-- [ ] 加 Feature table
-
-### 9. Beam search 加 diversity mechanism
-- [ ] Hamming distance: d(x,x') = (1/|O|)·Σ 1{k(x)≠k(x')}
-- [ ] score(x) = RF(x) - α·min_{x'∈S} d(x,x')
-- [ ] 或 top-3B 后 diversity filtering
-
-### 10. 加 Exact-label calibration（可选 but 加分）
-- [ ] r(x) = C_MIP(x) - C̃_heur(x)
-- [ ] Ĉ_final(x) = Ĉ_heur(x) + r̂(x)
-- [ ] heuristic-label pretraining + exact-label residual calibration
-
-### 11. 可复现性细节
-- [ ] Heuristic sequencer: ready set definition, tie-breaking, insertion logic, complexity
-- [ ] Random assignment generation method
-- [ ] Beam search deduplication
-- [ ] Train/test split
-- [ ] Training assignment proportions (40% random, 40% neighborhood, 20% beam)
-- [ ] RF hyperparameters tuning or not
-- [ ] Gurobi: gap tolerance, threads, time limit
-- [ ] 10 random seeds 覆盖哪些随机过程
-
----
-
-## 🟡 P2: 正文扩写
-
-### 12. Introduction → 2–2.5 页
-- [ ] P1: Manufacturing motivation
-- [ ] P2: Routing-sequencing coupling
-- [ ] P3: Traditional methods
-- [ ] P4: Learning-based scheduling opportunities/limitations
-- [ ] P5: Our approach — interpretable screening, not end-to-end
-- [ ] P6: RQ1–RQ4 + contributions
-
-### 13. Related Work → 4–5 页, 7 小节
-- [ ] 2.1 FJSP problem, benchmarks, BKS reporting
-- [ ] 2.2 Exact / MIP / CP formulations
-- [ ] 2.3 Metaheuristics and hybrid heuristics
-- [ ] 2.4 Decomposition in scheduling
-- [ ] 2.5 Learning-based scheduling (DRL/GNN)
-- [ ] 2.6 Surrogate-assisted combinatorial optimization
-- [ ] 2.7 Tree-in-MIP / constraint learning + position of this work
-- [ ] 加 Literature taxonomy table
-
-### 14. Problem & Lower Bounds → 2–3 页
-- [ ] Notation table
-- [ ] Full MIP formulation (完整约束)
-- [ ] Proof of Proposition 1 & 2
-- [ ] Example showing same max_load → different sequencing makespan
-- [ ] Feature motivation paragraph
-
-### 15. Methodology → 4–5 页, 7 小节
-- [ ] 4.1 Assignment representation and feature groups (加 feature table)
-- [ ] 4.2 Heuristic sequencer (加 pseudocode)
-- [ ] 4.3 Label generation and sampling design
-- [ ] 4.4 Surrogate model (why RF, cite Breiman 2001)
-- [ ] 4.5 Diversity-aware RF beam search (加 pseudocode)
-- [ ] 4.6 MIP/CP-based sequencing verification
-- [ ] 4.7 Optional exact-label calibration
-
-### 16. Experiments → 完整 8 主实验
-- [ ] Exp 1: Benchmark and instance characterization (加 Kacem small, Hurink, synthetic)
-- [ ] Exp 2: Proxy label validation (全实例, Recall/Regret)
-- [ ] Exp 3: Main results under equal verification budget
-- [ ] Exp 4: Main results under equal wall-clock budget (加 CP-SAT, Full MIP)
-- [ ] Exp 5: Scorer ablation (全10实例, 10 scorers)
-- [ ] Exp 6: Feature group ablation (F1→F4)
-- [ ] Exp 7: Search parameter diagnostics (B×iter grid, K sensitivity)
-- [ ] Exp 8: Failure case analysis (结构化诊断表)
-- [ ] Appendix A: Training sample learning curve
-- [ ] Appendix B: Exact-label calibration experiment
-- [ ] Appendix C: Scale/flexibility synthetic experiments
-- [ ] Appendix D: Rolling-horizon managerial experiment
-
-### 17. Discussion → 4 段机制讨论
-- [ ] What did the surrogate actually learn? (Feature importance, SHAP)
-- [ ] When is learned guidance better than workload scoring? (by size/flexibility/R²/regret)
-- [ ] Why does it fail? (mk04: precedence; mk06/mk10: sparsity/coverage/diversity)
-- [ ] Managerial implications (绑定 rolling-horizon experiment)
-
-### 18. Conclusion
-- [ ] 不重复摘要
-- [ ] 提出了什么 | 发现了什么 (RF useful but not uniformly dominant) | 边界是什么
-
----
-
-## 🟢 P3: 引用和格式
-
-### 19. 引用扩到 35–50 篇
-- [ ] A. FJSP benchmarks (10 篇): Brucker, Brandimarte, Hurink, Dauzère, Kacem, Fattahi, Behnke, Birgin, Pinedo
-- [ ] B. Exact/MIP/CP (5 篇): Ozgüven, Meng, OR-Tools CP-SAT, IBM CP Optimizer, Gurobi
-- [ ] C. Metaheuristics (7 篇): Mastrolilli, Pezzella, Gao, Xia&Wu, Li&Gao, Zheng&Wang, Xie
-- [ ] D. Decomposition (3 篇): Adams, Fattahi, Brandimarte
-- [ ] E. ML4CO (6 篇): Bengio, Khalil, Gasse, Hutter, He, Kotary
-- [ ] F. Learning-based scheduling (5 篇): Zhang, Song, Wang, Moon, Smit
-- [ ] G. Surrogate & RF (4 篇): Jin, Breiman, Volpato, Kotsiopoulos
-- [ ] H. Tree-in-MIP (5 篇): Verwer, Maragno, Bertsimas&Dunn, Elmachtoub, Biggs
-- [ ] I. Statistical testing (4 篇): Demšar, García, Benavoli, Wilcoxon
-- [ ] 删除未使用的 arXiv placeholder (Keegan2025, Abdellaoui2026, Xefteris2026 如果正文未讨论)
-
-### 20. 格式修整
-- [ ] Author/University → 填真实信息
-- [ ] Data Availability → 真实 GitHub URL
-- [ ] FJSPLib BKS 来源正式引用 + 访问日期
-- [ ] 表格编号和正文引用统一
-- [ ] PDF 交叉引用去掉红框
-- [ ] seed 口径统一 ("fixed seed 42" vs "10 random seeds")
-- [ ] Gurobi/CP-SAT 参数完整报告
-
-### 21. RF-embedded MIP Appendix 降调
-- [ ] 写明 "conceptual extension only, not part of computational contribution"
-- [ ] 写明 weighted objective may distort true makespan
-
-### 22. Abstract 重写
-- [ ] 删除 "consistent improvement over simpler scoring methods"
-- [ ] 加入 "simple workload-based scores remain strong"
-- [ ] 加入 "not intended as high-performance FJSP solver"
-- [ ] 加入 "screening under limited verification budget"
-
----
-
-## ✅ Done from previous rounds
-- [x] Basic structure and LaTeX formatting
-- [x] Main results table (Balanced vs RF) on 10 instances
-- [x] BKS gap table
-- [x] Partial fair baselines (5 instances)
-- [x] Partial surrogate ablation (3 instances)
-- [x] Top-K sensitivity (3 instances)
-- [x] Beam width sensitivity (3 instances)
-- [x] Wilcoxon/Friedman code (needs recalculation)
-- [x] RF-embedded MIP appendix
+- 不为了录用好看挑实例、删失败seed或反复调参数。
+- 不将五seed完成称为全部实验完成；未完成成本与预算复核前不声称可直接投稿。
+- 不把未收敛incumbent称为最优真值，不把多个seed当多个独立数据集。
+- 不默认制作Word；以目标刊会要求为准，当前主稿继续TeX/PDF。
+- 不跑新大型方法或直接移植旧RF-in-MIP概念附录来制造创新点。

@@ -1,0 +1,22 @@
+{
+  "captured_at": "2026-09-24T16:24:24.551391+08:00",
+  "purpose": "Migration environment snapshot, not proof of historical experiment hardware",
+  "baseline_commit": "e10d2364e48df129a42f194445561ec128eed2fd",
+  "python": "3.10.16",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "hardware": {
+    "cpu": "Intel(R) Core(TM) i5-14600KF",
+    "logical_processors": 20,
+    "memory_bytes": 16984236032
+  },
+  "core_packages": {
+    "numpy": "2.0.2",
+    "scipy": "1.15.1",
+    "scikit-learn": "1.6.1",
+    "gurobipy": "10.0.1",
+    "joblib": "1.4.2",
+    "threadpoolctl": "3.5.0"
+  },
+  "license_exported": false
+}

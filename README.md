@@ -1,5 +1,7 @@
 # FJSP：随机森林辅助的柔性作业车间调度
 
+**迁移/接手入口：** [迁移交接说明](MIGRATION_HANDOFF.md) → [详细后续实验路线](EXPERIMENT_ROADMAP.md) → [当前 TODO](fjsp/TODO.md)。新文档取代旧阶段计划的执行优先级；已有五 seed 实验是投稿前证据，不代表已达到投稿条件。
+
 本仓库包含一个面向柔性作业车间调度问题（Flexible Job Shop Scheduling Problem, FJSP）的实验项目。项目将机器分配（routing）与固定分配后的工序排序（sequencing）分开处理：先用轻量级特征和随机森林（RF）筛选候选机器分配，再用限时 Gurobi MIP 对少量候选进行排序验证。
 
 当前仓库用于整理投稿材料和继续实验。项目定位是可解释的候选分配筛选工具，不声称替代成熟的 FJSP 元启发式算法，也不声称已经达到最优或 state of the art。
@@ -71,7 +73,7 @@ python reproduce_audit.py
 3. [待做] 补充同一候选池下的 5 秒预算对照，重点覆盖 MK04/MK06/MK08–MK10；已有逐候选状态记录不等于已完成失败原因分析。
 4. [进行中] 继续核对 BKS 来源、数据版本、参考文献，并将正式结果表嵌入投稿版 PDF。
 5. [待做] 核验当期 EI 会议/期刊的官方投稿窗口、费用、首轮决定时间、收录承诺和单位认可要求。
-6. [待做] 强制检查训练/测试池交集，补各方法完整成本和独立测试预测指标；目前相同 Top-K 只控制验证预算，不能称为等总时间比较。
+6. [部分完成] 已重建50组候选池并核对ID，训练/测试交集为零，见 `fjsp/results/calibrated_screening_five_seeds.pool_audit.json`。仍需在生成器中强制去重，并补各方法完整成本和独立测试预测指标；相同 Top-K 不等于等总时间。
 
 CRF 小规模实验可复现命令：
 
@@ -88,6 +90,7 @@ python summarize_calibrated.py results/calibrated_screening_new_run.json
 ```powershell
 python merge_screening_results.py
 python summarize_calibrated.py results/calibrated_screening_five_seeds.json
+python audit_screening_pools.py
 ```
 
 Overleaf 请一并上传 `fjsp/paper/manuscript.tex` 与 `fjsp/paper/five_seed_tables.tex`；后者是自动生成的补充结果表。最终提交 PDF/TeX 或 DOCX 以目标刊会要求为准，目前无需另做 Word。

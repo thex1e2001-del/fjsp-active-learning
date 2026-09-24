@@ -1,3 +1,5 @@
+> 历史阶段计划（保留追溯）。当前执行优先级、实验参数和迁移状态以 [EXPERIMENT_ROADMAP.md](../EXPERIMENT_ROADMAP.md) 与 [MIGRATION_HANDOFF.md](../MIGRATION_HANDOFF.md) 为准；本文中的未完成设想不代表已实现。
+
 # Workflow — FJSP Paper Revision
 
 ## Phase 1: P0 Hard Fixes (Day 1)

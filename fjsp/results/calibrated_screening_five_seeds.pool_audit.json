@@ -1,0 +1,409 @@
+{
+  "source": "calibrated_screening_five_seeds.json",
+  "source_sha256": "cf226780a6fdba85ad275c5e50193e694aeb6759c0e5346fade938a4a3578cea",
+  "runs": 50,
+  "overlapping_runs": 0,
+  "total_overlap": 0,
+  "checks": [
+    {
+      "instance": "mk01",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "c54609c9cc025d4968ace3b09ee567102f7edbff1d8ba56edbb6b72a947f624e"
+    },
+    {
+      "instance": "mk01",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "c54609c9cc025d4968ace3b09ee567102f7edbff1d8ba56edbb6b72a947f624e"
+    },
+    {
+      "instance": "mk01",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "c54609c9cc025d4968ace3b09ee567102f7edbff1d8ba56edbb6b72a947f624e"
+    },
+    {
+      "instance": "mk01",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "c54609c9cc025d4968ace3b09ee567102f7edbff1d8ba56edbb6b72a947f624e"
+    },
+    {
+      "instance": "mk01",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "c54609c9cc025d4968ace3b09ee567102f7edbff1d8ba56edbb6b72a947f624e"
+    },
+    {
+      "instance": "mk02",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "cb0495183ac0763616d8e5fd2687ef87a320f8b979e9a049ac0fd9547112d7b9"
+    },
+    {
+      "instance": "mk02",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "cb0495183ac0763616d8e5fd2687ef87a320f8b979e9a049ac0fd9547112d7b9"
+    },
+    {
+      "instance": "mk02",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "cb0495183ac0763616d8e5fd2687ef87a320f8b979e9a049ac0fd9547112d7b9"
+    },
+    {
+      "instance": "mk02",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "cb0495183ac0763616d8e5fd2687ef87a320f8b979e9a049ac0fd9547112d7b9"
+    },
+    {
+      "instance": "mk02",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "cb0495183ac0763616d8e5fd2687ef87a320f8b979e9a049ac0fd9547112d7b9"
+    },
+    {
+      "instance": "mk03",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "4244a71c944f2c70ebca36596c6994f5d9f3803c70056b485cd390873858587d"
+    },
+    {
+      "instance": "mk03",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "4244a71c944f2c70ebca36596c6994f5d9f3803c70056b485cd390873858587d"
+    },
+    {
+      "instance": "mk03",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "4244a71c944f2c70ebca36596c6994f5d9f3803c70056b485cd390873858587d"
+    },
+    {
+      "instance": "mk03",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "4244a71c944f2c70ebca36596c6994f5d9f3803c70056b485cd390873858587d"
+    },
+    {
+      "instance": "mk03",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "4244a71c944f2c70ebca36596c6994f5d9f3803c70056b485cd390873858587d"
+    },
+    {
+      "instance": "mk04",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "f82cccf6cab435aa5d2e61ee08b887243b312f52b39e15edda2cbe377fadb21e"
+    },
+    {
+      "instance": "mk04",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "f82cccf6cab435aa5d2e61ee08b887243b312f52b39e15edda2cbe377fadb21e"
+    },
+    {
+      "instance": "mk04",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "f82cccf6cab435aa5d2e61ee08b887243b312f52b39e15edda2cbe377fadb21e"
+    },
+    {
+      "instance": "mk04",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "f82cccf6cab435aa5d2e61ee08b887243b312f52b39e15edda2cbe377fadb21e"
+    },
+    {
+      "instance": "mk04",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "f82cccf6cab435aa5d2e61ee08b887243b312f52b39e15edda2cbe377fadb21e"
+    },
+    {
+      "instance": "mk05",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "8a12c64d4bf407a8a9ed6294a00f75ca604facecb7c0eea70760882baa3c0624"
+    },
+    {
+      "instance": "mk05",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "8a12c64d4bf407a8a9ed6294a00f75ca604facecb7c0eea70760882baa3c0624"
+    },
+    {
+      "instance": "mk05",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "8a12c64d4bf407a8a9ed6294a00f75ca604facecb7c0eea70760882baa3c0624"
+    },
+    {
+      "instance": "mk05",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "8a12c64d4bf407a8a9ed6294a00f75ca604facecb7c0eea70760882baa3c0624"
+    },
+    {
+      "instance": "mk05",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "8a12c64d4bf407a8a9ed6294a00f75ca604facecb7c0eea70760882baa3c0624"
+    },
+    {
+      "instance": "mk06",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5d2d67a327d2e99565f85eb6b04c59fb16ddead094fd4f373453f3fcbfc8d7c4"
+    },
+    {
+      "instance": "mk06",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5d2d67a327d2e99565f85eb6b04c59fb16ddead094fd4f373453f3fcbfc8d7c4"
+    },
+    {
+      "instance": "mk06",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5d2d67a327d2e99565f85eb6b04c59fb16ddead094fd4f373453f3fcbfc8d7c4"
+    },
+    {
+      "instance": "mk06",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5d2d67a327d2e99565f85eb6b04c59fb16ddead094fd4f373453f3fcbfc8d7c4"
+    },
+    {
+      "instance": "mk06",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5d2d67a327d2e99565f85eb6b04c59fb16ddead094fd4f373453f3fcbfc8d7c4"
+    },
+    {
+      "instance": "mk07",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "1b43c1a9779ded19919d271508af763c27c8399016829a8c959962fcb84c614c"
+    },
+    {
+      "instance": "mk07",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "1b43c1a9779ded19919d271508af763c27c8399016829a8c959962fcb84c614c"
+    },
+    {
+      "instance": "mk07",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "1b43c1a9779ded19919d271508af763c27c8399016829a8c959962fcb84c614c"
+    },
+    {
+      "instance": "mk07",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "1b43c1a9779ded19919d271508af763c27c8399016829a8c959962fcb84c614c"
+    },
+    {
+      "instance": "mk07",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "1b43c1a9779ded19919d271508af763c27c8399016829a8c959962fcb84c614c"
+    },
+    {
+      "instance": "mk08",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "da56efa808b9e0c10abd78a85c3a8ea77b4932860305070e1a1ba731dd1c98e3"
+    },
+    {
+      "instance": "mk08",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "da56efa808b9e0c10abd78a85c3a8ea77b4932860305070e1a1ba731dd1c98e3"
+    },
+    {
+      "instance": "mk08",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "da56efa808b9e0c10abd78a85c3a8ea77b4932860305070e1a1ba731dd1c98e3"
+    },
+    {
+      "instance": "mk08",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "da56efa808b9e0c10abd78a85c3a8ea77b4932860305070e1a1ba731dd1c98e3"
+    },
+    {
+      "instance": "mk08",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "da56efa808b9e0c10abd78a85c3a8ea77b4932860305070e1a1ba731dd1c98e3"
+    },
+    {
+      "instance": "mk09",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "6c99ba7272c1d9ef82cb71c5e6f4efc261b6e4821d2dec47e01dee76937dca03"
+    },
+    {
+      "instance": "mk09",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "6c99ba7272c1d9ef82cb71c5e6f4efc261b6e4821d2dec47e01dee76937dca03"
+    },
+    {
+      "instance": "mk09",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "6c99ba7272c1d9ef82cb71c5e6f4efc261b6e4821d2dec47e01dee76937dca03"
+    },
+    {
+      "instance": "mk09",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "6c99ba7272c1d9ef82cb71c5e6f4efc261b6e4821d2dec47e01dee76937dca03"
+    },
+    {
+      "instance": "mk09",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "6c99ba7272c1d9ef82cb71c5e6f4efc261b6e4821d2dec47e01dee76937dca03"
+    },
+    {
+      "instance": "mk10",
+      "seed": 42,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5987ddaaf5e9f97d4ef4a15916958c1a55caafdd0d44e1ef7d9668ae54b2c412"
+    },
+    {
+      "instance": "mk10",
+      "seed": 43,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5987ddaaf5e9f97d4ef4a15916958c1a55caafdd0d44e1ef7d9668ae54b2c412"
+    },
+    {
+      "instance": "mk10",
+      "seed": 44,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5987ddaaf5e9f97d4ef4a15916958c1a55caafdd0d44e1ef7d9668ae54b2c412"
+    },
+    {
+      "instance": "mk10",
+      "seed": 45,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5987ddaaf5e9f97d4ef4a15916958c1a55caafdd0d44e1ef7d9668ae54b2c412"
+    },
+    {
+      "instance": "mk10",
+      "seed": 46,
+      "train_count": 300,
+      "test_count": 150,
+      "overlap_ids": [],
+      "instance_sha256": "5987ddaaf5e9f97d4ef4a15916958c1a55caafdd0d44e1ef7d9668ae54b2c412"
+    }
+  ]
+}
