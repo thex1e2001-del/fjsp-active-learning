@@ -1,8 +1,12 @@
 # FJSP：随机森林辅助的柔性作业车间调度
 
+**当前阶段：只进行计划与项目维护，不运行实验。** 文档中的后续实验均为待执行路线，当前结果不会因计划更新而改变。
+
 **迁移/接手入口：** [迁移交接说明](MIGRATION_HANDOFF.md) → [详细后续实验路线](EXPERIMENT_ROADMAP.md) → [当前 TODO](fjsp/TODO.md)。新文档取代旧阶段计划的执行优先级；已有五 seed 实验是投稿前证据，不代表已达到投稿条件。
 
 **最新计划：** [方法价值验证与路线调整](METHOD_DIRECTION.md)规定先检验真实成本收益，再有依据地改方法、冻结后用新种子确认；[论文图表计划](PAPER_VISUALS_PLAN.md)列出待补图及数据依赖。当前有10张表、1个算法块，尚无正式插图；这些计划不代表实验或绘图已完成。
+
+**执行总表：** [EXECUTION_PLAN.md](EXECUTION_PLAN.md)收敛阶段顺序、停止条件和投稿验收；[确认协议模板](fjsp/protocols/confirmation.template.json)是待填写的draft，不能直接运行。重点补充了保留已算出的可行解、统一完整CPU资源、主终点冻结和原始实例核验。
 
 本仓库包含一个面向柔性作业车间调度问题（Flexible Job Shop Scheduling Problem, FJSP）的实验项目。项目将机器分配（routing）与固定分配后的工序排序（sequencing）分开处理：先用轻量级特征和随机森林（RF）筛选候选机器分配，再用限时 Gurobi MIP 对少量候选进行排序验证。
 
@@ -97,7 +101,7 @@ python audit_screening_pools.py
 
 Overleaf 请一并上传 `fjsp/paper/manuscript.tex` 与 `fjsp/paper/five_seed_tables.tex`；后者是自动生成的补充结果表。最终提交 PDF/TeX 或 DOCX 以目标刊会要求为准，目前无需另做 Word。
 
-详细安排见 [`SUBMISSION_PLAN.md`](SUBMISSION_PLAN.md)，论文草稿见 [`fjsp/paper/manuscript.tex`](fjsp/paper/manuscript.tex)。
+当前安排见 [执行总表](EXECUTION_PLAN.md) 与 [实验路线](EXPERIMENT_ROADMAP.md)，论文草稿见 [`fjsp/paper/manuscript.tex`](fjsp/paper/manuscript.tex)。`SUBMISSION_PLAN.md`仅作历史阶段记录。
 
 ## 数据与复现说明
 

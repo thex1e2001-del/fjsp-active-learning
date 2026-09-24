@@ -2,6 +2,8 @@
 
 更新：2026-09-24。当前研究路线基线提交：`e10d236`；本交接包另作后续提交。接手时以 `git log -1` 和远端 `main` 为准，不把文档中基线hash误认为最新提交。
 
+**最新用户范围：仅计划与项目维护，不启动实验/训练/求解。** 本文的环境验收、烟雾求解及其他运行命令供后续启用实验时参考，当前不要因读取交接文件自动执行。可以检查文档、JSON格式、Git状态并提交推送。
+
 ## 1. 先读这三份
 
 1. [EXPERIMENT_ROADMAP.md](EXPERIMENT_ROADMAP.md)：详细补实验计划、参数、优先级、验收标准和不应声称的结论。
@@ -9,6 +11,8 @@
 3. [README.md](README.md)：结构、现有结果和运行入口。
 
 本次追加：[METHOD_DIRECTION.md](METHOD_DIRECTION.md) 的 Gate A/B/C 规定先检验价值再长跑；[PAPER_VISUALS_PLAN.md](PAPER_VISUALS_PLAN.md) 是新增图表TODO。接手时优先按这两个补充文件理解路线更新，避免只补seed/图表而没有解决方法价值问题。
+
+最新执行收敛见 [EXECUTION_PLAN.md](EXECUTION_PLAN.md)：阶段交付、完整资源/解保留公平性、数据与创新性核验及投稿门槛。确认前填写 [协议模板](fjsp/protocols/confirmation.template.json)，当前模板是draft，不可直接运行。
 
 旧 `SUBMISSION_PLAN.md`、`fjsp/POSTING_STRATEGY.md`、`fjsp/PAPER_OUTLINE.md`、`fjsp/WORKFLOW.md` 和旧TODO包含已过时的数字/设想。它们用于理解历史，不优先于新路线。**不能恢复旧文件中的3.32%改善、显著性、四组特征、10次重复等缺证据表述。**
 
@@ -29,7 +33,7 @@
 | 当前实验代码 | `fjsp/calibrated_screening.py`、`fjsp/fjsp_baseline.py`、生成器/排序器/RF模块 | 现有runner不是v2计划实现 |
 | 原始当前结果 | `fjsp/results/calibrated_screening_formal_small.json`、`calibrated_screening_seeds45_46.json` | 不覆盖，合并来源 |
 | 合并/审计/汇总 | `fjsp/results/calibrated_screening_five_seeds*` | 含50组和来源审计 |
-| 审计工具 | `fjsp/merge_screening_results.py`、`summarize_calibrated.py`、`audit_screening_pools.py` | 不调用MIP优化；部分import仍要求gurobipy安装 |
+| 审计工具 | `fjsp/merge_screening_results.py`、`summarize_calibrated.py`、`audit_screening_pools.py` | 合并/汇总仅标准库；池审计需核心依赖，均不调用MIP优化 |
 | 独立5秒探索 | `fjsp/results/calibrated_screening_verify5_mk06*` | 2组，不能拼主表 |
 | 实例 | `fjsp/data/instances/` | 基准来源、BKS、许可证仍待核验 |
 | 论文 | `fjsp/paper/manuscript.tex`、`five_seed_tables.tex` | Overleaf中放同一目录 |
@@ -119,7 +123,7 @@ python fjsp/audit_screening_pools.py
 
 预期审计输出：runs=50、crf_fallback=43、identical sets=48、both feasible=46、tied best=46；池审计为50组、overlapping runs=0、total overlap=0。任一不符先检查数据、版本与候选生成器，不继续生成正式表。
 
-汇总器只用标准库，可以单独运行而不装优化环境。池审计/合并入口因imports需要核心依赖，但不会求解MIP。文件字节hash会受跨平台换行影响；提交身份、字段内容、assignment ID和语义计数一起检查，不能仅靠字节差异判断实验改变。
+合并和汇总器只用标准库，可以单独运行而不装优化环境。只有池审计入口因imports需要核心依赖，但不会求解MIP。文件字节hash会受跨平台换行影响；提交身份、字段内容、assignment ID和语义计数一起检查，不能仅靠字节差异判断实验改变。
 
 可选的新机求解烟雾检查（输出新文件，不覆盖历史）：
 
