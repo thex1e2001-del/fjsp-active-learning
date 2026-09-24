@@ -8,6 +8,8 @@
 2. [fjsp/TODO.md](fjsp/TODO.md)：当前执行清单。
 3. [README.md](README.md)：结构、现有结果和运行入口。
 
+本次追加：[METHOD_DIRECTION.md](METHOD_DIRECTION.md) 的 Gate A/B/C 规定先检验价值再长跑；[PAPER_VISUALS_PLAN.md](PAPER_VISUALS_PLAN.md) 是新增图表TODO。接手时优先按这两个补充文件理解路线更新，避免只补seed/图表而没有解决方法价值问题。
+
 旧 `SUBMISSION_PLAN.md`、`fjsp/POSTING_STRATEGY.md`、`fjsp/PAPER_OUTLINE.md`、`fjsp/WORKFLOW.md` 和旧TODO包含已过时的数字/设想。它们用于理解历史，不优先于新路线。**不能恢复旧文件中的3.32%改善、显著性、四组特征、10次重复等缺证据表述。**
 
 ## 2. 当前准确状态
@@ -143,7 +145,7 @@ cd ..
 1. 验证clone、依赖、50组汇总和零交集审计，保存新机环境元数据。
 2. 阅读E0并实现日志/断点/排程校验/成本记录/强制去重；修正完整MIP无解时访问 `.X` 的边界问题。
 3. 新机统一参数后先E1A同池预算复核与E2误差诊断，不直接重复所有旧实验。
-4. 冻结协议后E1B/E3；根据结果决定实证短文是否有足够贡献。
+4. 按METHOD_DIRECTION先Gate A测成本与瓶颈；如有依据再Gate B一次轻量修改；Gate C冻结后用新确认种子（默认142–146）做E1B/E3。42–46已看过，用作开发。无优势时不默认认为改成实证短文就足够。
 5. 并行官方核验EI目标渠道、费用和时间窗口；还未正式选刊，也没有“保证录用”的依据。
 
 ## 9. 给下一位协作者的可复制任务

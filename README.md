@@ -2,6 +2,8 @@
 
 **迁移/接手入口：** [迁移交接说明](MIGRATION_HANDOFF.md) → [详细后续实验路线](EXPERIMENT_ROADMAP.md) → [当前 TODO](fjsp/TODO.md)。新文档取代旧阶段计划的执行优先级；已有五 seed 实验是投稿前证据，不代表已达到投稿条件。
 
+**最新计划：** [方法价值验证与路线调整](METHOD_DIRECTION.md)规定先检验真实成本收益，再有依据地改方法、冻结后用新种子确认；[论文图表计划](PAPER_VISUALS_PLAN.md)列出待补图及数据依赖。当前有10张表、1个算法块，尚无正式插图；这些计划不代表实验或绘图已完成。
+
 本仓库包含一个面向柔性作业车间调度问题（Flexible Job Shop Scheduling Problem, FJSP）的实验项目。项目将机器分配（routing）与固定分配后的工序排序（sequencing）分开处理：先用轻量级特征和随机森林（RF）筛选候选机器分配，再用限时 Gurobi MIP 对少量候选进行排序验证。
 
 当前仓库用于整理投稿材料和继续实验。项目定位是可解释的候选分配筛选工具，不声称替代成熟的 FJSP 元启发式算法，也不声称已经达到最优或 state of the art。
