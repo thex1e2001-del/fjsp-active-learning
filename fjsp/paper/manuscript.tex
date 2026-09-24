@@ -9,14 +9,14 @@
 \def\newblock{\ }\def\BIBand{and}
 \usepackage{hyperref}
 
-\title{A Surrogate-Assisted Decomposition Framework for Interpretable\\Assignment Screening in Flexible Job Shop Scheduling}
+\title{Random-Forest-Assisted Candidate Screening for Flexible Job Shop Scheduling:\\A Budget-Matched Empirical Study}
 \author{Author Name\textsuperscript{1}\\\textsuperscript{1}School of Management, University Name\\\href{mailto:author@university.edu.cn}{author@university.edu.cn}}
 \date{}
 
 \begin{document}\maketitle
 
 \begin{abstract}
-Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, causing exact MIP formulations to become difficult on medium and large instances. This paper studies a lightweight decomposition framework: a Random Forest (RF) surrogate, trained on low-cost heuristic labels using assignment-level features, screens candidate machine assignments, while MIP-based sequencing verification evaluates only selected candidates. In the saved single-seed Brandimarte MK01--MK10 run, the heuristic proxy shows Pearson correlations of 0.72--0.96 with time-limited fixed-assignment MIP results, while top-tail ranking quality varies by instance. RF-guided search is competitive with a greedy workload-balanced baseline: it wins on 6 of 10 instances, ties on 2, loses on 2, and improves the average makespan by 1.81\% under the saved protocol. These results are exploratory rather than evidence of statistically significant superiority; a two-sided Wilcoxon test on rounded makespans gives $p=0.124$. The RF method also remains well above several best-known solutions, with gaps of 0--72.4\% in this run. The framework is therefore positioned as an interpretable assignment-screening tool whose usefulness depends on the instance structure, rather than as a state-of-the-art FJSP solver.
+Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper presents a budget-matched empirical study of a lightweight candidate-screening pipeline. A Random Forest (RF) is trained on low-cost heuristic sequencing labels and assignment-level workload features; a fixed-assignment MIP then verifies only the top-ranked candidates. All scorers use the same candidate pools, Top-$K$ verification budget, and solver time limit. In a rerun on Brandimarte MK01--MK10 with three seeds, the RF scorer was competitive with lower-bound and direct heuristic rankings on small and medium instances, but did not consistently improve them. An exploratory residual-calibration variant (CRF) selected exactly the same Top-$K$ candidates as RF-H in all 26 combinations with feasible selected solutions and fell back to RF-H in 26 of 30 combinations because too few calibration labels met the low-gap criterion. The results support a transparent, reproducible screening workflow and identify clear instance and solver-budget limits; they do not support a claim of universal RF or CRF superiority over simple rules.
 
 \smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; interpretable screening
 \end{abstract}
@@ -30,21 +30,21 @@ The coupling of routing and sequencing is the central computational difficulty o
 
 Recent advances in machine learning for combinatorial optimization have opened new avenues \citep{Bengio2021}. End-to-end approaches using deep reinforcement learning or graph neural networks can learn effective dispatching policies \citep{Zhang2020drl,Song2023} but require extensive training data and offer limited interpretability. Tree-in-MIP methods embed learned decision trees or random forests as MIP constraints \citep{Maragno2023}, but the standard per-data-point encoding creates $O(N \times T \times L)$ binary variables---prohibitive for FJSP where each operation is a separate data point. Surrogate-assisted optimization \citep{Jin2011} offers a middle ground: use a cheap predictive model to guide search, reserving expensive exact evaluation for promising candidates only.
 
-This paper investigates whether lightweight, interpretable features of a machine assignment---workload, operation counts, load balance, and job paths---can provide useful guidance for screening candidate assignments. We study a decomposition framework with four components. First, a machine assignment is represented by features motivated by classical makespan lower bounds. Second, a fast heuristic sequencer using dispatching rules generates low-cost proxy labels for training. Third, a Random Forest surrogate trained on these labels scores candidate assignments. Fourth, time-limited MIP-based sequencing verification evaluates only the top-ranked candidates.
+This paper investigates whether lightweight, interpretable features of a machine assignment can provide useful guidance for screening candidate assignments under a fixed verification budget. A machine assignment is represented by workload, operation-count, machine-usage, imbalance, dispersion, and maximum job-time features. A fast heuristic sequencer generates low-cost proxy labels, a Random Forest surrogate scores unseen assignments, and a time-limited fixed-assignment MIP verifies the same number of candidates for every scorer.
 
 Our research is guided by four questions:
 \begin{enumerate}[leftmargin=1.2em]
     \item[\textbf{RQ1.}] Can aggregate assignment features support effective ranking of candidate assignments, as measured by top-$K$ recall and regret metrics?
     \item[\textbf{RQ2.}] Under fair computational budgets, does a learned RF surrogate add value over simple workload-based scoring rules?
     \item[\textbf{RQ3.}] Under what instance structures does the method succeed, and under what conditions does it fail?
-    \item[\textbf{RQ4.}] What managerial value does this screening framework offer for production scheduling?
+    \item[\textbf{RQ4.}] What limitations become visible when solver status, feasibility, and optimality gaps are reported at candidate level?
 \end{enumerate}
 
 Our contributions are:
 \begin{itemize}[leftmargin=1.2em]
-\item A lower-bound-motivated assignment feature representation for FJSP and an explicit discussion of the information it omits.
-\item A low-cost heuristic labeling procedure validated through multiple ranking metrics (Pearson, Spearman, Kendall $\tau$, Recall@$K$, Regret@$K$) across all 10 Brandimarte instances.
-\item A reproducible computational study comparing RF-guided search with rule-based assignments, together with proxy-ranking diagnostics and a structured failure analysis.
+\item An explicit, low-dimensional assignment representation whose implemented feature list is fully aligned with the released code.
+\item A budget-matched protocol that separates training and test candidate pools and records candidate IDs, incumbent makespans, solver statuses, bounds, gaps, and wall-clock times.
+\item A reproducible comparison of RF-H, lower-bound, direct heuristic, random, and Balanced reference scorers, including a negative result for residual calibration and an analysis of when screening conclusions are inconclusive because of time-limited MIP verification.
 \end{itemize}
 
 The paper is organized as follows. Section~2 reviews related work and positions our contribution. Section~3 formalizes the problem and presents lower-bound motivation. Section~4 describes the methodology. Section~5 presents computational experiments. Section~6 discusses findings, limitations, and managerial implications. Section~7 concludes.
@@ -136,7 +136,7 @@ $C_{\max} \geq \max_{j\in J} \sum_{p} \sum_{k} p_{j,p,k}\,x_{j,p,k}$.
 
 \textit{Proof.} Proposition~1 holds because $\max_k \operatorname{load}_k$ is the earliest possible completion time of the bottleneck machine. Proposition~2 holds because each job's operations must be processed sequentially, so total job time is a lower bound on its completion time. $\square$
 
-These bounds justify per-machine workload and per-job total time as surrogate inputs. However, they are necessary but not sufficient---two assignments with identical load vectors can yield different optimal makespans due to precedence-induced sequencing conflicts. This residual gap motivates augmenting the feature set with routing-efficiency and precedence-aware aggregate indicators.
+These bounds justify machine workload and maximum job-time features as surrogate inputs. They are necessary but not sufficient: two assignments with similar aggregate loads can still have different sequencing difficulty because of precedence and machine interactions. The experiments therefore treat the lower bound as a baseline scorer and do not claim that the implemented feature vector captures the full fixed-assignment objective.
 
 % ═══════════════════════════ 4. METHODOLOGY ═══════════════════════════
 \section{Methodology}
@@ -144,57 +144,49 @@ These bounds justify per-machine workload and per-job total time as surrogate in
 \subsection{Aggregate Feature Representation}
 We represent an assignment $\mathbf{x}$ by the workload, operation-count, usage, path-time, and dispersion features implemented in the released experiment code and summarized in Table~\ref{tab:features}. All features are computable from $\mathbf{x}$ alone and do not require solving the sequencing subproblem.
 
-\begin{table}[htbp]\centering\caption{Feature groups for assignment representation.}\label{tab:features}
+\begin{table}[htbp]\centering\caption{Feature groups implemented in the released scorer.}\label{tab:features}
 \begin{tabular}{llp{6cm}}\toprule
 Group & Features & Motivation \\ \midrule
-\textbf{A. Machine workload} & $\operatorname{load}_k$, $\operatorname{ops}_k$, $\operatorname{used}_k$, $\max_k\operatorname{load}_k$, $\operatorname{std}(\operatorname{load})$, load Gini & Proposition~1: bottleneck workload \\
-\textbf{B. Job path} & $\operatorname{jobTime}_j$, $\max_j\operatorname{jobTime}_j$, mean/std/Gini of job times, bottleneck ratio & Proposition~2: critical path \\
-\textbf{C. Routing efficiency} & $\operatorname{speedLoss}_{j,p}=p_{j,p,k}/\min_{k'}p_{j,p,k'}$, mean/max/std of speedLoss, fastest-machine ratio, total detour cost & Penalize assignments that choose slow machines for load balance \\
-\textbf{D. Precedence-aware} & Same-job consecutive ops on same/different machine count, stage-level workload, critical-job load concentration & Capture hidden sequencing conflicts invisible to workload alone \\ \bottomrule
+\textbf{A. Machine assignment} & $\operatorname{load}_k$, $\operatorname{ops}_k$, $\operatorname{used}_k$ for each machine & Represent machine workload and assignment sparsity \\
+\textbf{B. Aggregate workload} & number of used machines, maximum machine load, load imbalance, maximum operations per machine, load standard deviation & Lower-bound and balance indicators \\
+\textbf{C. Job-path summary} & maximum total processing time of any job under the assignment & Proposition~2: critical job-path bound \\ \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Heuristic Sequencer and Labeling Procedure}
-We design a fast constructive heuristic sequencer to generate proxy labels $\tilde{C}_{\max}(\mathbf{x})$ for training. The sequencer maintains the ready set of operations whose predecessors have completed, and at each step applies one of five dispatching rules: Earliest Start Time (EST), Shortest Processing Time (SPT), Longest Processing Time (LPT), Most Work Remaining (MWR), or First-In-First-Out (FIFO). The sequencer evaluates all five rules for each assignment and returns the minimum resulting makespan. Tie-breaking uses the operation index. The algorithm runs in $O(N \cdot m)$ time per rule with no backtracking or insertion.
+We design a fast constructive heuristic sequencer to generate proxy labels $\tilde{C}_{\max}(\mathbf{x})$ for training. The sequencer maintains the ready set of operations whose predecessors have completed, applies the implemented dispatching rules, and returns the best resulting makespan with deterministic tie-breaking. The implementation performs no backtracking or insertion; its runtime is measured empirically rather than assigned an overly specific asymptotic bound.
 
-In the archived implementation, training data is generated primarily from heuristic assignments and perturbations around a balanced assignment. A future controlled run will add an explicitly separated random/neighbor/beam sampling protocol; the current manuscript does not claim that mixture for the saved results.
+For the formal rerun, training and test pools are generated independently from deterministic seeds. The test pool is never used to fit RF-H or CRF, select hyperparameters, or choose calibration labels.
 
 \subsection{Surrogate Model}
-We use a Random Forest regressor \citep{Breiman2001} with $T=150$ trees and maximum depth 12 as the surrogate. RF is chosen for its nonlinear modeling capability, robustness to irrelevant features, built-in feature importance estimates, low training cost compared to deep models, and compatibility with MIP embedding for future extensions (Appendix~\ref{app:mip}).
+We use a Random Forest regressor \citep{Breiman2001} with 100 trees, maximum depth 12, and minimum leaf size 5 in the budget-matched rerun. RF is used as a transparent nonlinear baseline; the study does not assume that its in-sample fit implies generalization or superiority over lower-bound rules.
 
-\subsection{Diversity-Aware Beam Search}
-Algorithm~\ref{alg:beam} formalizes the archived RF-scored beam search. Candidates are deduplicated and retained by predicted score; a diversity filter is a planned extension rather than a component of the saved main run.
+\subsection{Budget-Matched Candidate Screening}
+The main rerun uses a fixed candidate-pool protocol rather than giving one scorer a larger verification budget. Training and test pools are generated independently with deterministic seeds. LB, RF-H, CRF, HeurSeq, and Random all score the same test pool and submit exactly the same Top-$K$ candidates to the fixed-assignment MIP. Balanced is retained as an independent reference assignment. This design isolates ranking quality from candidate-pool and solver-budget differences.
 
-\begin{algorithm}[htbp]\caption{Diversity-Aware RF-Guided Beam Search}\label{alg:beam}
+\begin{algorithm}[htbp]\caption{Budget-Matched Candidate Screening}\label{alg:beam}
 \begin{algorithmic}[1]
-\State \textbf{Input:} Instance, trained RF $\hat{f}$, beam width $B$, top-$K$
-\State $\mathcal{P} \gets$ initial assignments (Balanced, SPT, LPT, random)
-\State $\mathcal{P} \gets$ top-$B$ candidates by $\hat{f}$ after deduplication
-\For{$i=1$ to $\lceil N/20\rceil$}
-    \State $\mathcal{C} \gets \mathcal{P}$
-    \For{each $\mathbf{x}\in\mathcal{P}$}
-        \For{each $(j,p)\in\mathcal{O}$, $k\in M_{j,p}\setminus\{x_{j,p}\}$}
-            \State $\mathbf{x}'\gets\mathbf{x}$ with $(j,p)$ re-assigned to $k$
-            \If{$\mathbf{x}'$ not visited} $\mathcal{C}\gets\mathcal{C}\cup\{\mathbf{x}'\}$ \EndIf
-        \EndFor
-    \EndFor
-    \State Batch-score $\mathcal{C}$ via $\hat{f}$; $\mathcal{P}\gets$ top-$B$ after deduplication
+\State \textbf{Input:} Instance, train pool $\mathcal{T}$, test pool $\mathcal{V}$, top-$K$
+\State Train RF-H on heuristic labels from $\mathcal{T}$; optionally fit CRF on accepted MIP residual labels from $\mathcal{T}$
+\For{each scorer $s\in\{LB, RF\mbox{-}H, CRF, HeurSeq, Random\}$}
+    \State Score every assignment in the common test pool $\mathcal{V}$
+    \State Select the same number $K$ of lowest-scoring assignments
+    \State Verify selected assignments with identical time-limited $\operatorname{SEQ}$ MIP
 \EndFor
-\State Verify top-$K$ assignments via $\operatorname{SEQ}(\mathbf{x})$ under 30s time limit
-\State \Return $\mathbf{x}^*$ with best verified makespan
+\State Report incumbent, best bound, status, gap, feasibility, and wall time
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{MIP-Based Sequencing Verification}
-Top-$K$ candidates are verified by solving $\operatorname{SEQ}(\mathbf{x})$ via Gurobi 10.0 with a 30-second time limit. We report the solver status for each verification run: proven optimal (gap = 0), feasible incumbent (gap $>$ 0), or no feasible solution found. Under the 30s limit, the solver may return a feasible incumbent rather than a proven optimum; we use ``MIP-based verification'' rather than ``exact sequencing'' to acknowledge this.
+Top-$K$ candidates are verified by solving $\operatorname{SEQ}(\mathbf{x})$ via Gurobi 10.0 with a one-second time limit in the formal rerun; a two-seed five-second check is reported separately for MK06. We record incumbent makespan, best bound, solver status, MIP gap, and wall time. A time-limited feasible incumbent is not treated as a proof of optimality, so the paper uses ``time-limited MIP verification'' rather than ``exact sequencing.''
 
-\subsection{Exact-Label Residual Calibration (Optional)}
-As an optional enhancement, the top-$K$ verified candidates provide exact makespan labels that can calibrate the heuristic-trained surrogate:
+\subsection{Exploratory Residual Calibration}
+We also test a deliberately conservative residual-calibration variant. A small set of training-pool assignments is solved by the same time-limited MIP. Only labels with a feasible solution and gap at most 0.05 are accepted:
 \begin{equation}
 r(\mathbf{x}) = C_{\max}^{\operatorname{SEQ}}(\mathbf{x}) - \tilde{C}_{\max}^{\text{heur}}(\mathbf{x}),\quad
 \hat{C}_{\max}^{\text{final}}(\mathbf{x}) = \hat{C}_{\max}^{\text{RF}}(\mathbf{x}) + \hat{r}(\mathbf{x}),
 \end{equation}
-where $\hat{r}$ is a second RF trained on the small set of exact-labeled candidates. This provides a lightweight active learning loop at negligible additional cost.
+where $\hat{r}$ is a second RF trained on the accepted labels. If fewer than three accepted labels are available, CRF falls back to RF-H and records the reason. This is an exploratory ablation; it is not assumed to improve the main scorer.
 
 % ═══════════════════════════ 5. EXPERIMENTS ═══════════════════════════
 \section{Computational Experiments}
@@ -218,17 +210,20 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\textit{Implementation.} The saved run used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM). RF was implemented with scikit-learn ($T=150$, $d=12$, $\text{min\_samples\_leaf}=5$). Beam search used $B=15$ and verified $K=8$ candidates with a 30s time limit and MIP gap tolerance $0.0$. The archived main result is a single fixed-seed (42) exploratory run; independent repetitions are part of the follow-up protocol and are not claimed by the numbers below.
+\textit{Implementation.} The rerun used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM) with scikit-learn RF models (100 trees, depth 12, minimum leaf size 5). For each instance and seed, the protocol generated 300 training assignments and 150 independent test assignments, requested 15 calibration labels, selected $K=5$, and gave every selected assignment a one-second MIP verification budget. Seeds were 42, 43, and 44. The complete candidate-level output is released as JSON; the earlier single-seed beam-search table is retained only as historical exploratory context.
 
-\textit{Baselines.} We compare against three categories of methods:
+\textit{Baselines.} We compare scorers under a common candidate pool and verification budget:
 \begin{itemize}[leftmargin=1.2em]
-\item \textbf{Rule-based heuristics} (single assignment + sequencing): Random, SPT, LPT, Balanced (greedy minimum-load assignment).
-\item \textbf{Rule-based assignments}: Random, SPT, LPT, and Balanced. A budget-matched comparison against additional scoring rules is planned as a separate reproducible run.
+\item \textbf{LB}: $\max\{\max_k\operatorname{load}_k,\max_j\operatorname{jobTime}_j\}$.
+\item \textbf{RF-H}: RF trained only on heuristic sequencing labels from the training pool.
+\item \textbf{CRF}: RF-H with the exploratory residual calibration described above.
+\item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
+\item \textbf{Balanced-ref}: one independent balanced assignment, reported as a reference rather than a pool scorer.
 \end{itemize}
 
-\textit{Metrics.} For each instance-method pair, we report makespan, gap to BKS (\%$\,\triangleq\,100\times(\text{makespan}-\text{BKS})/\text{BKS}$), wall-clock time, number of verified candidates, and MIP verification status. Statistical tests follow \citet{Demsar2006}: Friedman test for omnibus comparison, Holm-corrected Wilcoxon signed-rank for pairwise comparisons, with two-sided and one-sided $p$-values reported transparently.
+\textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within one second, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. Inferential tests are not applied to the incomplete one-second table.
 
-\subsection{Proxy Label Validation (RQ1)}
+\subsection{Historical Proxy Label Validation (RQ1)}
 
 Table~\ref{tab:proxy} reports the fidelity of the heuristic sequencer as a labeling proxy. Across the saved 40-sample rows, Pearson correlations range from 0.72 (mk06) to 0.96 (mk05), Spearman from 0.68 to 0.95, and Kendall $\tau$ from 0.52 to 0.88. The heuristic labels are inexpensive but can be biased (MAE 3.2--51.5, MAPE 1.4--19.8\%), so these figures are ranking diagnostics rather than evidence of exactness.
 
@@ -250,7 +245,29 @@ mk10 & 0.871 & 0.778 & 0.596 & 51.5 & 12.2 & 0.60 & 0.0 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Main Results: Rule-Based Baseline Comparison}
+\subsection{Budget-Matched Rerun (Primary Evidence)}
+
+Table~\ref{tab:rerun} summarizes the formal rerun. Values are mean best feasible incumbents over the seeds that returned at least one feasible selected candidate; ``--'' means that no seed produced a feasible incumbent for that scorer. The comparison is descriptive because the one-second limit leaves substantial nonzero gaps on the larger instances. LB and HeurSeq are often as good as or better than RF-H. CRF is identical to RF-H in every combination with a feasible selected result, and 26 of 30 combinations fall back to RF-H because fewer than three calibration labels meet the gap threshold.
+
+\begin{table}[htbp]\centering\caption{Primary budget-matched rerun: mean best selected feasible incumbent.}\label{tab:rerun}
+\begin{tabular}{lrrrrrr}\toprule
+Inst. & Balanced & LB & RF-H & CRF & HeurSeq & Random \\ \midrule
+mk01 & 46.7 & 44.3 & 45.0 & 45.0 & 46.7 & 53.0 \\
+mk02 & 42.7 & 39.7 & 39.7 & 39.7 & 39.3 & 40.3 \\
+mk03 & 262.3 & 253.7 & 257.7 & 257.7 & 262.3 & 263.3 \\
+mk04 & 72.3 & 70.0 & 73.7 & 73.7 & 70.0 & 74.3 \\
+mk05 & 211.7 & 202.3 & 198.7 & 198.7 & 194.7 & 225.3 \\
+mk06 & 125.7 & 116.0 & 116.3 & 116.3 & 115.3 & 120.0 \\
+mk07 & 239.0 & 212.7 & 213.7 & 213.7 & 217.3 & 223.7 \\
+mk08 & -- & -- & -- & -- & -- & -- \\
+mk09 & -- & 469.0 & 469.5 & 469.5 & 452.0 & 446.0 \\
+mk10 & -- & 447.0 & 426.0 & 426.0 & 393.0 & 438.5 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The five-second MK06 check gives the same qualitative conclusion: CRF and RF-H remain tied (mean 112.0), while LB (109.5) and HeurSeq (111.5) are lower. The check also returns no accepted calibration labels, so increasing the verification budget alone did not establish a CRF gain.
+
+\subsection{Historical Single-Seed Comparison}
 
 Table~\ref{tab:main} presents the saved exploratory comparison against rule-based heuristics. RF-guided beam search improves on Balanced in 6 of 10 instances, ties on 2, and loses on 2. The average improvement is 1.81\% across all instances and 5.71\% over the six winning instances. The largest improvements are on mk05 (8.1\%) and mk06 (7.4\%); losses occur on mk04 and mk07.
 
@@ -273,9 +290,9 @@ mk10 & 412 & 334 & 814 & 285 & \textbf{277} & --2.8 \\ \midrule
 \end{tabular}
 \end{table}
 
-The saved single-seed comparison is descriptive. Its average ranks are inherited from the exploratory five-method table, but the RF--Balanced pairwise test is not significant after recomputation: rounded makespans, Pratt zero handling, two-sided Wilcoxon, $p=0.124$. Independent repeated runs and a pre-registered tie tolerance are required before making an inferential claim.
+The historical single-seed comparison is retained for traceability only. Its average ranks and the RF--Balanced $p=0.124$ value must not be combined with the primary rerun, because the candidate-generation and verification protocols differ.
 
-\subsection{Partial Budget-Matched Check (RQ2)}
+\subsection{Historical Partial Budget-Matched Check (RQ2)}
 
 The archive contains only one row from the budget-matched baseline script. We report it as an exploratory check and do not generalize it to all ten instances. A complete comparison is required for the final EI submission.
 
@@ -323,33 +340,29 @@ The archived sensitivity files cover only selected instances and should be treat
 \section{Discussion}
 
 \subsection{What Did the Surrogate Learn?}
-The RF surrogate primarily uses workload and assignment-structure features to approximate the heuristic labels. Because the archived run reports in-sample fit and does not save an independent feature-importance analysis, these observations are descriptive rather than evidence of generalization.
+The surrogate receives only workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. The train/test split prevents the formal rerun from using test assignments as labels. Nevertheless, the study does not claim that a high training fit implies generalization; the relevant evidence is the common-pool Top-$K$ outcome and its solver status.
 
 \subsection{When Is Learned Guidance Better Than Simple Scoring?}
-The saved comparison does not establish a universal advantage over simple workload scoring. RF improves on several instances, ties on two, and loses on mk04 and mk07; a complete budget-matched comparison with additional scorers is required before making stronger claims. The method is best treated as a complementary screening tool when interpretable features and limited verification budgets matter.
+The formal rerun does not establish a universal advantage over simple workload scoring. LB is lower than RF-H on several instances, while HeurSeq is lower on others; CRF adds no selected-candidate change under the tested calibration budget. The practical conclusion is therefore a protocol recommendation: use RF as one transparent scorer in a common candidate pool, and retain a lower-bound or direct heuristic scorer as a control.
 
 \subsection{Why Does the Method Fail on Certain Instances?}
-The saved diagnostics suggest three hypotheses for follow-up testing: precedence-induced sequencing conflicts (especially on mk04), sparse per-machine information on highly flexible instances, and heuristic-label bias (visible in the mk05 regret). They are plausible mechanisms, not causal findings, because the archived run lacks repeated seeds and independent feature ablations.
+The rerun exposes two measurable failure modes: time-limited MIP verification becomes inconclusive on larger instances, and low-gap calibration labels become rare, forcing CRF fallback. These observations are protocol-level limitations rather than causal explanations of precedence conflicts or feature sparsity.
 
-\subsection{Managerial Implications}
-The proposed framework offers three practical insights for production scheduling. First, the RF surrogate uses interpretable features, enabling managers to understand \textit{why} certain assignments are preferred: the surrogate favors assignments with low bottleneck load, balanced workload distribution, and modest routing penalties. Second, in rolling-horizon settings where repeatedly solving a full FJSP MIP is impractical, the screening mechanism can rapidly evaluate hundreds of routing alternatives and send only a few candidates for detailed verification. Third, the framework identifies the conditions under which automated screening is reliable and when human judgment or more sophisticated methods should intervene.
+\subsection{Practical Implications}
+The workflow is useful when a scheduler needs an auditable shortlist of machine assignments and can reserve a fixed solver budget for final checks. Its feature vector is easy to inspect, and its candidate-level status and gap records expose when the shortlist is not certified. Deployment should keep a simple lower-bound or heuristic control and should not interpret a time-limited incumbent as an optimal production plan.
 
 \subsection{Limitations and Future Work}
-Several limitations merit further investigation. The feature set remains low-dimensional; precedence-aware indicators could address mk04-type failures. The heuristic-label bias could be corrected through repeated exact labels or residual calibration. The current evidence is instance-specific, single-seed, and based on time-limited verification, so cross-instance transfer and solver comparisons remain future work.
+Several limitations remain. The feature set is intentionally low-dimensional and omits explicit precedence interactions. Large instances frequently return feasible incumbents with nonzero gaps or no incumbent within the one-second budget. Residual calibration was underpowered in most runs and did not change the selected candidates. The current results use three seeds per instance and one benchmark family; cross-benchmark transfer, longer budgets, and comparisons with established metaheuristics remain future work.
 
 % ═══════════════════════════ 7. CONCLUSION ═══════════════════════════
 \section{Conclusion}
 
-We have presented a surrogate-assisted decomposition framework for assignment screening in Flexible Job Shop Scheduling. The framework combines lower-bound-motivated features, low-cost heuristic labeling, RF-guided beam search, and time-limited MIP-based sequencing verification. In the archived Brandimarte MK01--MK10 run, RF is competitive with the Balanced rule but does not uniformly dominate it: the comparison is 6/2/2 in wins/draws/losses and the average improvement is 1.81\%. Proxy ranking quality varies substantially, and a rounded paired test is not significant. The evidence supports using RF as a candidate-screening aid whose value depends on instance structure, not as a replacement for established FJSP solvers.
+We have presented and audited a budget-matched RF candidate-screening workflow for Flexible Job Shop Scheduling. The primary rerun separates training and test pools, gives every scorer the same Top-$K$ verification budget, and records candidate-level MIP status and gaps. Across Brandimarte MK01--MK10, RF-H was competitive but did not consistently improve on the lower-bound or direct heuristic scorers. The residual-calibration variant produced no change in selected candidates and usually fell back because reliable calibration labels were unavailable. The evidence supports transparent screening experiments and clearly limits claims of learned-method superiority.
 
-The proposed framework is not intended as a state-of-the-art FJSP solver. Its contribution lies in providing a practical, transparent, and computationally lightweight screening mechanism for decomposition-based scheduling, where interpretability and rapid candidate filtering are valued alongside solution quality. The identification of conditions under which learned guidance helps---and when it does not---may inform the design of hybrid human-algorithm scheduling systems in manufacturing practice.
+The workflow is not intended as a state-of-the-art FJSP solver. Its contribution is a reproducible way to compare learned and rule-based assignment screeners under a declared verification budget, including negative and inconclusive outcomes.
 
 \section*{Data Availability}
-The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and archived experimental results should be deposited at a persistent repository before submission. The current archive contains a fixed-seed exploratory run; repeated-seed results are not yet part of the reported evidence. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
-
-\appendix
-\section{RF-Embedded MIP (Conceptual Formulation)}\label{app:mip}
-The aggregate feature representation enables a compact RF-in-MIP encoding as a conceptual extension. The formulation replaces the two-stage beam search with a single MIP: $\min\, C_{\max} + \lambda \cdot Q_{\text{global}}$, where $Q_{\text{global}}=\frac{1}{T}\sum_t\sum_\ell y_{t,\ell}\cdot\text{value}_{t,\ell}$ with leaf-activation variables $y_{t,\ell}\in\{0,1\}$. Feature variables $z_f$ are linked to assignment variables $x$ through linear constraints. Because features are globally shared rather than per-operation, the encoding requires $O(T\times L)$ rather than $O(N\times T\times L)$ binary variables. \textbf{Important caveat:} This is a conceptual formulation only and is not part of the computational contribution. Since $Q_{\text{global}}$ is a surrogate prediction, the weighted objective may distort the true makespan objective unless used lexicographically or calibrated carefully \citep{Maragno2023}.
+The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The historical single-seed files are retained separately from the three-seed budget-matched rerun. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
 
 % ═══════════════════════════ REFERENCES ═══════════════════════════
 \bibliographystyle{plainnat}
