@@ -65,11 +65,12 @@ python reproduce_audit.py
 
 ## 投稿前 TODO
 
-1. 用统一协议完成多随机种子实验，并保存每个候选的 assignment、solver status、incumbent、bound、MIP gap 和耗时。
-2. 补齐全 10 个 Brandimarte 实例的公平基线比较；当前公平基线文件只有部分记录。
-3. 修复并重新生成 candidate-level failure analysis，确保特征和 makespan 属于同一个候选。
-4. 从同一份结果自动生成论文表格，核对 BKS 来源、数据版本、参考文献和作者信息。
-5. 核验当期 EI 会议/期刊的官方投稿窗口、费用、首轮决定时间、收录承诺和单位认可要求。
+1. [已完成] 用统一协议完成 10 个 Brandimarte 实例 × 3 seeds 的初始公平实验，并保存 candidate-level assignment ID、solver status、incumbent、bound、MIP gap 和耗时。
+2. [已完成] 生成 LB、RF-H、CRF、HeurSeq、Random 和 Balanced reference 的统一比较表；大实例无可行 incumbent 的情况保留为空。
+3. [已完成] 生成 candidate-level 结果和 failure metadata；下一轮可补充更细的特征分组分析。
+4. [进行中] 继续核对 BKS 来源、数据版本、参考文献，并将正式结果表嵌入投稿版 PDF。
+5. [待做] 核验当期 EI 会议/期刊的官方投稿窗口、费用、首轮决定时间、收录承诺和单位认可要求。
+6. [待做] 确认 Gitee 推送环境或改用可用的 Git HTTPS/SSH 凭据。
 
 CRF 小规模实验可复现命令：
 
