@@ -13,7 +13,8 @@
 - OR 环境中的 Gurobi 10.0.1 可用；mk01、mk04、mk06 已通过小规模真实求解和机器分配可行性检查。
 - 投稿目标：优先选择正规 EI 会议或 EI 期刊，计划在 2026-11-23 前完成投稿并争取获得首轮回复。这个时间目标不等于录用、见刊或 EI 检索承诺。
 - 正式小规模实验已完成：`LB`、`RF-H`、`CRF`、`HeurSeq` 和 `Random` 共享候选池、Top-K 和限时固定分配 MIP 预算；结果同时保存可行解、solver status、best bound、gap 和耗时。
-- 10 个 Brandimarte 实例 × 3 seeds 的 1 秒验证协议已完成：CRF 与 RF-H 的 Top-5 选择完全一致，26/30 个组合因低 gap 校准标签不足回退，因此暂不声称 CRF 有稳定收益。MK06 的两 seed、5 秒复核也已完成，结论不变。
+- 1 秒验证实验已扩展至 10 个 Brandimarte 实例 × 5 seeds（42–46），共 50 组。CRF 在 43/50 组回退，48/50 组的 Top-5 候选集合与 RF-H 相同；两者均有可行结果的 46 组中，最佳 makespan 全部在 `1e-3` 容差内持平。此前“候选完全一致”的表述不准确，三 seed 原始结果实际为 29/30 组集合相同。MK06 两 seed 的 5 秒复核另存，不能与不同候选规模的 1 秒实验视为仅改变时限的对照。
+- 五 seed 汇总见 [`calibrated_screening_five_seeds.summary.md`](fjsp/results/calibrated_screening_five_seeds.summary.md)。成功/尝试 seed 数与条件均值同时报告；这些结果仍是投稿前实验，不能据此声称统计显著优势。
 - 英文稿件已改为预算匹配实证研究定位，删除未实现特征、RF-in-MIP 概念附录和过强的优越性表述。
 
 ### 当前历史结果的口径
@@ -65,22 +66,31 @@ python reproduce_audit.py
 
 ## 投稿前 TODO
 
-1. [已完成] 用统一协议完成 10 个 Brandimarte 实例 × 3 seeds 的初始公平实验，并保存 candidate-level assignment ID、solver status、incumbent、bound、MIP gap 和耗时。
+1. [已完成] 扩展至 10 个 Brandimarte 实例 × 5 seeds，保存 candidate-level assignment ID、solver status、incumbent、bound、MIP gap 和耗时。
 2. [已完成] 生成 LB、RF-H、CRF、HeurSeq、Random 和 Balanced reference 的统一比较表；大实例无可行 incumbent 的情况保留为空。
-3. [已完成] 生成 candidate-level 结果和 failure metadata；下一轮可补充更细的特征分组分析。
+3. [待做] 补充同一候选池下的 5 秒预算对照，重点覆盖 MK04/MK06/MK08–MK10；已有逐候选状态记录不等于已完成失败原因分析。
 4. [进行中] 继续核对 BKS 来源、数据版本、参考文献，并将正式结果表嵌入投稿版 PDF。
 5. [待做] 核验当期 EI 会议/期刊的官方投稿窗口、费用、首轮决定时间、收录承诺和单位认可要求。
-6. [待做] 确认 Gitee 推送环境或改用可用的 Git HTTPS/SSH 凭据。
+6. [待做] 强制检查训练/测试池交集，补各方法完整成本和独立测试预测指标；目前相同 Top-K 只控制验证预算，不能称为等总时间比较。
 
 CRF 小规模实验可复现命令：
 
 ```powershell
 cd fjsp
-python calibrated_screening.py --instances mk01 mk04 mk06 --seeds 42 43 44 `
+python calibrated_screening.py --instances mk01 mk02 mk03 mk04 mk05 mk06 mk07 mk08 mk09 mk10 --seeds 42 43 44 45 46 `
   --n-train 300 --n-test 150 --calibration 15 --verify-time 1 --k 5 `
-  --output results/calibrated_screening_formal_small.json
-python summarize_calibrated.py results/calibrated_screening_formal_small.json
+  --output results/calibrated_screening_new_run.json
+python summarize_calibrated.py results/calibrated_screening_new_run.json
 ```
+
+合并现有两批原始记录并重建论文表格，无需再次求解：
+
+```powershell
+python merge_screening_results.py
+python summarize_calibrated.py results/calibrated_screening_five_seeds.json
+```
+
+Overleaf 请一并上传 `fjsp/paper/manuscript.tex` 与 `fjsp/paper/five_seed_tables.tex`；后者是自动生成的补充结果表。最终提交 PDF/TeX 或 DOCX 以目标刊会要求为准，目前无需另做 Word。
 
 详细安排见 [`SUBMISSION_PLAN.md`](SUBMISSION_PLAN.md)，论文草稿见 [`fjsp/paper/manuscript.tex`](fjsp/paper/manuscript.tex)。
 

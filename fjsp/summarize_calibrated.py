@@ -41,6 +41,7 @@ def summarize(rows):
             "instance": instance,
             "scorer": scorer,
             "seeds": makespan["n"],
+            "attempted_seeds": len(items),
             "mean_best_makespan": makespan["mean"],
             "std_best_makespan": makespan["std"],
             "best_makespan": makespan["best"],
@@ -63,6 +64,7 @@ def summarize(rows):
             "instance": instance,
             "scorer": "Balanced-ref",
             "seeds": makespan["n"],
+            "attempted_seeds": len(items),
             "mean_best_makespan": makespan["mean"],
             "std_best_makespan": makespan["std"],
             "best_makespan": makespan["best"],
@@ -93,13 +95,15 @@ def main():
         writer.writerows(summary)
 
     lines = ["# Calibrated screening summary", "", f"Source: `{source.name}`", "",
-             "| Instance | Scorer | Seeds | Mean best | Std | Best | Feasible | Low-gap | Mean gap |",
+             "Means exclude runs without a feasible selected incumbent. Seeds shows successful/attempted runs; conditional means with different success counts are not directly comparable.", "",
+             "| Instance | Scorer | Seeds (success/attempted) | Mean best | Std | Best | Feasible | Low-gap | Mean gap |",
              "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for x in summary:
         def fmt(v): return "-" if v is None else f"{v:.3f}"
-        lines.append("| {instance} | {scorer} | {seeds} | {mean_best} | {std} | "
+        lines.append("| {instance} | {scorer} | {seeds}/{attempted} | {mean_best} | {std} | "
                      "{best} | {feasible:.3f} | {low_gap:.3f} | {gap} |".format(
                          instance=x["instance"], scorer=x["scorer"], seeds=x["seeds"],
+                         attempted=x["attempted_seeds"],
                          mean_best=fmt(x["mean_best_makespan"]),
                          std=fmt(x["std_best_makespan"]), best=fmt(x["best_makespan"]),
                          feasible=x["mean_feasible_ratio"], low_gap=x["mean_low_gap_ratio"],

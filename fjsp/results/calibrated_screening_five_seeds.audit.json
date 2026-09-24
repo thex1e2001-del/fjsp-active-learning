@@ -1,0 +1,12 @@
+{
+  "sources": [
+    "calibrated_screening_formal_small.json",
+    "calibrated_screening_seeds45_46.json"
+  ],
+  "runs": 50,
+  "crf_fallback": 43,
+  "identical_crf_rf_h_candidate_sets": 48,
+  "both_feasible_runs": 46,
+  "tied_best_makespans": 46,
+  "tie_tolerance": 0.001
+}
