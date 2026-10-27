@@ -4,8 +4,8 @@
 \usepackage{algorithm,algorithmicx,algpseudocode}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage{booktabs,multirow,array,float,enumitem}
-\usepackage[round,authoryear]{natbib}
 \title{Active-Learning-Assisted Candidate Screening for Flexible Job Shop Scheduling}
 \author{\IEEEauthorblockN{Xianyi Xie}
 \IEEEauthorblockA{School of Computer and Artificial Intelligence, Beijing Technology and Business University\\
@@ -23,9 +23,9 @@ Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, ma
 
 Modern manufacturing environments increasingly require flexible production systems where jobs can be routed through alternative machines depending on shop-floor conditions. This flexibility, while valuable for throughput and resilience, introduces a challenging combinatorial problem: the Flexible Job Shop Scheduling Problem (FJSP). Given $n$ jobs each comprising a sequence of operations and $m$ machines with machine-dependent processing times, the scheduler must simultaneously decide \emph{which} machine processes each operation (routing) and \emph{in what order} operations are processed on each machine (sequencing), to minimize the maximum completion time (makespan).
 
-The coupling of routing and sequencing is the central computational difficulty of FJSP. The routing decision determines which operations compete for each machine, while the sequencing decision resolves those competitions. Exact mixed-integer programming (MIP) formulations must jointly optimize both, leading to a search space that grows as $O(m^{N} \times N!)$ for $N$ operations. While modern solvers such as Gurobi can prove optimality on small instances (e.g., 55 operations), they fail to close the optimality gap within reasonable time on larger instances with 150--240 operations \citep{Ozguven2010}. Meta-heuristics, most notably the tabu search algorithm of \citet{Mastrolilli2000}, can find near-optimal solutions through carefully designed neighborhood structures, but they rely on hand-crafted operators, require instance-specific tuning, and do not learn from data to improve over time.
+The coupling of routing and sequencing is the central computational difficulty of FJSP. The routing decision determines which operations compete for each machine, while the sequencing decision resolves those competitions. Exact mixed-integer programming (MIP) formulations must jointly optimize both, leading to a search space that grows as $O(m^{N} \times N!)$ for $N$ operations. While modern solvers such as Gurobi can prove optimality on small instances (e.g., 55 operations), they fail to close the optimality gap within reasonable time on larger instances with 150--240 operations \cite{Ozguven2010}. Meta-heuristics, most notably the tabu search algorithm of \cite{Mastrolilli2000}, can find near-optimal solutions through carefully designed neighborhood structures, but they rely on hand-crafted operators, require instance-specific tuning, and do not learn from data to improve over time.
 
-Recent advances in machine learning for combinatorial optimization have opened new avenues \citep{Bengio2021}. End-to-end approaches using deep reinforcement learning or graph neural networks can learn effective dispatching policies \citep{Zhang2020drl,Song2023} but require extensive training data and offer limited interpretability. Tree-in-MIP methods embed learned decision trees or random forests as MIP constraints \citep{Maragno2023}, but the standard per-data-point encoding creates $O(N \times T \times L)$ binary variables---prohibitive for FJSP where each operation is a separate data point. Surrogate-assisted optimization \citep{Jin2011} offers a middle ground: use a cheap predictive model to guide search, reserving expensive exact evaluation for promising candidates only.
+Recent advances in machine learning for combinatorial optimization have opened new avenues \cite{Bengio2021}. End-to-end approaches using deep reinforcement learning or graph neural networks can learn effective dispatching policies \cite{Zhang2020drl,Song2023} but require extensive training data and offer limited interpretability. Tree-in-MIP methods embed learned decision trees or random forests as MIP constraints \cite{Maragno2023}, but the standard per-data-point encoding creates $O(N \times T \times L)$ binary variables---prohibitive for FJSP where each operation is a separate data point. Surrogate-assisted optimization \cite{Jin2011} offers a middle ground: use a cheap predictive model to guide search, reserving expensive exact evaluation for promising candidates only.
 
 This paper investigates whether lightweight, interpretable features of a machine assignment can provide useful guidance for screening candidate assignments under a fixed verification budget. A machine assignment is represented by workload, operation-count, machine-usage, imbalance, dispersion, and maximum job-time features. A fast heuristic sequencer generates low-cost proxy labels, a Random Forest surrogate scores unseen assignments, and a time-limited fixed-assignment MIP verifies the same number of candidates for every scorer.
 
@@ -50,27 +50,27 @@ The paper is organized as follows. Section~2 reviews related work and positions 
 \section{Related Work}
 
 \subsection{FJSP: Problem, Benchmarks, and Foundations}
-FJSP was formalized by \citet{Brucker1990} as a generalization of the classical job shop. The standard benchmark suites---Brandimarte \citep{Brandimarte1993}, Hurink \textit{edata}/\textit{rdata}/\textit{vdata} \citep{Hurink1994}, Dauz\`ere-P\'er\`es and Paulli \citep{Dauzere1997}, Kacem \citep{Kacem2002}, Fattahi \citep{Fattahi2007}, and others---have driven algorithm development for three decades. FJSPLib provides a centralized repository of instances and best-known lower/upper bounds across these suites. \citet{Pinedo2016} provides a comprehensive textbook treatment. \citet{Xie2019} classify FJSP solution methods into exact algorithms, heuristics, and meta-heuristics.
+FJSP was formalized by \cite{Brucker1990} as a generalization of the classical job shop. The standard benchmark suites---Brandimarte \cite{Brandimarte1993}, Hurink \textit{edata}/\textit{rdata}/\textit{vdata} \cite{Hurink1994}, Dauz\`ere-P\'er\`es and Paulli \cite{Dauzere1997}, Kacem \cite{Kacem2002}, Fattahi \cite{Fattahi2007}, and others---have driven algorithm development for three decades. FJSPLib provides a centralized repository of instances and best-known lower/upper bounds across these suites. \cite{Pinedo2016} provides a comprehensive textbook treatment. \cite{Xie2019} classify FJSP solution methods into exact algorithms, heuristics, and meta-heuristics.
 
 \subsection{Exact, MIP, and CP Methods}
-Exact MIP formulations jointly model assignment and sequencing \citep{Ozguven2010,Meng2020}. While they can prove optimality on small instances, their computational cost grows exponentially. Constraint Programming (CP) approaches, notably CP-SAT and IBM CP Optimizer, have demonstrated strong performance on FJSP benchmarks through interval variables and specialized scheduling constraints. However, both MIP and CP solvers still require substantial time on medium-to-large instances, motivating decomposition and heuristic approaches.
+Exact MIP formulations jointly model assignment and sequencing \cite{Ozguven2010,Meng2020}. While they can prove optimality on small instances, their computational cost grows exponentially. Constraint Programming (CP) approaches, notably CP-SAT and IBM CP Optimizer, have demonstrated strong performance on FJSP benchmarks through interval variables and specialized scheduling constraints. However, both MIP and CP solvers still require substantial time on medium-to-large instances, motivating decomposition and heuristic approaches.
 
 \subsection{Metaheuristics and Hybrid Methods}
-The tabu search of \citet{Mastrolilli2000} remains a landmark, achieving near-optimal makespan through hierarchical neighborhood structures. Subsequent work includes genetic algorithms \citep{Pezzella2008}, hybrid genetic-tabu search \citep{Li2016}, variable neighborhood search \citep{Gao2008}, and particle swarm optimization hybrids \citep{Xia2005}. \citet{Calis2015} review AI techniques for job shop scheduling. These methods are effective but hand-crafted: their operators, neighborhoods, and parameters are designed for specific benchmark characteristics and do not generalize without re-engineering.
+The tabu search of \cite{Mastrolilli2000} remains a landmark, achieving near-optimal makespan through hierarchical neighborhood structures. Subsequent work includes genetic algorithms \cite{Pezzella2008}, hybrid genetic-tabu search \cite{Li2016}, variable neighborhood search \cite{Gao2008}, and particle swarm optimization hybrids \cite{Xia2005}. \cite{Calis2015} review AI techniques for job shop scheduling. These methods are effective but hand-crafted: their operators, neighborhoods, and parameters are designed for specific benchmark characteristics and do not generalize without re-engineering.
 
 \subsection{Decomposition in Scheduling}
-Decomposition has a long history in scheduling. The shifting bottleneck procedure \citep{Adams1988} iteratively solves single-machine subproblems. For FJSP, several works separate assignment and sequencing: \citet{Brandimarte1993} uses a hierarchical tabu search, and \citet{Xia2005} hybridize particle swarm optimization for assignment with simulated annealing for sequencing. These methods use fixed heuristics for the assignment subproblem. Our work differs by \emph{learning} an evaluation function for assignments from data.
+Decomposition has a long history in scheduling. The shifting bottleneck procedure \cite{Adams1988} iteratively solves single-machine subproblems. For FJSP, several works separate assignment and sequencing: \cite{Brandimarte1993} uses a hierarchical tabu search, and \cite{Xia2005} hybridize particle swarm optimization for assignment with simulated annealing for sequencing. These methods use fixed heuristics for the assignment subproblem. Our work differs by \emph{learning} an evaluation function for assignments from data.
 
 \subsection{Learning-Based Scheduling}
-The intersection of machine learning and scheduling has grown rapidly. End-to-end methods use deep reinforcement learning to learn dispatching policies: \citet{Zhang2020drl} represent job shop states as disjunctive graphs and train a GNN-based agent; \citet{Song2023} extend this to FJSP with heterogeneous graph representations for joint operation selection and machine assignment; \citet{Wang2024} propose dual attention networks for FJSP; and \citet{Moon2024learning} address FJSP with transportation constraints. \citet{Smit2024nco} extend neural combinatorial optimization to stochastic FJSP. These methods can achieve strong empirical performance but require extensive training and are difficult to interpret.
+The intersection of machine learning and scheduling has grown rapidly. End-to-end methods use deep reinforcement learning to learn dispatching policies: \cite{Zhang2020drl} represent job shop states as disjunctive graphs and train a GNN-based agent; \cite{Song2023} extend this to FJSP with heterogeneous graph representations for joint operation selection and machine assignment; \cite{Wang2024} propose dual attention networks for FJSP; and \cite{Moon2024learning} address FJSP with transportation constraints. \cite{Smit2024nco} extend neural combinatorial optimization to stochastic FJSP. These methods can achieve strong empirical performance but require extensive training and are difficult to interpret.
 
-Learning-to-configure approaches use ML to accelerate existing solvers: \citet{Hutter2011} for algorithm configuration, \citet{He2014} and \citet{Khalil2016} for branching in MIP, and \citet{Gasse2019} for node selection in B\&B via graph convolutional networks. \citet{Kotary2021} survey end-to-end constrained optimization learning.
+Learning-to-configure approaches use ML to accelerate existing solvers: \cite{Hutter2011} for algorithm configuration, \cite{He2014} and \cite{Khalil2016} for branching in MIP, and \cite{Gasse2019} for node selection in B\&B via graph convolutional networks. \cite{Kotary2021} survey end-to-end constrained optimization learning.
 
 \subsection{Surrogate-Assisted Combinatorial Optimization}
-Surrogate models replace expensive objective evaluations with cheap approximations. \citet{Jin2011} surveys surrogate-assisted evolutionary computation, primarily for continuous optimization. Extensions to discrete and combinatorial problems are more recent. The key challenge in discrete settings is defining feature representations that preserve the ranking of decision alternatives under the true objective. Our work addresses this by designing structured aggregate features for the FJSP assignment space and validating ranking quality through top-$K$ metrics.
+Surrogate models replace expensive objective evaluations with cheap approximations. \cite{Jin2011} surveys surrogate-assisted evolutionary computation, primarily for continuous optimization. Extensions to discrete and combinatorial problems are more recent. The key challenge in discrete settings is defining feature representations that preserve the ranking of decision alternatives under the true objective. Our work addresses this by designing structured aggregate features for the FJSP assignment space and validating ranking quality through top-$K$ metrics.
 
 \subsection{Tree-in-MIP and Constraint Learning}
-\citet{Verwer2017} first proposed encoding decision trees as MIP constraints. \citet{Maragno2023} generalized this into OptiCL, a framework embedding decision trees, random forests, ensembles, and neural networks into MIP formulations. \citet{Elmachtoub2022} formalize the ``predict, then optimize'' paradigm. \citet{Bertsimas2017} develop optimal classification trees via MIP. The fundamental limitation for FJSP is the per-data-point encoding: $O(N \times T \times L)$ binary variables for $N$ operations, $T$ trees, and $L$ leaves. Our aggregate feature approach avoids this by using globally shared feature variables, reducing encoding complexity to $O(T \times L)$.
+\cite{Verwer2017} first proposed encoding decision trees as MIP constraints. \cite{Maragno2023} generalized this into OptiCL, a framework embedding decision trees, random forests, ensembles, and neural networks into MIP formulations. \cite{Elmachtoub2022} formalize the ``predict, then optimize'' paradigm. \cite{Bertsimas2017} develop optimal classification trees via MIP. The fundamental limitation for FJSP is the per-data-point encoding: $O(N \times T \times L)$ binary variables for $N$ operations, $T$ trees, and $L$ leaves. Our aggregate feature approach avoids this by using globally shared feature variables, reducing encoding complexity to $O(T \times L)$.
 
 \subsection{Positioning}
 The workflow positions itself between lightweight heuristics and learning-assisted exact verification. Our framework combines (1)~lower-bound-motivated assignment features, (2)~inexpensive heuristic labeling, (3)~a learned but interpretable surrogate, and (4)~MIP-based verification with explicit reporting of limitations.
@@ -172,7 +172,7 @@ Top-$K$ candidates and calibration assignments are verified by solving $\operato
 \section{Computational Experiments}
 
 \subsection{Experimental Setup}
-\textit{Instances.} We evaluate on the Brandimarte MK01--MK10 benchmark \citep{Brandimarte1993}, comprising 10 instances with sizes from $10\times6$ (55 operations) to $20\times15$ (240 operations). Table~\ref{tab:instances} summarizes instance characteristics and best-known solutions (BKS) sourced from FJSPLib (accessed June 2026).
+\textit{Instances.} We evaluate on the Brandimarte MK01--MK10 benchmark \cite{Brandimarte1993}, comprising 10 instances with sizes from $10\times6$ (55 operations) to $20\times15$ (240 operations). Table~\ref{tab:instances} summarizes instance characteristics and best-known solutions (BKS) sourced from FJSPLib (accessed June 2026).
 
 \begin{table}[htbp]\centering\caption{Instance characteristics.}\label{tab:instances}
 \begin{tabular}{lrrrrrr}\toprule
@@ -203,9 +203,16 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
 
 \subsection{Active-Learning Development Evaluation}
-Table~\ref{tab:active} reports the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
+Table~\ref{tab:active} and Fig.~\ref{fig:active-comparison} report the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
 
 \input{active_tables.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{active_method_comparison.png}
+\caption{Normalized mean best feasible makespan across Brandimarte instances. Values are divided by the instance BKS; lower is better. AL-RF is highlighted as the active-learning method.}
+\label{fig:active-comparison}
+\end{figure}
 
 The calibration phase used 30 heuristic-ranked training assignments per run. The complete JSON output records how many labels were feasible and the wall time for every phase. The method therefore exposes its trade-off: it spends additional MIP calls before final screening, then uses the learned ranking to select five final candidates under the same final budget as every baseline. We do not pool these development runs with the earlier one-second historical rerun because the solver budget and calibration protocol differ.
 
@@ -243,80 +250,79 @@ The author declares no conflict of interest.
 The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The earlier one-second historical files are retained separately from the active-learning development results. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
 
 % ═══════════════════════════ REFERENCES ═══════════════════════════
-\bibliographystyle{plainnat}
 \begin{thebibliography}{99}
 
-\bibitem[Adams et al.(1988)]{Adams1988} Adams, J., E. Balas, D. Zawack. 1988. The shifting bottleneck procedure for job shop scheduling. \textit{Management Science} 34(3):391--401.
+\bibitem{Adams1988} Adams, J., E. Balas, D. Zawack. 1988. The shifting bottleneck procedure for job shop scheduling. \textit{Management Science} 34(3):391--401.
 
-\bibitem[Bengio et al.(2021)]{Bengio2021} Bengio, Y., A. Lodi, A. Prouvost. 2021. Machine learning for combinatorial optimization: A methodological tour d'horizon. \textit{EJOR} 290(2):405--421.
+\bibitem{Bengio2021} Bengio, Y., A. Lodi, A. Prouvost. 2021. Machine learning for combinatorial optimization: A methodological tour d'horizon. \textit{EJOR} 290(2):405--421.
 
-\bibitem[Bertsimas and Dunn(2017)]{Bertsimas2017} Bertsimas, D., J. Dunn. 2017. Optimal classification trees. \textit{Machine Learning} 106:1039--1082.
+\bibitem{Bertsimas2017} Bertsimas, D., J. Dunn. 2017. Optimal classification trees. \textit{Machine Learning} 106:1039--1082.
 
-\bibitem[Brandimarte(1993)]{Brandimarte1993} Brandimarte, P. 1993. Routing and scheduling in a flexible job shop by tabu search. \textit{Annals of OR} 41(3):157--183.
+\bibitem{Brandimarte1993} Brandimarte, P. 1993. Routing and scheduling in a flexible job shop by tabu search. \textit{Annals of OR} 41(3):157--183.
 
-\bibitem[Breiman(2001)]{Breiman2001} Breiman, L. 2001. Random forests. \textit{Machine Learning} 45:5--32.
+\bibitem{Breiman2001} Breiman, L. 2001. Random forests. \textit{Machine Learning} 45:5--32.
 
-\bibitem[Brucker and Schlie(1990)]{Brucker1990} Brucker, P., R. Schlie. 1990. Job-shop scheduling with multi-purpose machines. \textit{Computing} 45(4):369--375.
+\bibitem{Brucker1990} Brucker, P., R. Schlie. 1990. Job-shop scheduling with multi-purpose machines. \textit{Computing} 45(4):369--375.
 
-\bibitem[Calis and Bulkan(2015)]{Calis2015} Calis, B., S. Bulkan. 2015. A research survey: review of AI solution techniques for job shop scheduling. \textit{J. Intelligent Manufacturing} 26(5):961--973.
+\bibitem{Calis2015} Calis, B., S. Bulkan. 2015. A research survey: review of AI solution techniques for job shop scheduling. \textit{J. Intelligent Manufacturing} 26(5):961--973.
 
-\bibitem[Dauz\`ere-P\'er\`es and Paulli(1997)]{Dauzere1997} Dauz\`ere-P\'er\`es, S., J. Paulli. 1997. An integrated approach for modeling and solving the general multiprocessor job-shop scheduling problem using tabu search. \textit{Annals of OR} 70:281--306.
+\bibitem{Dauzere1997} Dauz\`ere-P\'er\`es, S., J. Paulli. 1997. An integrated approach for modeling and solving the general multiprocessor job-shop scheduling problem using tabu search. \textit{Annals of OR} 70:281--306.
 
-\bibitem[Dem\v{s}ar(2006)]{Demsar2006} Dem\v{s}ar, J. 2006. Statistical comparisons of classifiers over multiple data sets. \textit{JMLR} 7:1--30.
+\bibitem{Demsar2006} Dem\v{s}ar, J. 2006. Statistical comparisons of classifiers over multiple data sets. \textit{JMLR} 7:1--30.
 
-\bibitem[Elmachtoub and Grigas(2022)]{Elmachtoub2022} Elmachtoub, A.N., P. Grigas. 2022. Smart ``predict, then optimize.'' \textit{Management Science} 68(1):9--26.
+\bibitem{Elmachtoub2022} Elmachtoub, A.N., P. Grigas. 2022. Smart ``predict, then optimize.'' \textit{Management Science} 68(1):9--26.
 
-\bibitem[Fattahi et al.(2007)]{Fattahi2007} Fattahi, P., M. Saidi Mehrabad, F. Jolai. 2007. Mathematical modeling and heuristic approaches to flexible job shop scheduling problems. \textit{J. Intelligent Manufacturing} 18:331--342.
+\bibitem{Fattahi2007} Fattahi, P., M. Saidi Mehrabad, F. Jolai. 2007. Mathematical modeling and heuristic approaches to flexible job shop scheduling problems. \textit{J. Intelligent Manufacturing} 18:331--342.
 
-\bibitem[Gao et al.(2008)]{Gao2008} Gao, J., L. Sun, M. Gen. 2008. A hybrid genetic and variable neighborhood descent algorithm for flexible job shop scheduling problems. \textit{Computers \& OR} 35:2892--2907.
+\bibitem{Gao2008} Gao, J., L. Sun, M. Gen. 2008. A hybrid genetic and variable neighborhood descent algorithm for flexible job shop scheduling problems. \textit{Computers \& OR} 35:2892--2907.
 
-\bibitem[Gasse et al.(2019)]{Gasse2019} Gasse, M., D. Ch\'{e}telat, N. Ferroni, L. Charlin, A. Lodi. 2019. Exact combinatorial optimization with graph convolutional neural networks. \textit{NeurIPS} 32.
+\bibitem{Gasse2019} Gasse, M., D. Ch\'{e}telat, N. Ferroni, L. Charlin, A. Lodi. 2019. Exact combinatorial optimization with graph convolutional neural networks. \textit{NeurIPS} 32.
 
-\bibitem[He et al.(2014)]{He2014} He, H., H. Daum\'{e} III, J. Eisner. 2014. Learning to search in branch and bound algorithms. \textit{NeurIPS} 27.
+\bibitem{He2014} He, H., H. Daum\'{e} III, J. Eisner. 2014. Learning to search in branch and bound algorithms. \textit{NeurIPS} 27.
 
-\bibitem[Hurink et al.(1994)]{Hurink1994} Hurink, J., B. Jurisch, M. Thole. 1994. Tabu search for the job shop scheduling problem with multi-purpose machines. \textit{OR Spektrum} 15:205--215.
+\bibitem{Hurink1994} Hurink, J., B. Jurisch, M. Thole. 1994. Tabu search for the job shop scheduling problem with multi-purpose machines. \textit{OR Spektrum} 15:205--215.
 
-\bibitem[Hutter et al.(2011)]{Hutter2011} Hutter, F., H. Hoos, K. Leyton-Brown. 2011. Sequential model-based optimization for general algorithm configuration. \textit{LION} 507--523.
+\bibitem{Hutter2011} Hutter, F., H. Hoos, K. Leyton-Brown. 2011. Sequential model-based optimization for general algorithm configuration. \textit{LION} 507--523.
 
-\bibitem[Jin(2011)]{Jin2011} Jin, Y. 2011. Surrogate-assisted evolutionary computation. \textit{Swarm and Evolutionary Computation} 1(2):61--70.
+\bibitem{Jin2011} Jin, Y. 2011. Surrogate-assisted evolutionary computation. \textit{Swarm and Evolutionary Computation} 1(2):61--70.
 
-\bibitem[Kacem et al.(2002)]{Kacem2002} Kacem, I., S. Hammadi, P. Borne. 2002. Approach by localization and multiobjective evolutionary optimization for FJSP. \textit{IEEE Trans. SMC-C} 32(1):1--13.
+\bibitem{Kacem2002} Kacem, I., S. Hammadi, P. Borne. 2002. Approach by localization and multiobjective evolutionary optimization for FJSP. \textit{IEEE Trans. SMC-C} 32(1):1--13.
 
-\bibitem[Khalil et al.(2016)]{Khalil2016} Khalil, E., P. Le Bodic, L. Song, G. Nemhauser, B. Dilkina. 2016. Learning to branch in mixed integer programming. \textit{AAAI}.
+\bibitem{Khalil2016} Khalil, E., P. Le Bodic, L. Song, G. Nemhauser, B. Dilkina. 2016. Learning to branch in mixed integer programming. \textit{AAAI}.
 
-\bibitem[Kotary et al.(2021)]{Kotary2021} Kotary, J., F. Fioretto, P. Van Hentenryck, B. Wilder. 2021. End-to-end constrained optimization learning: A survey. \textit{IJCAI}.
+\bibitem{Kotary2021} Kotary, J., F. Fioretto, P. Van Hentenryck, B. Wilder. 2021. End-to-end constrained optimization learning: A survey. \textit{IJCAI}.
 
-\bibitem[Li and Gao(2016)]{Li2016} Li, X., L. Gao. 2016. An effective hybrid genetic algorithm and tabu search for FJSP. \textit{IJPE} 174:93--110.
+\bibitem{Li2016} Li, X., L. Gao. 2016. An effective hybrid genetic algorithm and tabu search for FJSP. \textit{IJPE} 174:93--110.
 
-\bibitem[Maragno et al.(2025)]{Maragno2023} Maragno, D., H. Wiberg, D. Bertsimas, S.\.{I}. Birbil, D. den Hertog, A. Fajemisin. 2025. Mixed-integer optimization with constraint learning. \textit{Operations Research}.
+\bibitem{Maragno2023} Maragno, D., H. Wiberg, D. Bertsimas, S.\.{I}. Birbil, D. den Hertog, A. Fajemisin. 2025. Mixed-integer optimization with constraint learning. \textit{Operations Research}.
 
-\bibitem[Mastrolilli and Gambardella(2000)]{Mastrolilli2000} Mastrolilli, M., L.M. Gambardella. 2000. Effective neighborhood functions for the flexible job shop problem. \textit{J. Scheduling} 3(1):3--20.
+\bibitem{Mastrolilli2000} Mastrolilli, M., L.M. Gambardella. 2000. Effective neighborhood functions for the flexible job shop problem. \textit{J. Scheduling} 3(1):3--20.
 
-\bibitem[Meng et al.(2020)]{Meng2020} Meng, L., C. Zhang, Y. Ren, B. Zhang, C. Lv. 2020. Mixed-integer linear programming and constraint programming formulations for solving distributed FJSP. \textit{Computers \& IE} 142:106347.
+\bibitem{Meng2020} Meng, L., C. Zhang, Y. Ren, B. Zhang, C. Lv. 2020. Mixed-integer linear programming and constraint programming formulations for solving distributed FJSP. \textit{Computers \& IE} 142:106347.
 
-\bibitem[Moon et al.(2024)]{Moon2024learning} Moon, S., S. Lee, K.-J. Park. 2024. Learning-enabled flexible job-shop scheduling for scalable smart manufacturing. \textit{J. Manufacturing Systems} 77:356--367.
+\bibitem{Moon2024learning} Moon, S., S. Lee, K.-J. Park. 2024. Learning-enabled flexible job-shop scheduling for scalable smart manufacturing. \textit{J. Manufacturing Systems} 77:356--367.
 
-\bibitem[\"Ozg\"uven et al.(2010)]{Ozguven2010} \"Ozg\"uven, C., L. \"Ozbak{\i}r, Y. Yavuz. 2010. Mathematical models for job-shop scheduling. \textit{Applied Math. Modelling} 34(6):1539--1548.
+\bibitem{Ozguven2010} \"Ozg\"uven, C., L. \"Ozbak{\i}r, Y. Yavuz. 2010. Mathematical models for job-shop scheduling. \textit{Applied Math. Modelling} 34(6):1539--1548.
 
-\bibitem[Pezzella et al.(2008)]{Pezzella2008} Pezzella, F., G. Morganti, G. Ciaschetti. 2008. A genetic algorithm for the FJSP. \textit{Computers \& OR} 35:3202--3212.
+\bibitem{Pezzella2008} Pezzella, F., G. Morganti, G. Ciaschetti. 2008. A genetic algorithm for the FJSP. \textit{Computers \& OR} 35:3202--3212.
 
-\bibitem[Pinedo(2016)]{Pinedo2016} Pinedo, M. 2016. \textit{Scheduling: Theory, Algorithms, and Systems}. 5th ed. Springer.
+\bibitem{Pinedo2016} Pinedo, M. 2016. \textit{Scheduling: Theory, Algorithms, and Systems}. 5th ed. Springer.
 
-\bibitem[Smit et al.(2025)]{Smit2024nco} Smit, I.G., Y. Wu, P. Troubil, Y. Zhang, W.P.M. Nuijten. 2025. Neural combinatorial optimization for stochastic FJSP. \textit{AAAI}.
+\bibitem{Smit2024nco} Smit, I.G., Y. Wu, P. Troubil, Y. Zhang, W.P.M. Nuijten. 2025. Neural combinatorial optimization for stochastic FJSP. \textit{AAAI}.
 
-\bibitem[Song et al.(2023)]{Song2023} Song, W., X. Chen, Q. Li, Z. Cao. 2023. Flexible job-shop scheduling via graph neural network and deep reinforcement learning. \textit{IEEE Trans. Industrial Informatics} 19(2):1600--1610.
+\bibitem{Song2023} Song, W., X. Chen, Q. Li, Z. Cao. 2023. Flexible job-shop scheduling via graph neural network and deep reinforcement learning. \textit{IEEE Trans. Industrial Informatics} 19(2):1600--1610.
 
-\bibitem[Verwer et al.(2017)]{Verwer2017} Verwer, S., Y. Zhang, Q.C. Ye. 2017. Auction optimization using regression trees and linear models as integer programs. \textit{Artificial Intelligence} 244:368--395.
+\bibitem{Verwer2017} Verwer, S., Y. Zhang, Q.C. Ye. 2017. Auction optimization using regression trees and linear models as integer programs. \textit{Artificial Intelligence} 244:368--395.
 
-\bibitem[Wang et al.(2024)]{Wang2024} Wang, R., G. Wang, J. Sun, F. Deng, J. Chen. 2024. FJSP via dual attention network-based reinforcement learning. \textit{IEEE Trans. Neural Networks and Learning Systems} 35:3091--3102.
+\bibitem{Wang2024} Wang, R., G. Wang, J. Sun, F. Deng, J. Chen. 2024. FJSP via dual attention network-based reinforcement learning. \textit{IEEE Trans. Neural Networks and Learning Systems} 35:3091--3102.
 
-\bibitem[Xia and Wu(2005)]{Xia2005} Xia, W., Z. Wu. 2005. An effective hybrid optimization approach for multi-objective FJSP. \textit{Computers \& IE} 48(2):409--425.
+\bibitem{Xia2005} Xia, W., Z. Wu. 2005. An effective hybrid optimization approach for multi-objective FJSP. \textit{Computers \& IE} 48(2):409--425.
 
-\bibitem[Xie et al.(2019)]{Xie2019} Xie, J., L. Gao, K. Peng, X. Li, H. Li. 2019. Review on flexible job shop scheduling. \textit{IET Collaborative Intelligent Manufacturing} 1(3):67--77.
+\bibitem{Xie2019} Xie, J., L. Gao, K. Peng, X. Li, H. Li. 2019. Review on flexible job shop scheduling. \textit{IET Collaborative Intelligent Manufacturing} 1(3):67--77.
 
-\bibitem[Zhang et al.(2020)]{Zhang2020drl} Zhang, C., W. Song, Z. Cao, J. Zhang, P.S. Tan, X. Chi. 2020. Learning to dispatch for job shop scheduling via deep reinforcement learning. \textit{NeurIPS} 33:1621--1632.
+\bibitem{Zhang2020drl} Zhang, C., W. Song, Z. Cao, J. Zhang, P.S. Tan, X. Chi. 2020. Learning to dispatch for job shop scheduling via deep reinforcement learning. \textit{NeurIPS} 33:1621--1632.
 
-\bibitem[Zheng and Wang(2016)]{Zheng2016} Zheng, X., L. Wang. 2016. A knowledge-guided fruit fly optimization algorithm for dual resource constrained FJSP. \textit{IJPR} 54(18):5554--5566.
+\bibitem{Zheng2016} Zheng, X., L. Wang. 2016. A knowledge-guided fruit fly optimization algorithm for dual resource constrained FJSP. \textit{IJPR} 54(18):5554--5566.
 
 \end{thebibliography}
 \end{document}
