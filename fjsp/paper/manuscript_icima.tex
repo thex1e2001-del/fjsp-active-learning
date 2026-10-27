@@ -10,7 +10,8 @@
 \author{\IEEEauthorblockN{Xianyi Xie}
 \IEEEauthorblockA{School of Computer and Artificial Intelligence, Beijing Technology and Business University\\
 Beijing 100048, China\\
-Corresponding author}}
+Corresponding author\\
+Email: 2431062085@st.btbu.edu.cn}}
 \begin{document}\maketitle\begin{abstract}
 Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners and improves over the original RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
 
