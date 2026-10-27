@@ -14,7 +14,7 @@ Beijing 100048, China\\
 Corresponding author\\
 Email: 2431062085@st.btbu.edu.cn}}
 \begin{document}\maketitle\begin{abstract}
-Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners and improves over the original RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
+Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners, with a lower mean than the RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
 
 \smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; interpretable screening
 \end{abstract}
@@ -32,7 +32,7 @@ This paper investigates whether lightweight, interpretable features of a machine
 
 Our research is guided by four questions:
 \begin{enumerate}[leftmargin=1.2em]
-    \item[\textbf{RQ1.}] Can aggregate assignment features support effective ranking of candidate assignments, as measured by top-$K$ recall and regret metrics?
+    \item[\textbf{RQ1.}] Can aggregate assignment features improve final Top-$K$ feasible incumbent quality under a fixed verification budget?
     \item[\textbf{RQ2.}] Under fair computational budgets, does a learned RF surrogate add value over simple workload-based scoring rules?
     \item[\textbf{RQ3.}] Under what instance structures does the method succeed, and under what conditions does it fail?
     \item[\textbf{RQ4.}] What limitations become visible when solver status, feasibility, and optimality gaps are reported at candidate level?
@@ -40,7 +40,7 @@ Our research is guided by four questions:
 
 Our contributions are:
 \begin{itemize}[leftmargin=1.2em]
-\item An active-learning screening architecture that uses a small MIP-verified calibration set to correct the systematic bias of heuristic sequencing labels before ranking unseen machine assignments.
+\item An active-learning screening architecture that uses a small MIP-verified calibration set to calibrate heuristic labels near the predicted frontier before ranking unseen machine assignments.
 \item A budget-matched evaluation protocol with independent training and test pools, fixed Top-$K$ verification, and candidate-level solver evidence.
 \item A two-seed-per-instance Brandimarte evaluation showing that AL-RF reduces the mean best feasible makespan relative to RF-H, lower-bound, direct heuristic, and random screeners under the same final verification budget, while making calibration overhead explicit.
 \end{itemize}
@@ -201,7 +201,7 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
 \end{itemize}
 
-\textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
+\textit{Metrics.} The main table reports the mean best selected feasible incumbent across seeds. The released candidate-level records additionally contain standard deviation, feasible ratio, low-gap ratio, mean feasible gap, solver status, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
 
 \subsection{Active-Learning Development Evaluation}
 Table~\ref{tab:active} and Fig.~\ref{fig:active-comparison} report the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
@@ -237,7 +237,7 @@ Several limitations remain. The feature set is intentionally low-dimensional and
 % ═══════════════════════════ 7. CONCLUSION ═══════════════════════════
 \section{Conclusion}
 
-We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. A small set of MIP-verified assignments corrects heuristic labels before a Random Forest ranks a common test pool, and every final shortlist receives the same verification budget. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF achieves the best overall mean feasible incumbent among the tested screeners and improves over the original RF-H, lower-bound, direct heuristic, and random controls. The candidate-level release makes calibration cost, feasibility, and solver gaps visible for reproduction.
+We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. A small set of MIP-verified assignments corrects heuristic labels before a Random Forest ranks a common test pool, and every final shortlist receives the same verification budget. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF achieves the best overall mean feasible incumbent among the tested screeners, with a lower mean than the original RF-H, lower-bound, direct heuristic, and random controls. The candidate-level release makes calibration cost, feasibility, and solver gaps visible for reproduction.
 
 The method is designed as a decision-support component for intelligent manufacturing. Its strongest use case is a scheduler with a small calibration budget and a strict final verification budget; when calibration time is unavailable, the simpler controls remain appropriate.
 
