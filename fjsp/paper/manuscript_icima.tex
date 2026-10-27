@@ -2,12 +2,10 @@
 \IEEEoverridecommandlockouts
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithm,algorithmicx,algpseudocode}
-\usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs,multirow,array,float,enumitem}
 \usepackage[round,authoryear]{natbib}
-\usepackage[hidelinks]{hyperref}
 \title{Active-Learning-Assisted Candidate Screening for Flexible Job Shop Scheduling}
 \author{\IEEEauthorblockN{Author Name}
 \IEEEauthorblockA{School of Management, University Name\\
@@ -74,18 +72,8 @@ Surrogate models replace expensive objective evaluations with cheap approximatio
 \citet{Verwer2017} first proposed encoding decision trees as MIP constraints. \citet{Maragno2023} generalized this into OptiCL, a framework embedding decision trees, random forests, ensembles, and neural networks into MIP formulations. \citet{Elmachtoub2022} formalize the ``predict, then optimize'' paradigm. \citet{Bertsimas2017} develop optimal classification trees via MIP. The fundamental limitation for FJSP is the per-data-point encoding: $O(N \times T \times L)$ binary variables for $N$ operations, $T$ trees, and $L$ leaves. Our aggregate feature approach avoids this by using globally shared feature variables, reducing encoding complexity to $O(T \times L)$.
 
 \subsection{Positioning}
-Table~\ref{tab:taxonomy} positions our work within the literature. Our framework combines (1)~lower-bound-motivated assignment features, (2)~inexpensive heuristic labeling, (3)~a learned but interpretable surrogate, and (4)~MIP-based verification with explicit reporting of limitations.
+The workflow positions itself between lightweight heuristics and learning-assisted exact verification. Our framework combines (1)~lower-bound-motivated assignment features, (2)~inexpensive heuristic labeling, (3)~a learned but interpretable surrogate, and (4)~MIP-based verification with explicit reporting of limitations.
 
-\begin{table}[htbp]\centering\caption{Literature taxonomy.}\label{tab:taxonomy}
-\begin{tabular}{lccccc}\toprule
-Method Class & Learning & Feat.\ Cost & Seq.\ Method & Interpret. & FJSP Scale \\ \midrule
-Exact MIP/CP & No & -- & Exact & High & Low \\
-Meta-heuristics & No & -- & Heuristic & Medium & Medium \\
-End-to-end DRL/GNN & Policy & High & Learned & Low & Medium \\
-Tree-in-MIP & RF/DT & High (per-op) & Exact & Medium & Low \\
-\textbf{This work} & RF & Low (aggregate) & MIP-verified & High & Medium \\ \bottomrule
-\end{tabular}
-\end{table}
 
 % ═══════════════════════════ 3. PROBLEM ═══════════════════════════
 \section{Problem Formulation and Lower-Bound Motivation}
@@ -143,7 +131,7 @@ These bounds justify machine workload and maximum job-time features as surrogate
 We represent an assignment $\mathbf{x}$ by the workload, operation-count, usage, path-time, and dispersion features implemented in the released experiment code and summarized in Table~\ref{tab:features}. All features are computable from $\mathbf{x}$ alone and do not require solving the sequencing subproblem.
 
 \begin{table}[htbp]\centering\caption{Feature groups implemented in the released scorer.}\label{tab:features}
-\begin{tabular}{llp{6cm}}\toprule
+\scriptsize\begin{tabular}{p{1.15cm}p{2.35cm}p{4.0cm}}\toprule
 Group & Features & Motivation \\ \midrule
 \textbf{A. Machine assignment} & $\operatorname{load}_k$, $\operatorname{ops}_k$, $\operatorname{used}_k$ for each machine & Represent machine workload and assignment sparsity \\
 \textbf{B. Aggregate workload} & number of used machines, maximum machine load, load imbalance, maximum operations per machine, load standard deviation & Lower-bound and balance indicators \\
