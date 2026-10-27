@@ -4,7 +4,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 37.999992999993,
         "feasible": 5,
         "labels": 30
@@ -40,7 +40,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 230.99999999999994,
         "feasible": 5,
         "labels": 30
@@ -76,7 +76,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 185.99999998129528,
         "feasible": 5,
         "labels": 30
@@ -112,7 +112,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 213.99999997849324,
         "feasible": 5,
         "labels": 30
@@ -148,7 +148,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 371.99999999981867,
         "feasible": 5,
         "labels": 29
@@ -184,7 +184,7 @@
     "seed": 42,
     "rows": [
       {
-        "scorer": "ActiveRF",
+        "scorer": "AL-RF",
         "best": 311.9999999999881,
         "feasible": 5,
         "labels": 28

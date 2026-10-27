@@ -209,13 +209,12 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \item \textbf{RF-H}: RF trained only on heuristic sequencing labels from the training pool.
 \item \textbf{AL-RF}: RF trained on the small MIP-verified calibration set described above.
 \item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
-\item \textbf{Balanced-ref}: one independent balanced assignment, reported as a reference rather than a pool scorer.
 \end{itemize}
 
 \textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
 
 \subsection{Active-Learning Development Evaluation}
-Table~\ref{tab:active} reports the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
+Table~\ref{tab:active} reports the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
 
 \input{active_tables.tex}
 
@@ -246,7 +245,7 @@ We have presented an active-learning-assisted candidate-screening workflow for F
 The method is designed as a decision-support component for intelligent manufacturing. Its strongest use case is a scheduler with a small calibration budget and a strict final verification budget; when calibration time is unavailable, the simpler controls remain appropriate.
 
 \section*{Data Availability}
-The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The historical single-seed files are retained separately from the three-seed budget-matched rerun. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
+The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The earlier one-second historical files are retained separately from the active-learning development results. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
 
 % ═══════════════════════════ REFERENCES ═══════════════════════════
 \bibliographystyle{plainnat}
