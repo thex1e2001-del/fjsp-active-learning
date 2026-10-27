@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-10-27",
+  "purpose": "Gate A runtime manifest",
+  "python": "3.11.7 | packaged by Anaconda, Inc. | (main, Dec 15 2023, 18:05:47) [MSC v.1916 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "packages": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.1",
+    "gurobipy": "10.0.1"
+  }
+}
