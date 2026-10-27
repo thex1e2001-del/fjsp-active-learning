@@ -7,10 +7,10 @@
 \usepackage{booktabs,multirow,array,float,enumitem}
 \usepackage[round,authoryear]{natbib}
 \title{Active-Learning-Assisted Candidate Screening for Flexible Job Shop Scheduling}
-\author{\IEEEauthorblockN{Author Name}
-\IEEEauthorblockA{School of Management, University Name\\
-City, Country\\
-email@university.edu}}
+\author{\IEEEauthorblockN{Xianyi Xie}
+\IEEEauthorblockA{School of Computer and Artificial Intelligence, Beijing Technology and Business University\\
+Beijing 100048, China\\
+Corresponding author}}
 \begin{document}\maketitle\begin{abstract}
 Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners and improves over the original RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
 
@@ -231,6 +231,12 @@ Several limitations remain. The feature set is intentionally low-dimensional and
 We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. A small set of MIP-verified assignments corrects heuristic labels before a Random Forest ranks a common test pool, and every final shortlist receives the same verification budget. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF achieves the best overall mean feasible incumbent among the tested screeners and improves over the original RF-H, lower-bound, direct heuristic, and random controls. The candidate-level release makes calibration cost, feasibility, and solver gaps visible for reproduction.
 
 The method is designed as a decision-support component for intelligent manufacturing. Its strongest use case is a scheduler with a small calibration budget and a strict final verification budget; when calibration time is unavailable, the simpler controls remain appropriate.
+
+\section*{Funding}
+This work received no external funding.
+
+\section*{Conflict of Interest}
+The author declares no conflict of interest.
 
 \section*{Data Availability}
 The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The earlier one-second historical files are retained separately from the active-learning development results. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
