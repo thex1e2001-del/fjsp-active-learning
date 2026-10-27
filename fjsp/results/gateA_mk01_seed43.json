@@ -1,0 +1,533 @@
+[
+  {
+    "instance": "mk01",
+    "seed": 43,
+    "top_k": 3,
+    "verify_time": 1.0,
+    "wall_time": 8.772743300010916,
+    "balanced": {
+      "assignment_id": "cec8431c0a43ecaf@t=1",
+      "has_solution": true,
+      "status_code": 2,
+      "sol_count": 9,
+      "status": "OPTIMAL",
+      "makespan": 49.999999994899994,
+      "gap": 0.0,
+      "best_bound": 49.999999994899994,
+      "wall_time": 0.30690526962280273
+    },
+    "scorers": [
+      {
+        "instance": "mk01",
+        "seed": 43,
+        "scorer": "LB",
+        "top_k": 3,
+        "best_selected_makespan": 41.99999999999999,
+        "feasible_count": 3,
+        "feasible_ratio": 1.0,
+        "low_gap_count": 3,
+        "low_gap_ratio": 1.0,
+        "mean_gap_feasible": 0.0,
+        "selected": [
+          {
+            "prediction": 42.0,
+            "assignment_id": "5f0ad4c0313c1bf3@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 10,
+            "status": "OPTIMAL",
+            "makespan": 41.99999999999999,
+            "gap": 0.0,
+            "best_bound": 41.99999999999999,
+            "wall_time": 0.25815367698669434
+          },
+          {
+            "prediction": 42.0,
+            "assignment_id": "94be5fe889834fb8@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 7,
+            "status": "OPTIMAL",
+            "makespan": 43.0,
+            "gap": 0.0,
+            "best_bound": 43.0,
+            "wall_time": 0.33701395988464355
+          },
+          {
+            "prediction": 48.0,
+            "assignment_id": "c9a01d67dea719d9@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 3,
+            "status": "OPTIMAL",
+            "makespan": 47.99999999999407,
+            "gap": 0.0,
+            "best_bound": 47.99999999999407,
+            "wall_time": 0.28753137588500977
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 43,
+        "scorer": "RF-H",
+        "top_k": 3,
+        "best_selected_makespan": 41.99999999999999,
+        "feasible_count": 3,
+        "feasible_ratio": 1.0,
+        "low_gap_count": 3,
+        "low_gap_ratio": 1.0,
+        "mean_gap_feasible": 0.0,
+        "selected": [
+          {
+            "prediction": 58.22958193767018,
+            "assignment_id": "5f0ad4c0313c1bf3@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 10,
+            "status": "OPTIMAL",
+            "makespan": 41.99999999999999,
+            "gap": 0.0,
+            "best_bound": 41.99999999999999,
+            "wall_time": 0.25815367698669434
+          },
+          {
+            "prediction": 58.22958193767018,
+            "assignment_id": "94be5fe889834fb8@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 7,
+            "status": "OPTIMAL",
+            "makespan": 43.0,
+            "gap": 0.0,
+            "best_bound": 43.0,
+            "wall_time": 0.33701395988464355
+          },
+          {
+            "prediction": 59.892051976618156,
+            "assignment_id": "92fad871fb84907e@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 4,
+            "status": "OPTIMAL",
+            "makespan": 48.00000000000001,
+            "gap": 0.0,
+            "best_bound": 48.00000000000001,
+            "wall_time": 0.2780590057373047
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 43,
+        "scorer": "CRF",
+        "top_k": 3,
+        "best_selected_makespan": 41.99999999999999,
+        "feasible_count": 3,
+        "feasible_ratio": 1.0,
+        "low_gap_count": 3,
+        "low_gap_ratio": 1.0,
+        "mean_gap_feasible": 0.0,
+        "selected": [
+          {
+            "prediction": 58.22958193767018,
+            "assignment_id": "5f0ad4c0313c1bf3@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 10,
+            "status": "OPTIMAL",
+            "makespan": 41.99999999999999,
+            "gap": 0.0,
+            "best_bound": 41.99999999999999,
+            "wall_time": 0.25815367698669434
+          },
+          {
+            "prediction": 58.22958193767018,
+            "assignment_id": "94be5fe889834fb8@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 7,
+            "status": "OPTIMAL",
+            "makespan": 43.0,
+            "gap": 0.0,
+            "best_bound": 43.0,
+            "wall_time": 0.33701395988464355
+          },
+          {
+            "prediction": 59.892051976618156,
+            "assignment_id": "92fad871fb84907e@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 4,
+            "status": "OPTIMAL",
+            "makespan": 48.00000000000001,
+            "gap": 0.0,
+            "best_bound": 48.00000000000001,
+            "wall_time": 0.2780590057373047
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 43,
+        "scorer": "HeurSeq",
+        "top_k": 3,
+        "best_selected_makespan": 41.99999999999999,
+        "feasible_count": 3,
+        "feasible_ratio": 1.0,
+        "low_gap_count": 3,
+        "low_gap_ratio": 1.0,
+        "mean_gap_feasible": 0.0,
+        "selected": [
+          {
+            "prediction": 49.0,
+            "assignment_id": "5f0ad4c0313c1bf3@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 10,
+            "status": "OPTIMAL",
+            "makespan": 41.99999999999999,
+            "gap": 0.0,
+            "best_bound": 41.99999999999999,
+            "wall_time": 0.25815367698669434
+          },
+          {
+            "prediction": 50.0,
+            "assignment_id": "94be5fe889834fb8@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 7,
+            "status": "OPTIMAL",
+            "makespan": 43.0,
+            "gap": 0.0,
+            "best_bound": 43.0,
+            "wall_time": 0.33701395988464355
+          },
+          {
+            "prediction": 54.0,
+            "assignment_id": "c9a01d67dea719d9@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 3,
+            "status": "OPTIMAL",
+            "makespan": 47.99999999999407,
+            "gap": 0.0,
+            "best_bound": 47.99999999999407,
+            "wall_time": 0.28753137588500977
+          }
+        ]
+      },
+      {
+        "instance": "mk01",
+        "seed": 43,
+        "scorer": "Random",
+        "top_k": 3,
+        "best_selected_makespan": 41.99999999999999,
+        "feasible_count": 3,
+        "feasible_ratio": 1.0,
+        "low_gap_count": 1,
+        "low_gap_ratio": 0.3333333333333333,
+        "mean_gap_feasible": 0.34126153553819566,
+        "selected": [
+          {
+            "prediction": 0.0,
+            "assignment_id": "5f0ad4c0313c1bf3@t=1",
+            "has_solution": true,
+            "status_code": 2,
+            "sol_count": 10,
+            "status": "OPTIMAL",
+            "makespan": 41.99999999999999,
+            "gap": 0.0,
+            "best_bound": 41.99999999999999,
+            "wall_time": 0.25815367698669434
+          },
+          {
+            "prediction": 1.0,
+            "assignment_id": "7dc83ca725f38afe@t=1",
+            "has_solution": true,
+            "status_code": 9,
+            "sol_count": 3,
+            "status": "TIME_LIMIT",
+            "makespan": 103.99999998949892,
+            "gap": 0.6442307691948466,
+            "best_bound": 37.00000000000001,
+            "wall_time": 1.0076847076416016
+          },
+          {
+            "prediction": 2.0,
+            "assignment_id": "ad06c1dc8baf64da@t=1",
+            "has_solution": true,
+            "status_code": 9,
+            "sol_count": 3,
+            "status": "TIME_LIMIT",
+            "makespan": 89.99999999086972,
+            "gap": 0.37955383741974047,
+            "best_bound": 55.840154626558515,
+            "wall_time": 1.0026154518127441
+          }
+        ]
+      }
+    ],
+    "calibration": {
+      "features": [
+        "num_used_machines",
+        "max_machine_load",
+        "load_imbalance",
+        "max_ops_on_machine",
+        "max_job_time",
+        "load_std",
+        "load_0",
+        "used_0",
+        "ops_0",
+        "load_1",
+        "used_1",
+        "ops_1",
+        "load_2",
+        "used_2",
+        "ops_2",
+        "load_3",
+        "used_3",
+        "ops_3",
+        "load_4",
+        "used_4",
+        "ops_4",
+        "load_5",
+        "used_5",
+        "ops_5"
+      ],
+      "n_train": 60,
+      "n_test": 30,
+      "calibration_requested": 6,
+      "calibration_solved": 6,
+      "calibration_accepted": 2,
+      "calibration_acceptance_rate": 0.3333333333333333,
+      "crf_fallback": "fewer_than_3_low_gap_calibration_labels",
+      "calibration_rows": [
+        {
+          "idx": 37,
+          "heuristic": 48.0,
+          "assignment_id": "2b682742377dab55@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 6,
+          "status": "OPTIMAL",
+          "makespan": 44.0,
+          "gap": 0.0,
+          "best_bound": 44.0,
+          "wall_time": 0.24156522750854492
+        },
+        {
+          "idx": 48,
+          "heuristic": 61.0,
+          "assignment_id": "1c35b021b1355bce@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 5,
+          "status": "OPTIMAL",
+          "makespan": 49.99999999999744,
+          "gap": 0.0,
+          "best_bound": 49.99999999999744,
+          "wall_time": 0.20411920547485352
+        },
+        {
+          "idx": 53,
+          "heuristic": 69.0,
+          "assignment_id": "3df25587f0db305d@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 3,
+          "status": "TIME_LIMIT",
+          "makespan": 66.99999999318403,
+          "gap": 0.3283582088868971,
+          "best_bound": 45.00000000000001,
+          "wall_time": 1.0162665843963623
+        },
+        {
+          "idx": 42,
+          "heuristic": 83.0,
+          "assignment_id": "64bdab36227b041e@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 2,
+          "status": "TIME_LIMIT",
+          "makespan": 80.99999999179873,
+          "gap": 0.5308641974833669,
+          "best_bound": 37.99999999999977,
+          "wall_time": 1.0117008686065674
+        },
+        {
+          "idx": 51,
+          "heuristic": 93.0,
+          "assignment_id": "7c8f3393569f2659@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 4,
+          "status": "TIME_LIMIT",
+          "makespan": 90.99999999077662,
+          "gap": 0.5850202428729196,
+          "best_bound": 37.76315789473679,
+          "wall_time": 1.0031981468200684
+        },
+        {
+          "idx": 55,
+          "heuristic": 119.0,
+          "assignment_id": "8872411b9ae35adc@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 2,
+          "status": "TIME_LIMIT",
+          "makespan": 114.99999998839996,
+          "gap": 0.4277400193862348,
+          "best_bound": 65.80989776394476,
+          "wall_time": 1.0041260719299316
+        }
+      ],
+      "rf_h_train_r2": 0.9598526982078839,
+      "cache": {
+        "2b682742377dab55@t=1": {
+          "assignment_id": "2b682742377dab55@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 6,
+          "status": "OPTIMAL",
+          "makespan": 44.0,
+          "gap": 0.0,
+          "best_bound": 44.0,
+          "wall_time": 0.24156522750854492
+        },
+        "1c35b021b1355bce@t=1": {
+          "assignment_id": "1c35b021b1355bce@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 5,
+          "status": "OPTIMAL",
+          "makespan": 49.99999999999744,
+          "gap": 0.0,
+          "best_bound": 49.99999999999744,
+          "wall_time": 0.20411920547485352
+        },
+        "3df25587f0db305d@t=1": {
+          "assignment_id": "3df25587f0db305d@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 3,
+          "status": "TIME_LIMIT",
+          "makespan": 66.99999999318403,
+          "gap": 0.3283582088868971,
+          "best_bound": 45.00000000000001,
+          "wall_time": 1.0162665843963623
+        },
+        "64bdab36227b041e@t=1": {
+          "assignment_id": "64bdab36227b041e@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 2,
+          "status": "TIME_LIMIT",
+          "makespan": 80.99999999179873,
+          "gap": 0.5308641974833669,
+          "best_bound": 37.99999999999977,
+          "wall_time": 1.0117008686065674
+        },
+        "7c8f3393569f2659@t=1": {
+          "assignment_id": "7c8f3393569f2659@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 4,
+          "status": "TIME_LIMIT",
+          "makespan": 90.99999999077662,
+          "gap": 0.5850202428729196,
+          "best_bound": 37.76315789473679,
+          "wall_time": 1.0031981468200684
+        },
+        "8872411b9ae35adc@t=1": {
+          "assignment_id": "8872411b9ae35adc@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 2,
+          "status": "TIME_LIMIT",
+          "makespan": 114.99999998839996,
+          "gap": 0.4277400193862348,
+          "best_bound": 65.80989776394476,
+          "wall_time": 1.0041260719299316
+        },
+        "cec8431c0a43ecaf@t=1": {
+          "assignment_id": "cec8431c0a43ecaf@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 9,
+          "status": "OPTIMAL",
+          "makespan": 49.999999994899994,
+          "gap": 0.0,
+          "best_bound": 49.999999994899994,
+          "wall_time": 0.30690526962280273
+        },
+        "5f0ad4c0313c1bf3@t=1": {
+          "assignment_id": "5f0ad4c0313c1bf3@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 10,
+          "status": "OPTIMAL",
+          "makespan": 41.99999999999999,
+          "gap": 0.0,
+          "best_bound": 41.99999999999999,
+          "wall_time": 0.25815367698669434
+        },
+        "94be5fe889834fb8@t=1": {
+          "assignment_id": "94be5fe889834fb8@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 7,
+          "status": "OPTIMAL",
+          "makespan": 43.0,
+          "gap": 0.0,
+          "best_bound": 43.0,
+          "wall_time": 0.33701395988464355
+        },
+        "c9a01d67dea719d9@t=1": {
+          "assignment_id": "c9a01d67dea719d9@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 3,
+          "status": "OPTIMAL",
+          "makespan": 47.99999999999407,
+          "gap": 0.0,
+          "best_bound": 47.99999999999407,
+          "wall_time": 0.28753137588500977
+        },
+        "92fad871fb84907e@t=1": {
+          "assignment_id": "92fad871fb84907e@t=1",
+          "has_solution": true,
+          "status_code": 2,
+          "sol_count": 4,
+          "status": "OPTIMAL",
+          "makespan": 48.00000000000001,
+          "gap": 0.0,
+          "best_bound": 48.00000000000001,
+          "wall_time": 0.2780590057373047
+        },
+        "7dc83ca725f38afe@t=1": {
+          "assignment_id": "7dc83ca725f38afe@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 3,
+          "status": "TIME_LIMIT",
+          "makespan": 103.99999998949892,
+          "gap": 0.6442307691948466,
+          "best_bound": 37.00000000000001,
+          "wall_time": 1.0076847076416016
+        },
+        "ad06c1dc8baf64da@t=1": {
+          "assignment_id": "ad06c1dc8baf64da@t=1",
+          "has_solution": true,
+          "status_code": 9,
+          "sol_count": 3,
+          "status": "TIME_LIMIT",
+          "makespan": 89.99999999086972,
+          "gap": 0.37955383741974047,
+          "best_bound": 55.840154626558515,
+          "wall_time": 1.0026154518127441
+        }
+      }
+    }
+  }
+]

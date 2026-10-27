@@ -59,7 +59,10 @@ def make_pool(inst: FJSPInstance, seed: int, size: int) -> List[Dict[Tuple[int, 
     rng = random.Random(seed + 100_003)
     anchor = gen.balanced_assignment()
     pool, seen = [], set()
-    while len(pool) < size:
+    max_attempts = max(1000, size * 100)
+    attempts = 0
+    while len(pool) < size and attempts < max_attempts:
+        attempts += 1
         candidate = gen.random_assignment() if rng.random() < 0.6 else perturb_assignment(inst, anchor, rng)
         key = assignment_key(candidate)
         if key in seen:
@@ -67,6 +70,11 @@ def make_pool(inst: FJSPInstance, seed: int, size: int) -> List[Dict[Tuple[int, 
         check_assignment(inst, candidate)
         seen.add(key)
         pool.append(candidate)
+    if len(pool) < size:
+        raise RuntimeError(
+            f"could not construct requested pool: requested={size}, "
+            f"unique={len(pool)}, attempts={attempts}"
+        )
     return pool
 
 
@@ -79,7 +87,7 @@ def train_rf(X: np.ndarray, y: np.ndarray, seed: int, trees: int = 100,
              depth: int = 12, leaf: int = 5) -> RandomForestRegressor:
     model = RandomForestRegressor(
         n_estimators=trees, max_depth=depth, min_samples_leaf=leaf,
-        random_state=seed, n_jobs=-1,
+        random_state=seed, n_jobs=1,
     )
     model.fit(X, y)
     return model
@@ -94,7 +102,8 @@ def status_name(status: int) -> str:
 
 def solve_assignment(inst: FJSPInstance, assignment: Dict, verify_time: float,
                      cache: Dict[str, Dict]) -> Dict:
-    key = assignment_key(assignment)
+    # Verification results are budget-specific and cannot be reused silently.
+    key = f"{assignment_key(assignment)}@t={verify_time:g}"
     if key in cache:
         return cache[key]
     result = FixedAssignmentSequencingModel(
@@ -138,7 +147,10 @@ def fit_and_score(inst: FJSPInstance, train_pool: List[Dict], test_pool: List[Di
         result = solve_assignment(inst, train_pool[int(pos)], verify_time, cache)
         if result["has_solution"]:
             calibration_rows.append({"idx": int(pos), "heuristic": float(train_h[pos]), **result})
-    accepted = [r for r in calibration_rows if r["gap"] is None or r["gap"] <= 0.05]
+    # A missing gap is not a reliable calibration label.  Accept only a
+    # feasible incumbent with a finite, explicitly bounded optimality gap.
+    accepted = [r for r in calibration_rows
+                if r["gap"] is not None and r["gap"] <= 0.05]
 
     residual_constant = 0.0
     fallback_reason = None
