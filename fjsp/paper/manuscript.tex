@@ -156,7 +156,7 @@ Group & Features & Motivation \\ \midrule
 \subsection{Heuristic Sequencer and Labeling Procedure}
 We design a fast constructive heuristic sequencer to generate proxy labels $\tilde{C}_{\max}(\mathbf{x})$ for training. The sequencer maintains the ready set of operations whose predecessors have completed, applies the implemented dispatching rules, and returns the best resulting makespan with deterministic tie-breaking. The implementation performs no backtracking or insertion; its runtime is measured empirically rather than assigned an overly specific asymptotic bound.
 
-Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. This implementation does not enforce disjoint pools, so cross-pool assignment overlap remains an audit item; different seeds alone do not establish a strict held-out split.
+Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. The preserved formal runs were audited for zero cross-pool assignment intersection, and the current runner enforces the same invariant before scoring.
 
 \subsection{Surrogate Model}
 We use a Random Forest regressor \citep{Breiman2001} with 100 trees, maximum depth 12, and minimum leaf size 5 in the budget-matched rerun. RF is used as a transparent nonlinear baseline; the study does not assume that its in-sample fit implies generalization or superiority over lower-bound rules.
@@ -265,12 +265,12 @@ mk10 & -- & 447.0 & 426.0 & 426.0 & 393.0 & 438.5 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-A separate exploratory five-second MK06 run (200 training, 100 test candidates, 20 calibration labels, seeds 42 and 43) gives the following descriptive results: CRF and RF-H remain tied (mean 112.0), while LB (109.5) and HeurSeq (111.5) are lower. The check also returns no accepted calibration labels, and provides no evidence of a CRF gain. Candidate-pool sizes and calibration counts also changed, so this is not a controlled time-limit sensitivity experiment.
+A separate exploratory five-second MK06 run (200 training, 100 test candidates, 20 calibration labels, seeds 42 and 43) gives the following descriptive results: CRF and RF-H remain tied (mean 112.0), while LB (109.5) and HeurSeq (111.5) are lower. The check also returns no accepted calibration labels, and provides no evidence of a CRF gain. Candidate-pool sizes and calibration counts also changed, so this is not a controlled time-limit sensitivity experiment. A subsequent Gate-A development replay used the same small candidate pools for MK01, MK04, MK06, and MK08 at one- and five-second verification limits. RF-H showed no consistent advantage; five seconds mainly increased feasibility on MK08. No accepted CRF labels were obtained for MK04, MK06, or MK08. These results reinforce that solver budget and label availability are material limitations rather than evidence for CRF superiority; the replay is development evidence and is not pooled with the formal rerun.
 
 \subsection{Five-Seed Extension}
 The frozen one-second protocol was extended with seeds 45 and 46, yielding 50 instance--seed combinations. Table~\ref{tab:five-seeds} is generated directly from the two preserved result batches. CRF falls back in 43/50 runs and selects the same candidate sets as RF-H in 48/50; the two methods tie in best incumbent in all 46 jointly feasible runs using a $10^{-3}$ tolerance. This corrects the earlier conflation of identical makespans with identical candidate sets (the original three-seed batch had 29/30 identical sets).
 
-The added seeds provide feasible incumbents on MK08, but only two of five runs succeed for each pool scorer. MK09 and MK10 also have method-dependent success counts. We therefore report successful/attempted runs beside conditional means and do not rank methods by conditional means alone. Candidate-level feasible ratios and gaps are available in the accompanying machine-readable summary. These additional seeds do not repair the remaining protocol limitations: cross-pool duplicate checks, per-method total costs, and a controlled longer-budget experiment are still required before submission.
+The added seeds provide feasible incumbents on MK08, but only two of five runs succeed for each pool scorer. MK09 and MK10 also have method-dependent success counts. We therefore report successful/attempted runs beside conditional means and do not rank methods by conditional means alone. Candidate-level feasible ratios and gaps are available in the accompanying machine-readable summary. These additional seeds do not by themselves establish an end-to-end total-cost advantage. The development runner now enforces pool-size and uniqueness checks and keeps verification caches budget-specific; a full confirmation of per-method total costs remains outside the primary historical rerun and is reported as a limitation.
 
 \input{five_seed_tables.tex}
 
@@ -347,7 +347,7 @@ The archived sensitivity files cover only selected instances and should be treat
 \section{Discussion}
 
 \subsection{What Did the Surrogate Learn?}
-The surrogate receives only workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. Training and test pools use different random seeds, but the current generator does not enforce cross-pool deduplication. Assignment overlap must be audited before claiming strict held-out evaluation. Nevertheless, the study does not claim that a high training fit implies generalization; the relevant evidence is the common-pool Top-$K$ outcome and its solver status.
+The surrogate receives only workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. Training and test pools use different random seeds; the preserved five-seed results were audited for zero train/test assignment intersection, and the current runner additionally rejects duplicate or undersized pools. Nevertheless, the study does not claim that a high training fit implies generalization; the relevant evidence is the common-pool Top-$K$ outcome and its solver status.
 
 \subsection{When Is Learned Guidance Better Than Simple Scoring?}
 The formal rerun does not establish a universal advantage over simple workload scoring. LB is lower than RF-H on several instances, while HeurSeq is lower on others; CRF adds no best-makespan improvement under the tested calibration budget. The practical conclusion is therefore a protocol recommendation: use RF as one transparent scorer in a common candidate pool, and retain a lower-bound or direct heuristic scorer as a control.
@@ -449,3 +449,4 @@ The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), an
 
 \end{thebibliography}
 \end{document}
+
