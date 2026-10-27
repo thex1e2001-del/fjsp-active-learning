@@ -1,0 +1,358 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs,multirow,array,float,enumitem}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\title{Random-Forest-Assisted Candidate Screening for Flexible Job Shop Scheduling}
+\author{\IEEEauthorblockN{Author Name}
+\IEEEauthorblockA{School of Management, University Name\\
+City, Country\\
+email@university.edu}}
+\begin{document}\maketitle\begin{abstract}
+Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper presents a budget-matched empirical study of a lightweight candidate-screening pipeline. A Random Forest (RF) is trained on low-cost heuristic sequencing labels and assignment-level workload features; a fixed-assignment MIP then verifies only the top-ranked candidates. All scorers use the same candidate pools, Top-$K$ verification budget, and solver time limit. In a rerun on Brandimarte MK01--MK10 extended to five seeds, the RF scorer was competitive with lower-bound and direct heuristic rankings on small and medium instances, but did not consistently improve them. An exploratory residual-calibration variant (CRF) selected the same candidate sets as RF-H in 48 of 50 runs and fell back in 43 runs. Best selected feasible makespans tied within $10^{-3}$ in all 46 jointly feasible runs; equal objective values do not imply identical selections. The results support a transparent, reproducible screening workflow and identify clear instance and solver-budget limits; they do not support a claim of universal RF or CRF superiority over simple rules.
+
+\smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; interpretable screening
+\end{abstract}
+
+% ═══════════════════════════ 1. INTRODUCTION ═══════════════════════════
+\section{Introduction}
+
+Modern manufacturing environments increasingly require flexible production systems where jobs can be routed through alternative machines depending on shop-floor conditions. This flexibility, while valuable for throughput and resilience, introduces a challenging combinatorial problem: the Flexible Job Shop Scheduling Problem (FJSP). Given $n$ jobs each comprising a sequence of operations and $m$ machines with machine-dependent processing times, the scheduler must simultaneously decide \emph{which} machine processes each operation (routing) and \emph{in what order} operations are processed on each machine (sequencing), to minimize the maximum completion time (makespan).
+
+The coupling of routing and sequencing is the central computational difficulty of FJSP. The routing decision determines which operations compete for each machine, while the sequencing decision resolves those competitions. Exact mixed-integer programming (MIP) formulations must jointly optimize both, leading to a search space that grows as $O(m^{N} \times N!)$ for $N$ operations. While modern solvers such as Gurobi can prove optimality on small instances (e.g., 55 operations), they fail to close the optimality gap within reasonable time on larger instances with 150--240 operations \citep{Ozguven2010}. Meta-heuristics, most notably the tabu search algorithm of \citet{Mastrolilli2000}, can find near-optimal solutions through carefully designed neighborhood structures, but they rely on hand-crafted operators, require instance-specific tuning, and do not learn from data to improve over time.
+
+Recent advances in machine learning for combinatorial optimization have opened new avenues \citep{Bengio2021}. End-to-end approaches using deep reinforcement learning or graph neural networks can learn effective dispatching policies \citep{Zhang2020drl,Song2023} but require extensive training data and offer limited interpretability. Tree-in-MIP methods embed learned decision trees or random forests as MIP constraints \citep{Maragno2023}, but the standard per-data-point encoding creates $O(N \times T \times L)$ binary variables---prohibitive for FJSP where each operation is a separate data point. Surrogate-assisted optimization \citep{Jin2011} offers a middle ground: use a cheap predictive model to guide search, reserving expensive exact evaluation for promising candidates only.
+
+This paper investigates whether lightweight, interpretable features of a machine assignment can provide useful guidance for screening candidate assignments under a fixed verification budget. A machine assignment is represented by workload, operation-count, machine-usage, imbalance, dispersion, and maximum job-time features. A fast heuristic sequencer generates low-cost proxy labels, a Random Forest surrogate scores unseen assignments, and a time-limited fixed-assignment MIP verifies the same number of candidates for every scorer.
+
+Our research is guided by four questions:
+\begin{enumerate}[leftmargin=1.2em]
+    \item[\textbf{RQ1.}] Can aggregate assignment features support effective ranking of candidate assignments, as measured by top-$K$ recall and regret metrics?
+    \item[\textbf{RQ2.}] Under fair computational budgets, does a learned RF surrogate add value over simple workload-based scoring rules?
+    \item[\textbf{RQ3.}] Under what instance structures does the method succeed, and under what conditions does it fail?
+    \item[\textbf{RQ4.}] What limitations become visible when solver status, feasibility, and optimality gaps are reported at candidate level?
+\end{enumerate}
+
+Our contributions are:
+\begin{itemize}[leftmargin=1.2em]
+\item An explicit, low-dimensional assignment representation whose implemented feature list is fully aligned with the released code.
+\item A budget-matched protocol that separates training and test candidate pools and records candidate IDs, incumbent makespans, solver statuses, bounds, gaps, and wall-clock times.
+\item A reproducible comparison of RF-H, lower-bound, direct heuristic, random, and Balanced reference scorers, including a negative result for residual calibration and an analysis of when screening conclusions are inconclusive because of time-limited MIP verification.
+\end{itemize}
+
+The paper is organized as follows. Section~2 reviews related work and positions our contribution. Section~3 formalizes the problem and presents lower-bound motivation. Section~4 describes the methodology. Section~5 presents computational experiments. Section~6 discusses findings, limitations, and managerial implications. Section~7 concludes.
+
+% ═══════════════════════════ 2. RELATED WORK ═══════════════════════════
+\section{Related Work}
+
+\subsection{FJSP: Problem, Benchmarks, and Foundations}
+FJSP was formalized by \citet{Brucker1990} as a generalization of the classical job shop. The standard benchmark suites---Brandimarte \citep{Brandimarte1993}, Hurink \textit{edata}/\textit{rdata}/\textit{vdata} \citep{Hurink1994}, Dauz\`ere-P\'er\`es and Paulli \citep{Dauzere1997}, Kacem \citep{Kacem2002}, Fattahi \citep{Fattahi2007}, and others---have driven algorithm development for three decades. FJSPLib provides a centralized repository of instances and best-known lower/upper bounds across these suites. \citet{Pinedo2016} provides a comprehensive textbook treatment. \citet{Xie2019} classify FJSP solution methods into exact algorithms, heuristics, and meta-heuristics.
+
+\subsection{Exact, MIP, and CP Methods}
+Exact MIP formulations jointly model assignment and sequencing \citep{Ozguven2010,Meng2020}. While they can prove optimality on small instances, their computational cost grows exponentially. Constraint Programming (CP) approaches, notably CP-SAT and IBM CP Optimizer, have demonstrated strong performance on FJSP benchmarks through interval variables and specialized scheduling constraints. However, both MIP and CP solvers still require substantial time on medium-to-large instances, motivating decomposition and heuristic approaches.
+
+\subsection{Metaheuristics and Hybrid Methods}
+The tabu search of \citet{Mastrolilli2000} remains a landmark, achieving near-optimal makespan through hierarchical neighborhood structures. Subsequent work includes genetic algorithms \citep{Pezzella2008}, hybrid genetic-tabu search \citep{Li2016}, variable neighborhood search \citep{Gao2008}, and particle swarm optimization hybrids \citep{Xia2005}. \citet{Calis2015} review AI techniques for job shop scheduling. These methods are effective but hand-crafted: their operators, neighborhoods, and parameters are designed for specific benchmark characteristics and do not generalize without re-engineering.
+
+\subsection{Decomposition in Scheduling}
+Decomposition has a long history in scheduling. The shifting bottleneck procedure \citep{Adams1988} iteratively solves single-machine subproblems. For FJSP, several works separate assignment and sequencing: \citet{Brandimarte1993} uses a hierarchical tabu search, and \citet{Xia2005} hybridize particle swarm optimization for assignment with simulated annealing for sequencing. These methods use fixed heuristics for the assignment subproblem. Our work differs by \emph{learning} an evaluation function for assignments from data.
+
+\subsection{Learning-Based Scheduling}
+The intersection of machine learning and scheduling has grown rapidly. End-to-end methods use deep reinforcement learning to learn dispatching policies: \citet{Zhang2020drl} represent job shop states as disjunctive graphs and train a GNN-based agent; \citet{Song2023} extend this to FJSP with heterogeneous graph representations for joint operation selection and machine assignment; \citet{Wang2024} propose dual attention networks for FJSP; and \citet{Moon2024learning} address FJSP with transportation constraints. \citet{Smit2024nco} extend neural combinatorial optimization to stochastic FJSP. These methods can achieve strong empirical performance but require extensive training and are difficult to interpret.
+
+Learning-to-configure approaches use ML to accelerate existing solvers: \citet{Hutter2011} for algorithm configuration, \citet{He2014} and \citet{Khalil2016} for branching in MIP, and \citet{Gasse2019} for node selection in B\&B via graph convolutional networks. \citet{Kotary2021} survey end-to-end constrained optimization learning.
+
+\subsection{Surrogate-Assisted Combinatorial Optimization}
+Surrogate models replace expensive objective evaluations with cheap approximations. \citet{Jin2011} surveys surrogate-assisted evolutionary computation, primarily for continuous optimization. Extensions to discrete and combinatorial problems are more recent. The key challenge in discrete settings is defining feature representations that preserve the ranking of decision alternatives under the true objective. Our work addresses this by designing structured aggregate features for the FJSP assignment space and validating ranking quality through top-$K$ metrics.
+
+\subsection{Tree-in-MIP and Constraint Learning}
+\citet{Verwer2017} first proposed encoding decision trees as MIP constraints. \citet{Maragno2023} generalized this into OptiCL, a framework embedding decision trees, random forests, ensembles, and neural networks into MIP formulations. \citet{Elmachtoub2022} formalize the ``predict, then optimize'' paradigm. \citet{Bertsimas2017} develop optimal classification trees via MIP. The fundamental limitation for FJSP is the per-data-point encoding: $O(N \times T \times L)$ binary variables for $N$ operations, $T$ trees, and $L$ leaves. Our aggregate feature approach avoids this by using globally shared feature variables, reducing encoding complexity to $O(T \times L)$.
+
+\subsection{Positioning}
+Table~\ref{tab:taxonomy} positions our work within the literature. Our framework combines (1)~lower-bound-motivated assignment features, (2)~inexpensive heuristic labeling, (3)~a learned but interpretable surrogate, and (4)~MIP-based verification with explicit reporting of limitations.
+
+\begin{table}[htbp]\centering\caption{Literature taxonomy.}\label{tab:taxonomy}
+\begin{tabular}{lccccc}\toprule
+Method Class & Learning & Feat.\ Cost & Seq.\ Method & Interpret. & FJSP Scale \\ \midrule
+Exact MIP/CP & No & -- & Exact & High & Low \\
+Meta-heuristics & No & -- & Heuristic & Medium & Medium \\
+End-to-end DRL/GNN & Policy & High & Learned & Low & Medium \\
+Tree-in-MIP & RF/DT & High (per-op) & Exact & Medium & Low \\
+\textbf{This work} & RF & Low (aggregate) & MIP-verified & High & Medium \\ \bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════ 3. PROBLEM ═══════════════════════════
+\section{Problem Formulation and Lower-Bound Motivation}
+
+\subsection{Notation}
+\begin{table}[htbp]\centering\caption{Notation.}\label{tab:notation}
+\begin{tabular}{ll}\toprule
+$J=\{1,\ldots,n\}$ & Set of jobs \\
+$M=\{1,\ldots,m\}$ & Set of machines \\
+$\mathcal{O}=\{(j,p)\}$ & Set of all operations \\
+$M_{j,p}\subseteq M$ & Feasible machines for $(j,p)$ \\
+$p_{j,p,k}$ & Processing time of $(j,p)$ on $k$ \\
+$x_{j,p,k}\in\{0,1\}$ & Assignment variable \\
+$S_{j,p},C_{j,p}\geq 0$ & Start and completion times \\
+$\delta_{(j,p),(j',p'),k}\in\{0,1\}$ & Sequencing variable \\
+$C_{\max}$ & Makespan \\
+$H$ & Big-M constant ($\sum_{j,p,k}p_{j,p,k}$) \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Full FJSP MIP Formulation}
+The standard MIP minimizes $C_{\max}$ subject to:
+\begin{align}
+\sum_{k\in M_{j,p}} x_{j,p,k} &= 1 \quad \forall (j,p)\in\mathcal{O} \label{eq:c1}\\
+C_{j,p} &= S_{j,p} + \sum_{k\in M_{j,p}} p_{j,p,k}\,x_{j,p,k} \quad \forall (j,p) \label{eq:c2}\\
+S_{j,p+1} &\geq C_{j,p} \quad \forall j, p< o_j \label{eq:c3}\\
+S_{j',p'} &\geq C_{j,p} - H(1-\delta) - H(2-x_{j,p,k}-x_{j',p',k}) \label{eq:c4}\\
+C_{\max} &\geq C_{j,p} \quad \forall (j,p) \label{eq:c5}
+\end{align}
+where~\eqref{eq:c4} is enforced for all machine-sharing operation pairs with the complementary constraint $S_{j,p} \geq C_{j',p'} - H\delta - H(2-x_{j,p,k}-x_{j',p',k})$.
+
+\subsection{Lower Bounds and Feature Motivation}
+Given a fixed assignment $\mathbf{x}$, the sequencing subproblem is:
+\begin{equation}
+\operatorname{SEQ}(\mathbf{x}):\; \min_{\delta,S,C}\, C_{\max}\;\text{ s.t. }\;\eqref{eq:c2}--\eqref{eq:c5}\text{ with }\mathbf{x}\text{ fixed}. \label{eq:seq}
+\end{equation}
+
+Two classical lower bounds motivate our feature design:
+
+\begin{description}
+\item[Proposition 1 (Machine workload bound).] For any feasible schedule under assignment $\mathbf{x}$: 
+$C_{\max} \geq \max_{k\in M} \sum_{(j,p):x_{j,p,k}=1} p_{j,p,k}$.
+\item[Proposition 2 (Job path bound).] For any feasible schedule: 
+$C_{\max} \geq \max_{j\in J} \sum_{p} \sum_{k} p_{j,p,k}\,x_{j,p,k}$.
+\end{description}
+
+\textit{Proof.} Proposition~1 holds because $\max_k \operatorname{load}_k$ is the earliest possible completion time of the bottleneck machine. Proposition~2 holds because each job's operations must be processed sequentially, so total job time is a lower bound on its completion time. $\square$
+
+These bounds justify machine workload and maximum job-time features as surrogate inputs. They are necessary but not sufficient: two assignments with similar aggregate loads can still have different sequencing difficulty because of precedence and machine interactions. The experiments therefore treat the lower bound as a baseline scorer and do not claim that the implemented feature vector captures the full fixed-assignment objective.
+
+% ═══════════════════════════ 4. METHODOLOGY ═══════════════════════════
+\section{Methodology}
+
+\subsection{Aggregate Feature Representation}
+We represent an assignment $\mathbf{x}$ by the workload, operation-count, usage, path-time, and dispersion features implemented in the released experiment code and summarized in Table~\ref{tab:features}. All features are computable from $\mathbf{x}$ alone and do not require solving the sequencing subproblem.
+
+\begin{table}[htbp]\centering\caption{Feature groups implemented in the released scorer.}\label{tab:features}
+\begin{tabular}{llp{6cm}}\toprule
+Group & Features & Motivation \\ \midrule
+\textbf{A. Machine assignment} & $\operatorname{load}_k$, $\operatorname{ops}_k$, $\operatorname{used}_k$ for each machine & Represent machine workload and assignment sparsity \\
+\textbf{B. Aggregate workload} & number of used machines, maximum machine load, load imbalance, maximum operations per machine, load standard deviation & Lower-bound and balance indicators \\
+\textbf{C. Job-path summary} & maximum total processing time of any job under the assignment & Proposition~2: critical job-path bound \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Heuristic Sequencer and Labeling Procedure}
+We design a fast constructive heuristic sequencer to generate proxy labels $\tilde{C}_{\max}(\mathbf{x})$ for training. The sequencer maintains the ready set of operations whose predecessors have completed, applies the implemented dispatching rules, and returns the best resulting makespan with deterministic tie-breaking. The implementation performs no backtracking or insertion; its runtime is measured empirically rather than assigned an overly specific asymptotic bound.
+
+Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. The preserved formal runs were audited for zero cross-pool assignment intersection, and the current runner enforces the same invariant before scoring.
+
+\subsection{Surrogate Model}
+We use a Random Forest regressor \citep{Breiman2001} with 100 trees, maximum depth 12, and minimum leaf size 5 in the budget-matched rerun. RF is used as a transparent nonlinear baseline; the study does not assume that its in-sample fit implies generalization or superiority over lower-bound rules.
+
+\subsection{Budget-Matched Candidate Screening}
+The main rerun uses a fixed candidate-pool protocol rather than giving one scorer a larger verification budget. Training and test pools are generated independently with deterministic seeds. LB, RF-H, CRF, HeurSeq, and Random all score the same test pool and each submit $K$ candidates to the fixed-assignment MIP. The selected candidate identities can differ between scorers. Balanced is retained as an independent reference assignment. This design isolates ranking quality from candidate-pool and solver-budget differences.
+
+\begin{algorithm}[htbp]\caption{Budget-Matched Candidate Screening}\label{alg:beam}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Instance, train pool $\mathcal{T}$, test pool $\mathcal{V}$, top-$K$
+\State Train RF-H on heuristic labels from $\mathcal{T}$; optionally fit CRF on accepted MIP residual labels from $\mathcal{T}$
+\For{each scorer $s\in\{LB, RF\mbox{-}H, CRF, HeurSeq, Random\}$}
+    \State Score every assignment in the common test pool $\mathcal{V}$
+    \State Select the same number $K$ of lowest-scoring assignments
+    \State Verify selected assignments with identical time-limited $\operatorname{SEQ}$ MIP
+\EndFor
+\State Report incumbent, best bound, status, gap, feasibility, and wall time
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{MIP-Based Sequencing Verification}
+Top-$K$ candidates are verified by solving $\operatorname{SEQ}(\mathbf{x})$ via Gurobi 10.0 with a one-second time limit in the formal rerun; a two-seed five-second check is reported separately for MK06. We record incumbent makespan, best bound, solver status, MIP gap, and wall time. A time-limited feasible incumbent is not treated as a proof of optimality, so the paper uses ``time-limited MIP verification'' rather than ``exact sequencing.''
+
+\subsection{Exploratory Residual Calibration}
+We also test a deliberately conservative residual-calibration variant. A small set of training-pool assignments is solved by the same time-limited MIP. Only labels with a feasible solution and gap at most 0.05 are accepted:
+\begin{equation}
+r(\mathbf{x}) = C_{\max}^{\operatorname{SEQ}}(\mathbf{x}) - \tilde{C}_{\max}^{\text{heur}}(\mathbf{x}),\quad
+\hat{C}_{\max}^{\text{final}}(\mathbf{x}) = \hat{C}_{\max}^{\text{RF}}(\mathbf{x}) + \hat{r}(\mathbf{x}),
+\end{equation}
+where $\hat{r}$ is a second RF trained on the accepted labels. If fewer than three accepted labels are available, CRF falls back to RF-H and records the reason. This is an exploratory ablation; it is not assumed to improve the main scorer.
+
+% ═══════════════════════════ 5. EXPERIMENTS ═══════════════════════════
+\section{Computational Experiments}
+
+\subsection{Experimental Setup}
+\textit{Instances.} We evaluate on the Brandimarte MK01--MK10 benchmark \citep{Brandimarte1993}, comprising 10 instances with sizes from $10\times6$ (55 operations) to $20\times15$ (240 operations). Table~\ref{tab:instances} summarizes instance characteristics and best-known solutions (BKS) sourced from FJSPLib (accessed June 2026).
+
+\begin{table}[htbp]\centering\caption{Instance characteristics.}\label{tab:instances}
+\begin{tabular}{lrrrrrr}\toprule
+Instance & $n$ & $m$ & $N$ & Avg.\ flex. & BKS & Status \\ \midrule
+mk01 & 10 & 6  & 55 & 2.0 & 40 & closed \\
+mk02 & 10 & 6  & 58 & 2.0 & 26 & closed \\
+mk03 & 15 & 8  & 150 & 3.0 & 204 & closed \\
+mk04 & 15 & 8  & 90 & 3.0 & 60 & closed \\
+mk05 & 15 & 4  & 106 & 2.0 & 172 & closed \\
+mk06 & 10 & 15 & 150 & 8.0 & 58 & closed \\
+mk07 & 20 & 5  & 100 & 2.0 & 139 & closed \\
+mk08 & 20 & 10 & 225 & 3.0 & 523 & closed \\
+mk09 & 20 & 10 & 240 & 3.0 & 307 & closed \\
+mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Implementation.} The rerun used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM) with scikit-learn RF models (100 trees, depth 12, minimum leaf size 5). For each instance and seed, the protocol generated 300 training assignments and 150 independent test assignments, requested 15 calibration labels, selected $K=5$, and gave every selected assignment a one-second MIP verification budget. Seeds were 42, 43, and 44. The complete candidate-level output is released as JSON; the earlier single-seed beam-search table is retained only as historical exploratory context.
+
+\textit{Baselines.} We compare scorers under a common candidate pool and verification budget:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{LB}: $\max\{\max_k\operatorname{load}_k,\max_j\operatorname{jobTime}_j\}$.
+\item \textbf{RF-H}: RF trained only on heuristic sequencing labels from the training pool.
+\item \textbf{CRF}: RF-H with the exploratory residual calibration described above.
+\item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
+\item \textbf{Balanced-ref}: one independent balanced assignment, reported as a reference rather than a pool scorer.
+\end{itemize}
+
+\textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within one second, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. Inferential tests are not applied to the incomplete one-second table.
+
+\subsection{Budget-Matched Rerun (Primary Evidence)}
+
+Table~\ref{tab:rerun} summarizes the formal rerun. Values are mean best feasible incumbents over the seeds that returned at least one feasible selected candidate; ``--'' means that no seed produced a feasible incumbent for that scorer. The comparison is descriptive because the one-second limit leaves substantial nonzero gaps on the larger instances. LB and HeurSeq are often as good as or better than RF-H. CRF is identical to RF-H in every combination with a feasible selected result, and 26 of 30 combinations fall back to RF-H because fewer than three calibration labels meet the gap threshold.
+
+\begin{table}[htbp]\centering\caption{Primary budget-matched rerun: mean best selected feasible incumbent.}\label{tab:rerun}
+\begin{tabular}{lrrrrrr}\toprule
+Inst. & Balanced & LB & RF-H & CRF & HeurSeq & Random \\ \midrule
+mk01 & 46.7 & 44.3 & 45.0 & 45.0 & 46.7 & 53.0 \\
+mk02 & 42.7 & 39.7 & 39.7 & 39.7 & 39.3 & 40.3 \\
+mk03 & 262.3 & 253.7 & 257.7 & 257.7 & 262.3 & 263.3 \\
+mk04 & 72.3 & 70.0 & 73.7 & 73.7 & 70.0 & 74.3 \\
+mk05 & 211.7 & 202.3 & 198.7 & 198.7 & 194.7 & 225.3 \\
+mk06 & 125.7 & 116.0 & 116.3 & 116.3 & 115.3 & 120.0 \\
+mk07 & 239.0 & 212.7 & 213.7 & 213.7 & 217.3 & 223.7 \\
+mk08 & -- & -- & -- & -- & -- & -- \\
+mk09 & -- & 469.0 & 469.5 & 469.5 & 452.0 & 446.0 \\
+mk10 & -- & 447.0 & 426.0 & 426.0 & 393.0 & 438.5 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+A separate exploratory five-second MK06 run (200 training, 100 test candidates, 20 calibration labels, seeds 42 and 43) gives the following descriptive results: CRF and RF-H remain tied (mean 112.0), while LB (109.5) and HeurSeq (111.5) are lower. The check also returns no accepted calibration labels, and provides no evidence of a CRF gain. Candidate-pool sizes and calibration counts also changed, so this is not a controlled time-limit sensitivity experiment. A subsequent Gate-A development replay used the same small candidate pools for MK01, MK04, MK06, and MK08 at one- and five-second verification limits. RF-H showed no consistent advantage; five seconds mainly increased feasibility on MK08. No accepted CRF labels were obtained for MK04, MK06, or MK08. These results reinforce that solver budget and label availability are material limitations rather than evidence for CRF superiority; the replay is development evidence and is not pooled with the formal rerun.
+
+\subsection{Five-Seed Extension}
+The frozen one-second protocol was extended with seeds 45 and 46, yielding 50 instance--seed combinations. Table~\ref{tab:five-seeds} is generated directly from the two preserved result batches. CRF falls back in 43/50 runs and selects the same candidate sets as RF-H in 48/50; the two methods tie in best incumbent in all 46 jointly feasible runs using a $10^{-3}$ tolerance. This corrects the earlier conflation of identical makespans with identical candidate sets (the original three-seed batch had 29/30 identical sets).
+
+The added seeds provide feasible incumbents on MK08, but only two of five runs succeed for each pool scorer. MK09 and MK10 also have method-dependent success counts. We therefore report successful/attempted runs beside conditional means and do not rank methods by conditional means alone. Candidate-level feasible ratios and gaps are available in the accompanying machine-readable summary. These additional seeds do not by themselves establish an end-to-end total-cost advantage. The development runner now enforces pool-size and uniqueness checks and keeps verification caches budget-specific; a full confirmation of per-method total costs remains outside the primary historical rerun and is reported as a limitation.
+
+\input{five_seed_tables.tex}
+
+\section{Discussion}
+
+\subsection{What Did the Surrogate Learn?}
+The surrogate receives only workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. Training and test pools use different random seeds; the preserved five-seed results were audited for zero train/test assignment intersection, and the current runner additionally rejects duplicate or undersized pools. Nevertheless, the study does not claim that a high training fit implies generalization; the relevant evidence is the common-pool Top-$K$ outcome and its solver status.
+
+\subsection{When Is Learned Guidance Better Than Simple Scoring?}
+The formal rerun does not establish a universal advantage over simple workload scoring. LB is lower than RF-H on several instances, while HeurSeq is lower on others; CRF adds no best-makespan improvement under the tested calibration budget. The practical conclusion is therefore a protocol recommendation: use RF as one transparent scorer in a common candidate pool, and retain a lower-bound or direct heuristic scorer as a control.
+
+\subsection{Why Does the Method Fail on Certain Instances?}
+The rerun exposes two measurable failure modes: time-limited MIP verification becomes inconclusive on larger instances, and low-gap calibration labels become rare, forcing CRF fallback. These observations are protocol-level limitations rather than causal explanations of precedence conflicts or feature sparsity.
+
+\subsection{Practical Implications}
+The workflow is useful when a scheduler needs an auditable shortlist of machine assignments and can reserve a fixed solver budget for final checks. Its feature vector is easy to inspect, and its candidate-level status and gap records expose when the shortlist is not certified. Deployment should keep a simple lower-bound or heuristic control and should not interpret a time-limited incumbent as an optimal production plan.
+
+\subsection{Limitations and Future Work}
+Several limitations remain. The feature set is intentionally low-dimensional and omits explicit precedence interactions. Large instances frequently return feasible incumbents with nonzero gaps or no incumbent within the one-second budget. Residual calibration was underpowered in most runs and did not improve best feasible makespans, although two runs selected different candidate sets. The extended results use five seeds per instance and one benchmark family; cross-benchmark transfer, longer budgets, and comparisons with established metaheuristics remain future work.
+
+% ═══════════════════════════ 7. CONCLUSION ═══════════════════════════
+\section{Conclusion}
+
+We have presented and audited a budget-matched RF candidate-screening workflow for Flexible Job Shop Scheduling. The primary rerun separates training and test pools, gives every scorer the same Top-$K$ verification budget, and records candidate-level MIP status and gaps. Across Brandimarte MK01--MK10, RF-H was competitive but did not consistently improve on the lower-bound or direct heuristic scorers. The residual-calibration variant produced no improvement in best feasible makespans and usually fell back because reliable calibration labels were unavailable. The evidence supports transparent screening experiments and clearly limits claims of learned-method superiority.
+
+The workflow is not intended as a state-of-the-art FJSP solver. Its contribution is a reproducible way to compare learned and rule-based assignment screeners under a declared verification budget, including negative and inconclusive outcomes.
+
+\section*{Data Availability}
+The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The historical single-seed files are retained separately from the three-seed budget-matched rerun. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
+
+% ═══════════════════════════ REFERENCES ═══════════════════════════
+\bibliographystyle{plainnat}
+\begin{thebibliography}{99}
+
+\bibitem[Adams et al.(1988)]{Adams1988} Adams, J., E. Balas, D. Zawack. 1988. The shifting bottleneck procedure for job shop scheduling. \textit{Management Science} 34(3):391--401.
+
+\bibitem[Bengio et al.(2021)]{Bengio2021} Bengio, Y., A. Lodi, A. Prouvost. 2021. Machine learning for combinatorial optimization: A methodological tour d'horizon. \textit{EJOR} 290(2):405--421.
+
+\bibitem[Bertsimas and Dunn(2017)]{Bertsimas2017} Bertsimas, D., J. Dunn. 2017. Optimal classification trees. \textit{Machine Learning} 106:1039--1082.
+
+\bibitem[Brandimarte(1993)]{Brandimarte1993} Brandimarte, P. 1993. Routing and scheduling in a flexible job shop by tabu search. \textit{Annals of OR} 41(3):157--183.
+
+\bibitem[Breiman(2001)]{Breiman2001} Breiman, L. 2001. Random forests. \textit{Machine Learning} 45:5--32.
+
+\bibitem[Brucker and Schlie(1990)]{Brucker1990} Brucker, P., R. Schlie. 1990. Job-shop scheduling with multi-purpose machines. \textit{Computing} 45(4):369--375.
+
+\bibitem[Calis and Bulkan(2015)]{Calis2015} Calis, B., S. Bulkan. 2015. A research survey: review of AI solution techniques for job shop scheduling. \textit{J. Intelligent Manufacturing} 26(5):961--973.
+
+\bibitem[Dauz\`ere-P\'er\`es and Paulli(1997)]{Dauzere1997} Dauz\`ere-P\'er\`es, S., J. Paulli. 1997. An integrated approach for modeling and solving the general multiprocessor job-shop scheduling problem using tabu search. \textit{Annals of OR} 70:281--306.
+
+\bibitem[Dem\v{s}ar(2006)]{Demsar2006} Dem\v{s}ar, J. 2006. Statistical comparisons of classifiers over multiple data sets. \textit{JMLR} 7:1--30.
+
+\bibitem[Elmachtoub and Grigas(2022)]{Elmachtoub2022} Elmachtoub, A.N., P. Grigas. 2022. Smart ``predict, then optimize.'' \textit{Management Science} 68(1):9--26.
+
+\bibitem[Fattahi et al.(2007)]{Fattahi2007} Fattahi, P., M. Saidi Mehrabad, F. Jolai. 2007. Mathematical modeling and heuristic approaches to flexible job shop scheduling problems. \textit{J. Intelligent Manufacturing} 18:331--342.
+
+\bibitem[Gao et al.(2008)]{Gao2008} Gao, J., L. Sun, M. Gen. 2008. A hybrid genetic and variable neighborhood descent algorithm for flexible job shop scheduling problems. \textit{Computers \& OR} 35:2892--2907.
+
+\bibitem[Gasse et al.(2019)]{Gasse2019} Gasse, M., D. Ch\'{e}telat, N. Ferroni, L. Charlin, A. Lodi. 2019. Exact combinatorial optimization with graph convolutional neural networks. \textit{NeurIPS} 32.
+
+\bibitem[He et al.(2014)]{He2014} He, H., H. Daum\'{e} III, J. Eisner. 2014. Learning to search in branch and bound algorithms. \textit{NeurIPS} 27.
+
+\bibitem[Hurink et al.(1994)]{Hurink1994} Hurink, J., B. Jurisch, M. Thole. 1994. Tabu search for the job shop scheduling problem with multi-purpose machines. \textit{OR Spektrum} 15:205--215.
+
+\bibitem[Hutter et al.(2011)]{Hutter2011} Hutter, F., H. Hoos, K. Leyton-Brown. 2011. Sequential model-based optimization for general algorithm configuration. \textit{LION} 507--523.
+
+\bibitem[Jin(2011)]{Jin2011} Jin, Y. 2011. Surrogate-assisted evolutionary computation. \textit{Swarm and Evolutionary Computation} 1(2):61--70.
+
+\bibitem[Kacem et al.(2002)]{Kacem2002} Kacem, I., S. Hammadi, P. Borne. 2002. Approach by localization and multiobjective evolutionary optimization for FJSP. \textit{IEEE Trans. SMC-C} 32(1):1--13.
+
+\bibitem[Khalil et al.(2016)]{Khalil2016} Khalil, E., P. Le Bodic, L. Song, G. Nemhauser, B. Dilkina. 2016. Learning to branch in mixed integer programming. \textit{AAAI}.
+
+\bibitem[Kotary et al.(2021)]{Kotary2021} Kotary, J., F. Fioretto, P. Van Hentenryck, B. Wilder. 2021. End-to-end constrained optimization learning: A survey. \textit{IJCAI}.
+
+\bibitem[Li and Gao(2016)]{Li2016} Li, X., L. Gao. 2016. An effective hybrid genetic algorithm and tabu search for FJSP. \textit{IJPE} 174:93--110.
+
+\bibitem[Maragno et al.(2025)]{Maragno2023} Maragno, D., H. Wiberg, D. Bertsimas, S.\.{I}. Birbil, D. den Hertog, A. Fajemisin. 2025. Mixed-integer optimization with constraint learning. \textit{Operations Research}.
+
+\bibitem[Mastrolilli and Gambardella(2000)]{Mastrolilli2000} Mastrolilli, M., L.M. Gambardella. 2000. Effective neighborhood functions for the flexible job shop problem. \textit{J. Scheduling} 3(1):3--20.
+
+\bibitem[Meng et al.(2020)]{Meng2020} Meng, L., C. Zhang, Y. Ren, B. Zhang, C. Lv. 2020. Mixed-integer linear programming and constraint programming formulations for solving distributed FJSP. \textit{Computers \& IE} 142:106347.
+
+\bibitem[Moon et al.(2024)]{Moon2024learning} Moon, S., S. Lee, K.-J. Park. 2024. Learning-enabled flexible job-shop scheduling for scalable smart manufacturing. \textit{J. Manufacturing Systems} 77:356--367.
+
+\bibitem[\"Ozg\"uven et al.(2010)]{Ozguven2010} \"Ozg\"uven, C., L. \"Ozbak{\i}r, Y. Yavuz. 2010. Mathematical models for job-shop scheduling. \textit{Applied Math. Modelling} 34(6):1539--1548.
+
+\bibitem[Pezzella et al.(2008)]{Pezzella2008} Pezzella, F., G. Morganti, G. Ciaschetti. 2008. A genetic algorithm for the FJSP. \textit{Computers \& OR} 35:3202--3212.
+
+\bibitem[Pinedo(2016)]{Pinedo2016} Pinedo, M. 2016. \textit{Scheduling: Theory, Algorithms, and Systems}. 5th ed. Springer.
+
+\bibitem[Smit et al.(2025)]{Smit2024nco} Smit, I.G., Y. Wu, P. Troubil, Y. Zhang, W.P.M. Nuijten. 2025. Neural combinatorial optimization for stochastic FJSP. \textit{AAAI}.
+
+\bibitem[Song et al.(2023)]{Song2023} Song, W., X. Chen, Q. Li, Z. Cao. 2023. Flexible job-shop scheduling via graph neural network and deep reinforcement learning. \textit{IEEE Trans. Industrial Informatics} 19(2):1600--1610.
+
+\bibitem[Verwer et al.(2017)]{Verwer2017} Verwer, S., Y. Zhang, Q.C. Ye. 2017. Auction optimization using regression trees and linear models as integer programs. \textit{Artificial Intelligence} 244:368--395.
+
+\bibitem[Wang et al.(2024)]{Wang2024} Wang, R., G. Wang, J. Sun, F. Deng, J. Chen. 2024. FJSP via dual attention network-based reinforcement learning. \textit{IEEE Trans. Neural Networks and Learning Systems} 35:3091--3102.
+
+\bibitem[Xia and Wu(2005)]{Xia2005} Xia, W., Z. Wu. 2005. An effective hybrid optimization approach for multi-objective FJSP. \textit{Computers \& IE} 48(2):409--425.
+
+\bibitem[Xie et al.(2019)]{Xie2019} Xie, J., L. Gao, K. Peng, X. Li, H. Li. 2019. Review on flexible job shop scheduling. \textit{IET Collaborative Intelligent Manufacturing} 1(3):67--77.
+
+\bibitem[Zhang et al.(2020)]{Zhang2020drl} Zhang, C., W. Song, Z. Cao, J. Zhang, P.S. Tan, X. Chi. 2020. Learning to dispatch for job shop scheduling via deep reinforcement learning. \textit{NeurIPS} 33:1621--1632.
+
+\bibitem[Zheng and Wang(2016)]{Zheng2016} Zheng, X., L. Wang. 2016. A knowledge-guided fruit fly optimization algorithm for dual resource constrained FJSP. \textit{IJPR} 54(18):5554--5566.
+
+\end{thebibliography}
+\end{document}
+
