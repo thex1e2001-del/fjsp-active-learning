@@ -1,0 +1,218 @@
+[
+  {
+    "instance": "mk02",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 40.99999999579993,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "RF-H",
+        "best": 40.99999999579993,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "LB",
+        "best": 42.99999999558253,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 40.99999999579993,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "Random",
+        "best": 42.99999999559674,
+        "feasible": 5,
+        "labels": 30
+      }
+    ]
+  },
+  {
+    "instance": "mk03",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 249.0,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "RF-H",
+        "best": 249.0,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "LB",
+        "best": 247.9999999750963,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 247.9999999750963,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "Random",
+        "best": 257.999999999998,
+        "feasible": 5,
+        "labels": 30
+      }
+    ]
+  },
+  {
+    "instance": "mk05",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 183.99999998149622,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "RF-H",
+        "best": 183.99999998149622,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "LB",
+        "best": 182.99999999999994,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 183.9999999814789,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "Random",
+        "best": 187.99999998102987,
+        "feasible": 5,
+        "labels": 30
+      }
+    ]
+  },
+  {
+    "instance": "mk07",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 198.99999997999515,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "RF-H",
+        "best": 200.99999997979197,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "LB",
+        "best": 193.99999998049617,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 200.99999999999957,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "Random",
+        "best": 197.99999999999983,
+        "feasible": 5,
+        "labels": 30
+      }
+    ]
+  },
+  {
+    "instance": "mk09",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 381.9999999998597,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "RF-H",
+        "best": 399.0,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "LB",
+        "best": 391.99999999970026,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 380.99999999991724,
+        "feasible": 5,
+        "labels": 30
+      },
+      {
+        "scorer": "Random",
+        "best": 381.9999999998597,
+        "feasible": 5,
+        "labels": 30
+      }
+    ]
+  },
+  {
+    "instance": "mk10",
+    "seed": 43,
+    "rows": [
+      {
+        "scorer": "ActiveRF",
+        "best": 308.99999999998346,
+        "feasible": 5,
+        "labels": 29
+      },
+      {
+        "scorer": "RF-H",
+        "best": 304.999999999989,
+        "feasible": 5,
+        "labels": 29
+      },
+      {
+        "scorer": "LB",
+        "best": 323.99999999996913,
+        "feasible": 5,
+        "labels": 29
+      },
+      {
+        "scorer": "HeurSeq",
+        "best": 304.999999999989,
+        "feasible": 5,
+        "labels": 29
+      },
+      {
+        "scorer": "Random",
+        "best": 308.9999999999996,
+        "feasible": 5,
+        "labels": 29
+      }
+    ]
+  }
+]

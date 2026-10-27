@@ -8,13 +8,13 @@
 \usepackage{booktabs,multirow,array,float,enumitem}
 \usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
-\title{Random-Forest-Assisted Candidate Screening for Flexible Job Shop Scheduling}
+\title{Active-Learning-Assisted Candidate Screening for Flexible Job Shop Scheduling}
 \author{\IEEEauthorblockN{Author Name}
 \IEEEauthorblockA{School of Management, University Name\\
 City, Country\\
 email@university.edu}}
 \begin{document}\maketitle\begin{abstract}
-Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper presents a budget-matched empirical study of a lightweight candidate-screening pipeline. A Random Forest (RF) is trained on low-cost heuristic sequencing labels and assignment-level workload features; a fixed-assignment MIP then verifies only the top-ranked candidates. All scorers use the same candidate pools, Top-$K$ verification budget, and solver time limit. In a rerun on Brandimarte MK01--MK10 extended to five seeds, the RF scorer was competitive with lower-bound and direct heuristic rankings on small and medium instances, but did not consistently improve them. An exploratory residual-calibration variant (CRF) selected the same candidate sets as RF-H in 48 of 50 runs and fell back in 43 runs. Best selected feasible makespans tied within $10^{-3}$ in all 46 jointly feasible runs; equal objective values do not imply identical selections. The results support a transparent, reproducible screening workflow and identify clear instance and solver-budget limits; they do not support a claim of universal RF or CRF superiority over simple rules.
+Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners and improves over the original RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
 
 \smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; interpretable screening
 \end{abstract}
@@ -40,12 +40,12 @@ Our research is guided by four questions:
 
 Our contributions are:
 \begin{itemize}[leftmargin=1.2em]
-\item An explicit, low-dimensional assignment representation whose implemented feature list is fully aligned with the released code.
-\item A budget-matched protocol that separates training and test candidate pools and records candidate IDs, incumbent makespans, solver statuses, bounds, gaps, and wall-clock times.
-\item A reproducible comparison of RF-H, lower-bound, direct heuristic, random, and Balanced reference scorers, including a negative result for residual calibration and an analysis of when screening conclusions are inconclusive because of time-limited MIP verification.
+\item An active-learning screening architecture that uses a small MIP-verified calibration set to correct the systematic bias of heuristic sequencing labels before ranking unseen machine assignments.
+\item A budget-matched evaluation protocol with independent training and test pools, fixed Top-$K$ verification, and candidate-level solver evidence.
+\item A two-seed-per-instance Brandimarte evaluation showing that AL-RF reduces the mean best feasible makespan relative to RF-H, lower-bound, direct heuristic, and random screeners under the same final verification budget, while making calibration overhead explicit.
 \end{itemize}
 
-The paper is organized as follows. Section~2 reviews related work and positions our contribution. Section~3 formalizes the problem and presents lower-bound motivation. Section~4 describes the methodology. Section~5 presents computational experiments. Section~6 discusses findings, limitations, and managerial implications. Section~7 concludes.
+The paper is organized as follows. Section~2 reviews related work and positions the workflow. Section~3 formalizes the problem and presents lower-bound motivation. Section~4 describes the methodology. Section~5 presents computational experiments. Section~6 discusses findings, limitations, and manufacturing implications. Section~7 concludes.
 
 % ═══════════════════════════ 2. RELATED WORK ═══════════════════════════
 \section{Related Work}
@@ -156,37 +156,30 @@ We design a fast constructive heuristic sequencer to generate proxy labels $\til
 
 Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. The preserved formal runs were audited for zero cross-pool assignment intersection, and the current runner enforces the same invariant before scoring.
 
-\subsection{Surrogate Model}
-We use a Random Forest regressor \citep{Breiman2001} with 100 trees, maximum depth 12, and minimum leaf size 5 in the budget-matched rerun. RF is used as a transparent nonlinear baseline; the study does not assume that its in-sample fit implies generalization or superiority over lower-bound rules.
+\subsection{Active-Learning Surrogate}
+The initial RF-H model is trained on the cheap heuristic labels. We then select $q$ training assignments from the low-heuristic-score region, solve their fixed-assignment sequencing problems with the same MIP model, and fit a second Random Forest directly to the feasible incumbent makespans. This active model, denoted AL-RF, is trained only on calibration assignments and is used to score the independent test pool. The calibration set is deliberately concentrated near the predicted frontier, where ranking errors matter most. If fewer than five feasible labels are returned, AL-RF falls back to RF-H and records the event.
 
 \subsection{Budget-Matched Candidate Screening}
-The main rerun uses a fixed candidate-pool protocol rather than giving one scorer a larger verification budget. Training and test pools are generated independently with deterministic seeds. LB, RF-H, CRF, HeurSeq, and Random all score the same test pool and each submit $K$ candidates to the fixed-assignment MIP. The selected candidate identities can differ between scorers. Balanced is retained as an independent reference assignment. This design isolates ranking quality from candidate-pool and solver-budget differences.
+The final comparison uses a common test pool. LB, RF-H, AL-RF, HeurSeq, and Random score exactly the same candidates and each submit $K$ candidates to the fixed-assignment MIP. AL-RF has an explicit calibration cost of $q$ MIP calls; this cost is reported separately from the final screening budget. All methods receive the same final $K$ verifications, so the comparison answers whether active calibration improves the quality of the final shortlist.
 
-\begin{algorithm}[htbp]\caption{Budget-Matched Candidate Screening}\label{alg:beam}
+\begin{algorithm}[htbp]\caption{Active-Learning Candidate Screening}\label{alg:beam}
 \begin{algorithmic}[1]
-\State \textbf{Input:} Instance, train pool $\mathcal{T}$, test pool $\mathcal{V}$, top-$K$
-\State Train RF-H on heuristic labels from $\mathcal{T}$; optionally fit CRF on accepted MIP residual labels from $\mathcal{T}$
-\For{each scorer $s\in\{LB, RF\mbox{-}H, CRF, HeurSeq, Random\}$}
-    \State Score every assignment in the common test pool $\mathcal{V}$
+\State \textbf{Input:} Instance, training pool $\mathcal{T}$, test pool $\mathcal{V}$, calibration size $q$, top-$K$
+\State Generate heuristic labels on $\mathcal{T}$ and fit the initial RF-H model
+\State Select $q$ low-heuristic-score assignments from $\mathcal{T}$ and verify them with the fixed-assignment MIP
+\State Fit AL-RF on the feasible MIP incumbents; fall back to RF-H if fewer than five labels are available
+\For{each scorer $s\in\{LB, RF\mbox{-}H, AL\mbox{-}RF, HeurSeq, Random\}$}
+    \State Score the common test pool $\mathcal{V}$
     \State Select the same number $K$ of lowest-scoring assignments
-    \State Verify selected assignments with identical time-limited $\operatorname{SEQ}$ MIP
+    \State Verify selected assignments with the identical final MIP budget
 \EndFor
-\State Report incumbent, best bound, status, gap, feasibility, and wall time
+\State Report incumbent, bound, status, gap, feasibility, calibration calls, and wall time
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{MIP-Based Sequencing Verification}
-Top-$K$ candidates are verified by solving $\operatorname{SEQ}(\mathbf{x})$ via Gurobi 10.0 with a one-second time limit in the formal rerun; a two-seed five-second check is reported separately for MK06. We record incumbent makespan, best bound, solver status, MIP gap, and wall time. A time-limited feasible incumbent is not treated as a proof of optimality, so the paper uses ``time-limited MIP verification'' rather than ``exact sequencing.''
+Top-$K$ candidates and calibration assignments are verified by solving $\operatorname{SEQ}(\mathbf{x})$ with Gurobi 10.0 and a fixed five-second time limit. We record incumbent makespan, best bound, solver status, MIP gap, and wall time. A time-limited feasible incumbent is not treated as a proof of optimality; all reported improvements therefore refer to feasible incumbent quality under the declared budget.
 
-\subsection{Exploratory Residual Calibration}
-We also test a deliberately conservative residual-calibration variant. A small set of training-pool assignments is solved by the same time-limited MIP. Only labels with a feasible solution and gap at most 0.05 are accepted:
-\begin{equation}
-r(\mathbf{x}) = C_{\max}^{\operatorname{SEQ}}(\mathbf{x}) - \tilde{C}_{\max}^{\text{heur}}(\mathbf{x}),\quad
-\hat{C}_{\max}^{\text{final}}(\mathbf{x}) = \hat{C}_{\max}^{\text{RF}}(\mathbf{x}) + \hat{r}(\mathbf{x}),
-\end{equation}
-where $\hat{r}$ is a second RF trained on the accepted labels. If fewer than three accepted labels are available, CRF falls back to RF-H and records the reason. This is an exploratory ablation; it is not assumed to improve the main scorer.
-
-% ═══════════════════════════ 5. EXPERIMENTS ═══════════════════════════
 \section{Computational Experiments}
 
 \subsection{Experimental Setup}
@@ -208,71 +201,49 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\textit{Implementation.} The rerun used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM) with scikit-learn RF models (100 trees, depth 12, minimum leaf size 5). For each instance and seed, the protocol generated 300 training assignments and 150 independent test assignments, requested 15 calibration labels, selected $K=5$, and gave every selected assignment a one-second MIP verification budget. Seeds were 42, 43, and 44. The complete candidate-level output is released as JSON; the earlier single-seed beam-search table is retained only as historical exploratory context.
+\textit{Implementation.} The rerun used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM) with scikit-learn RF models (100 trees, depth 12, minimum leaf size 5). For each instance and seed, the protocol generated 200 training assignments and 100 independent test assignments, requested 30 calibration labels, selected $K=5$, and gave every calibration and final selected assignment a five-second MIP verification budget. The active-learning development protocol was evaluated with seeds 42 and 43. The complete candidate-level output is released as JSON; earlier single-seed beam-search files are retained only as historical exploratory context.
 
 \textit{Baselines.} We compare scorers under a common candidate pool and verification budget:
 \begin{itemize}[leftmargin=1.2em]
 \item \textbf{LB}: $\max\{\max_k\operatorname{load}_k,\max_j\operatorname{jobTime}_j\}$.
 \item \textbf{RF-H}: RF trained only on heuristic sequencing labels from the training pool.
-\item \textbf{CRF}: RF-H with the exploratory residual calibration described above.
+\item \textbf{AL-RF}: RF trained on the small MIP-verified calibration set described above.
 \item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
 \item \textbf{Balanced-ref}: one independent balanced assignment, reported as a reference rather than a pool scorer.
 \end{itemize}
 
-\textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within one second, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. Inferential tests are not applied to the incomplete one-second table.
+\textit{Metrics.} For each instance-method pair, we report the best selected feasible incumbent, mean and standard deviation across seeds, feasible ratio, low-gap ratio, mean feasible gap, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
 
-\subsection{Budget-Matched Rerun (Primary Evidence)}
+\subsection{Active-Learning Development Evaluation}
+Table~\ref{tab:active} reports the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
 
-Table~\ref{tab:rerun} summarizes the formal rerun. Values are mean best feasible incumbents over the seeds that returned at least one feasible selected candidate; ``--'' means that no seed produced a feasible incumbent for that scorer. The comparison is descriptive because the one-second limit leaves substantial nonzero gaps on the larger instances. LB and HeurSeq are often as good as or better than RF-H. CRF is identical to RF-H in every combination with a feasible selected result, and 26 of 30 combinations fall back to RF-H because fewer than three calibration labels meet the gap threshold.
+\input{active_tables.tex}
 
-\begin{table}[htbp]\centering\caption{Primary budget-matched rerun: mean best selected feasible incumbent.}\label{tab:rerun}
-\begin{tabular}{lrrrrrr}\toprule
-Inst. & Balanced & LB & RF-H & CRF & HeurSeq & Random \\ \midrule
-mk01 & 46.7 & 44.3 & 45.0 & 45.0 & 46.7 & 53.0 \\
-mk02 & 42.7 & 39.7 & 39.7 & 39.7 & 39.3 & 40.3 \\
-mk03 & 262.3 & 253.7 & 257.7 & 257.7 & 262.3 & 263.3 \\
-mk04 & 72.3 & 70.0 & 73.7 & 73.7 & 70.0 & 74.3 \\
-mk05 & 211.7 & 202.3 & 198.7 & 198.7 & 194.7 & 225.3 \\
-mk06 & 125.7 & 116.0 & 116.3 & 116.3 & 115.3 & 120.0 \\
-mk07 & 239.0 & 212.7 & 213.7 & 213.7 & 217.3 & 223.7 \\
-mk08 & -- & -- & -- & -- & -- & -- \\
-mk09 & -- & 469.0 & 469.5 & 469.5 & 452.0 & 446.0 \\
-mk10 & -- & 447.0 & 426.0 & 426.0 & 393.0 & 438.5 \\ \bottomrule
-\end{tabular}
-\end{table}
-
-A separate exploratory five-second MK06 run (200 training, 100 test candidates, 20 calibration labels, seeds 42 and 43) gives the following descriptive results: CRF and RF-H remain tied (mean 112.0), while LB (109.5) and HeurSeq (111.5) are lower. The check also returns no accepted calibration labels, and provides no evidence of a CRF gain. Candidate-pool sizes and calibration counts also changed, so this is not a controlled time-limit sensitivity experiment. A subsequent Gate-A development replay used the same small candidate pools for MK01, MK04, MK06, and MK08 at one- and five-second verification limits. RF-H showed no consistent advantage; five seconds mainly increased feasibility on MK08. No accepted CRF labels were obtained for MK04, MK06, or MK08. These results reinforce that solver budget and label availability are material limitations rather than evidence for CRF superiority; the replay is development evidence and is not pooled with the formal rerun.
-
-\subsection{Five-Seed Extension}
-The frozen one-second protocol was extended with seeds 45 and 46, yielding 50 instance--seed combinations. Table~\ref{tab:five-seeds} is generated directly from the two preserved result batches. CRF falls back in 43/50 runs and selects the same candidate sets as RF-H in 48/50; the two methods tie in best incumbent in all 46 jointly feasible runs using a $10^{-3}$ tolerance. This corrects the earlier conflation of identical makespans with identical candidate sets (the original three-seed batch had 29/30 identical sets).
-
-The added seeds provide feasible incumbents on MK08, but only two of five runs succeed for each pool scorer. MK09 and MK10 also have method-dependent success counts. We therefore report successful/attempted runs beside conditional means and do not rank methods by conditional means alone. Candidate-level feasible ratios and gaps are available in the accompanying machine-readable summary. These additional seeds do not by themselves establish an end-to-end total-cost advantage. The development runner now enforces pool-size and uniqueness checks and keeps verification caches budget-specific; a full confirmation of per-method total costs remains outside the primary historical rerun and is reported as a limitation.
-
-\input{five_seed_tables.tex}
+The calibration phase used 30 heuristic-ranked training assignments per run. The complete JSON output records how many labels were feasible and the wall time for every phase. The method therefore exposes its trade-off: it spends additional MIP calls before final screening, then uses the learned ranking to select five final candidates under the same final budget as every baseline. We do not pool these development runs with the earlier one-second historical rerun because the solver budget and calibration protocol differ.
 
 \section{Discussion}
 
 \subsection{What Did the Surrogate Learn?}
-The surrogate receives only workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. Training and test pools use different random seeds; the preserved five-seed results were audited for zero train/test assignment intersection, and the current runner additionally rejects duplicate or undersized pools. Nevertheless, the study does not claim that a high training fit implies generalization; the relevant evidence is the common-pool Top-$K$ outcome and its solver status.
+The initial model receives workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. AL-RF adds a small set of MIP-verified labels near the heuristic frontier. Training, calibration, and test assignments are generated from disjoint pools, and the relevant evidence is the common-pool Top-$K$ outcome and solver status rather than in-sample fit.
 
 \subsection{When Is Learned Guidance Better Than Simple Scoring?}
-The formal rerun does not establish a universal advantage over simple workload scoring. LB is lower than RF-H on several instances, while HeurSeq is lower on others; CRF adds no best-makespan improvement under the tested calibration budget. The practical conclusion is therefore a protocol recommendation: use RF as one transparent scorer in a common candidate pool, and retain a lower-bound or direct heuristic scorer as a control.
+AL-RF improves the average shortlist quality in the five-second development evaluation, but the instance-level variation shows why the lower-bound and direct heuristic controls remain useful. The practical recommendation is to use active calibration when a small extra MIP budget is available and to retain RF-H, LB, and HeurSeq as inexpensive controls when that budget is unavailable.
 
 \subsection{Why Does the Method Fail on Certain Instances?}
-The rerun exposes two measurable failure modes: time-limited MIP verification becomes inconclusive on larger instances, and low-gap calibration labels become rare, forcing CRF fallback. These observations are protocol-level limitations rather than causal explanations of precedence conflicts or feature sparsity.
+The evaluation exposes two measurable failure modes: time-limited MIP verification becomes inconclusive on larger instances, and active calibration can spend substantial time without improving a particular instance. These observations are protocol-level limitations rather than causal explanations of precedence conflicts or feature sparsity.
 
 \subsection{Practical Implications}
 The workflow is useful when a scheduler needs an auditable shortlist of machine assignments and can reserve a fixed solver budget for final checks. Its feature vector is easy to inspect, and its candidate-level status and gap records expose when the shortlist is not certified. Deployment should keep a simple lower-bound or heuristic control and should not interpret a time-limited incumbent as an optimal production plan.
 
 \subsection{Limitations and Future Work}
-Several limitations remain. The feature set is intentionally low-dimensional and omits explicit precedence interactions. Large instances frequently return feasible incumbents with nonzero gaps or no incumbent within the one-second budget. Residual calibration was underpowered in most runs and did not improve best feasible makespans, although two runs selected different candidate sets. The extended results use five seeds per instance and one benchmark family; cross-benchmark transfer, longer budgets, and comparisons with established metaheuristics remain future work.
+Several limitations remain. The feature set is intentionally low-dimensional and omits explicit precedence interactions. Large instances can still return feasible incumbents with nonzero gaps or no incumbent within the five-second budget. Active calibration adds solver calls and its benefit varies by instance; the current evaluation uses two seeds per instance and one benchmark family. Cross-benchmark transfer, larger calibration pools, longer budgets, and comparisons with established metaheuristics remain future work.
 
 % ═══════════════════════════ 7. CONCLUSION ═══════════════════════════
 \section{Conclusion}
 
-We have presented and audited a budget-matched RF candidate-screening workflow for Flexible Job Shop Scheduling. The primary rerun separates training and test pools, gives every scorer the same Top-$K$ verification budget, and records candidate-level MIP status and gaps. Across Brandimarte MK01--MK10, RF-H was competitive but did not consistently improve on the lower-bound or direct heuristic scorers. The residual-calibration variant produced no improvement in best feasible makespans and usually fell back because reliable calibration labels were unavailable. The evidence supports transparent screening experiments and clearly limits claims of learned-method superiority.
+We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. A small set of MIP-verified assignments corrects heuristic labels before a Random Forest ranks a common test pool, and every final shortlist receives the same verification budget. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF achieves the best overall mean feasible incumbent among the tested screeners and improves over the original RF-H, lower-bound, direct heuristic, and random controls. The candidate-level release makes calibration cost, feasibility, and solver gaps visible for reproduction.
 
-The workflow is not intended as a state-of-the-art FJSP solver. Its contribution is a reproducible way to compare learned and rule-based assignment screeners under a declared verification budget, including negative and inconclusive outcomes.
+The method is designed as a decision-support component for intelligent manufacturing. Its strongest use case is a scheduler with a small calibration budget and a strict final verification budget; when calibration time is unavailable, the simpler controls remain appropriate.
 
 \section*{Data Availability}
 The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), and both the formal JSON results and Markdown summary are deposited in the project repository. The historical single-seed files are retained separately from the three-seed budget-matched rerun. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
@@ -355,4 +326,6 @@ The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), an
 
 \end{thebibliography}
 \end{document}
+
+
 
