@@ -1,5 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
+\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithm,algorithmicx,algpseudocode}
 \usepackage{textcomp}
@@ -8,44 +9,42 @@
 \usepackage{url}
 \usepackage{booktabs,multirow,array,float,enumitem}
 \title{Active-Learning-Assisted Candidate Screening for Flexible Job Shop Scheduling}
-\author{\IEEEauthorblockN{Xianyi Xie}
+\author{\IEEEauthorblockN{Xianyi Xie, Liwei Liu}
 \IEEEauthorblockA{School of Computer and Artificial Intelligence, Beijing Technology and Business University\\
 Beijing 100048, China\\
-Corresponding author\\
-Email: 2431062085@st.btbu.edu.cn}}
+Emails: 2431062085@st.btbu.edu.cn; 2431062177@st.btbu.edu.cn\\
+Corresponding author: Xianyi Xie}}
 \begin{document}\maketitle\begin{abstract}
-Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. This paper proposes an active-learning-assisted candidate-screening workflow for intelligent manufacturing. A low-cost heuristic first ranks assignment candidates; a small, deliberately selected calibration set is then verified by a fixed-assignment MIP, and the resulting incumbent makespans train a Random Forest (AL-RF) to rank the remaining candidates. All final scorers use the same independent test pool, Top-$K$ verification budget, and solver time limit. Across Brandimarte MK01--MK10, with two deterministic seeds per instance and a five-second verification budget, AL-RF achieves the lowest mean best feasible makespan among the tested screeners, with a lower mean than the RF-H, lower-bound, direct-heuristic, and random controls. The released protocol records candidate identities, solver status, feasibility, optimality gaps, and calibration cost, allowing the gain and its computational trade-off to be audited.
+Flexible Job Shop Scheduling (FJSP) couples routing and sequencing decisions, making repeated exact evaluation expensive. We study a candidate-screening workflow in which a heuristic ranks machine assignments, time-limited MIP solves provide calibration labels, and a Random Forest (AL-RF) ranks an independent test pool. In the original two-seed Brandimarte MK01--MK10 evaluation, AL-RF has the lowest mean best feasible makespan among five methods given the same five final verifications. Its 30 calibration calls add substantial cost. A five-seed comparison counts those calls and compares AL-RF's best calibration or final solution with 35 heuristic-ranked verifications. Each method performs better on five instances; AL-RF does not improve the overall mean ($p=0.943$). The distinction between final and total calls is central to assessing the learned screener.
 
-\smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; interpretable screening
+\smallskip\noindent\textbf{Keywords:} flexible job shop scheduling; random forest; surrogate model; decomposition; heuristic labeling; solver budget
 \end{abstract}
 
 % ═══════════════════════════ 1. INTRODUCTION ═══════════════════════════
 \section{Introduction}
 
-Modern manufacturing environments increasingly require flexible production systems where jobs can be routed through alternative machines depending on shop-floor conditions. This flexibility, while valuable for throughput and resilience, introduces a challenging combinatorial problem: the Flexible Job Shop Scheduling Problem (FJSP). Given $n$ jobs each comprising a sequence of operations and $m$ machines with machine-dependent processing times, the scheduler must simultaneously decide \emph{which} machine processes each operation (routing) and \emph{in what order} operations are processed on each machine (sequencing), to minimize the maximum completion time (makespan).
+In a flexible job shop, an operation can run on more than one machine, often with a different processing time on each. Given jobs with fixed operation order, scheduling must assign every operation to an eligible machine and sequence operations sharing that machine. We minimize makespan, the completion time of the last job.
 
-The coupling of routing and sequencing is the central computational difficulty of FJSP. The routing decision determines which operations compete for each machine, while the sequencing decision resolves those competitions. Exact mixed-integer programming (MIP) formulations must jointly optimize both, leading to a search space that grows as $O(m^{N} \times N!)$ for $N$ operations. While modern solvers such as Gurobi can prove optimality on small instances (e.g., 55 operations), they fail to close the optimality gap within reasonable time on larger instances with 150--240 operations \cite{Ozguven2010}. Meta-heuristics, most notably the tabu search algorithm of \cite{Mastrolilli2000}, can find near-optimal solutions through carefully designed neighborhood structures, but they rely on hand-crafted operators, require instance-specific tuning, and do not learn from data to improve over time.
+The coupling of routing and sequencing is the central computational difficulty of FJSP. Routing determines which operations compete for each machine, while sequencing resolves those conflicts. Mixed-integer programming (MIP) formulations model both decisions, and solving larger instances can be difficult \cite{Ozguven2010}. Metaheuristics, including the tabu search of \cite{Mastrolilli2000}, offer an alternative. Here we ask whether solutions to a small set of assignments can guide which other assignments receive MIP verification.
 
-Recent advances in machine learning for combinatorial optimization have opened new avenues \cite{Bengio2021}. End-to-end approaches using deep reinforcement learning or graph neural networks can learn effective dispatching policies \cite{Zhang2020drl,Song2023} but require extensive training data and offer limited interpretability. Tree-in-MIP methods embed learned decision trees or random forests as MIP constraints \cite{Maragno2023}, but the standard per-data-point encoding creates $O(N \times T \times L)$ binary variables---prohibitive for FJSP where each operation is a separate data point. Surrogate-assisted optimization \cite{Jin2011} offers a middle ground: use a cheap predictive model to guide search, reserving expensive exact evaluation for promising candidates only.
+Learning-based scheduling includes dispatching policies trained with reinforcement learning or graph neural networks \cite{Zhang2020drl,Song2023,Bengio2021}. Surrogate-assisted optimization instead uses a predictor to guide expensive evaluations \cite{Jin2011}. Our RF ranks assignments externally rather than being embedded in the MIP \cite{Maragno2023}.
 
 This paper investigates whether lightweight, interpretable features of a machine assignment can provide useful guidance for screening candidate assignments under a fixed verification budget. A machine assignment is represented by workload, operation-count, machine-usage, imbalance, dispersion, and maximum job-time features. A fast heuristic sequencer generates low-cost proxy labels, a Random Forest surrogate scores unseen assignments, and a time-limited fixed-assignment MIP verifies the same number of candidates for every scorer.
 
 Our research is guided by four questions:
-\begin{enumerate}[leftmargin=1.2em]
+\begin{enumerate}[leftmargin=3.2em,labelsep=0.5em]
     \item[\textbf{RQ1.}] Can aggregate assignment features improve final Top-$K$ feasible incumbent quality under a fixed verification budget?
-    \item[\textbf{RQ2.}] Under fair computational budgets, does a learned RF surrogate add value over simple workload-based scoring rules?
-    \item[\textbf{RQ3.}] Under what instance structures does the method succeed, and under what conditions does it fail?
-    \item[\textbf{RQ4.}] What limitations become visible when solver status, feasibility, and optimality gaps are reported at candidate level?
+    \item[\textbf{RQ2.}] Under the same final verification budget, does a learned RF surrogate improve on simpler scoring rules?
+    \item[\textbf{RQ3.}] How much does the relative performance vary across the Brandimarte instances?
+    \item[\textbf{RQ4.}] Does the method still help when calibration calls count toward the solver budget?
 \end{enumerate}
 
 Our contributions are:
 \begin{itemize}[leftmargin=1.2em]
-\item An active-learning screening architecture that uses a small MIP-verified calibration set to calibrate heuristic labels near the predicted frontier before ranking unseen machine assignments.
-\item A budget-matched evaluation protocol with independent training and test pools, fixed Top-$K$ verification, and candidate-level solver evidence.
-\item A two-seed-per-instance Brandimarte evaluation showing that AL-RF reduces the mean best feasible makespan relative to RF-H, lower-bound, direct heuristic, and random screeners under the same final verification budget, while making calibration overhead explicit.
+\item An active-learning-assisted screening workflow that fits an RF to a small, deliberately selected set of MIP-verified training assignments before ranking unseen machine assignments.
+\item A common-pool evaluation with fixed final Top-$K$ verification and a separate five-seed comparison that counts calibration calls.
+\item Evidence that the lower mean in the original five-verification comparison does not carry over to the equal-call comparison with a direct heuristic.
 \end{itemize}
-
-The paper is organized as follows. Section~2 reviews related work and positions the workflow. Section~3 formalizes the problem and presents lower-bound motivation. Section~4 describes the methodology. Section~5 presents computational experiments. Section~6 discusses findings, limitations, and manufacturing implications. Section~7 concludes.
 
 % ═══════════════════════════ 2. RELATED WORK ═══════════════════════════
 \section{Related Work}
@@ -57,13 +56,13 @@ FJSP was formalized by \cite{Brucker1990} as a generalization of the classical j
 Exact MIP formulations jointly model assignment and sequencing \cite{Ozguven2010,Meng2020}. While they can prove optimality on small instances, their computational cost grows exponentially. Constraint Programming (CP) approaches, notably CP-SAT and IBM CP Optimizer, have demonstrated strong performance on FJSP benchmarks through interval variables and specialized scheduling constraints. However, both MIP and CP solvers still require substantial time on medium-to-large instances, motivating decomposition and heuristic approaches.
 
 \subsection{Metaheuristics and Hybrid Methods}
-The tabu search of \cite{Mastrolilli2000} remains a landmark, achieving near-optimal makespan through hierarchical neighborhood structures. Subsequent work includes genetic algorithms \cite{Pezzella2008}, hybrid genetic-tabu search \cite{Li2016}, variable neighborhood search \cite{Gao2008}, and particle swarm optimization hybrids \cite{Xia2005}. \cite{Calis2015} review AI techniques for job shop scheduling. These methods are effective but hand-crafted: their operators, neighborhoods, and parameters are designed for specific benchmark characteristics and do not generalize without re-engineering.
+The tabu search of \cite{Mastrolilli2000} uses hierarchical neighborhoods to find strong schedules. Subsequent work includes genetic algorithms \cite{Pezzella2008}, knowledge-guided search for dual-resource variants \cite{Zheng2016}, hybrid genetic-tabu search \cite{Li2016}, variable neighborhood search \cite{Gao2008}, and particle swarm optimization hybrids \cite{Xia2005}. \cite{Calis2015} review AI techniques for job shop scheduling. These methods provide established alternatives to candidate screening.
 
 \subsection{Decomposition in Scheduling}
 Decomposition has a long history in scheduling. The shifting bottleneck procedure \cite{Adams1988} iteratively solves single-machine subproblems. For FJSP, several works separate assignment and sequencing: \cite{Brandimarte1993} uses a hierarchical tabu search, and \cite{Xia2005} hybridize particle swarm optimization for assignment with simulated annealing for sequencing. These methods use fixed heuristics for the assignment subproblem. Our work differs by \emph{learning} an evaluation function for assignments from data.
 
 \subsection{Learning-Based Scheduling}
-The intersection of machine learning and scheduling has grown rapidly. End-to-end methods use deep reinforcement learning to learn dispatching policies: \cite{Zhang2020drl} represent job shop states as disjunctive graphs and train a GNN-based agent; \cite{Song2023} extend this to FJSP with heterogeneous graph representations for joint operation selection and machine assignment; \cite{Wang2024} propose dual attention networks for FJSP; and \cite{Moon2024learning} address FJSP with transportation constraints. \cite{Smit2024nco} extend neural combinatorial optimization to stochastic FJSP. These methods can achieve strong empirical performance but require extensive training and are difficult to interpret.
+End-to-end methods learn dispatching policies: \cite{Zhang2020drl} represent job shop states as disjunctive graphs; \cite{Song2023} extend graph-based control to FJSP; \cite{Wang2024} use dual attention; and \cite{Moon2024learning} address transportation constraints. \cite{Smit2024nco} study stochastic FJSP. Our RF has a narrower role: ranking a fixed pool of assignments for MIP verification.
 
 Learning-to-configure approaches use ML to accelerate existing solvers: \cite{Hutter2011} for algorithm configuration, \cite{He2014} and \cite{Khalil2016} for branching in MIP, and \cite{Gasse2019} for node selection in B\&B via graph convolutional networks. \cite{Kotary2021} survey end-to-end constrained optimization learning.
 
@@ -71,16 +70,17 @@ Learning-to-configure approaches use ML to accelerate existing solvers: \cite{Hu
 Surrogate models replace expensive objective evaluations with cheap approximations. \cite{Jin2011} surveys surrogate-assisted evolutionary computation, primarily for continuous optimization. Extensions to discrete and combinatorial problems are more recent. The key challenge in discrete settings is defining feature representations that preserve the ranking of decision alternatives under the true objective. Our work addresses this by designing structured aggregate features for the FJSP assignment space and validating ranking quality through top-$K$ metrics.
 
 \subsection{Tree-in-MIP and Constraint Learning}
-\cite{Verwer2017} first proposed encoding decision trees as MIP constraints. \cite{Maragno2023} generalized this into OptiCL, a framework embedding decision trees, random forests, ensembles, and neural networks into MIP formulations. \cite{Elmachtoub2022} formalize the ``predict, then optimize'' paradigm. \cite{Bertsimas2017} develop optimal classification trees via MIP. The fundamental limitation for FJSP is the per-data-point encoding: $O(N \times T \times L)$ binary variables for $N$ operations, $T$ trees, and $L$ leaves. Our aggregate feature approach avoids this by using globally shared feature variables, reducing encoding complexity to $O(T \times L)$.
+Tree-based predictors can be embedded in mixed-integer models \cite{Verwer2017,Maragno2023}, and optimization can also guide tree construction \cite{Bertsimas2017}. Our method does not embed the RF in an MIP: it ranks assignments externally, then uses a conventional sequencing model for verification. This distinction places the workflow within prediction-guided optimization \cite{Elmachtoub2022}.
 
 \subsection{Positioning}
-The workflow positions itself between lightweight heuristics and learning-assisted exact verification. Our framework combines (1)~lower-bound-motivated assignment features, (2)~inexpensive heuristic labeling, (3)~a learned but interpretable surrogate, and (4)~MIP-based verification with explicit reporting of limitations.
+The workflow combines assignment features, heuristic labels, an RF ranking, and MIP verification. Its calibration calls are counted when comparing it with direct heuristic ranking.
 
 
 % ═══════════════════════════ 3. PROBLEM ═══════════════════════════
 \section{Problem Formulation and Lower-Bound Motivation}
 
 \subsection{Notation}
+Table~\ref{tab:notation} defines the notation. Each job follows a prescribed operation order, and each operation must be processed without interruption on one eligible machine.
 \begin{table}[htbp]\centering\caption{Notation.}\label{tab:notation}
 \begin{tabular}{ll}\toprule
 $J=\{1,\ldots,n\}$ & Set of jobs \\
@@ -133,7 +133,7 @@ These bounds justify machine workload and maximum job-time features as surrogate
 We represent an assignment $\mathbf{x}$ by the workload, operation-count, usage, path-time, and dispersion features implemented in the released experiment code and summarized in Table~\ref{tab:features}. All features are computable from $\mathbf{x}$ alone and do not require solving the sequencing subproblem.
 
 \begin{table}[htbp]\centering\caption{Feature groups implemented in the released scorer.}\label{tab:features}
-\scriptsize\begin{tabular}{p{1.15cm}p{2.35cm}p{4.0cm}}\toprule
+\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{2.5cm}}\toprule
 Group & Features & Motivation \\ \midrule
 \textbf{A. Machine assignment} & $\operatorname{load}_k$, $\operatorname{ops}_k$, $\operatorname{used}_k$ for each machine & Represent machine workload and assignment sparsity \\
 \textbf{B. Aggregate workload} & number of used machines, maximum machine load, load imbalance, maximum operations per machine, load standard deviation & Lower-bound and balance indicators \\
@@ -144,54 +144,54 @@ Group & Features & Motivation \\ \midrule
 \subsection{Heuristic Sequencer and Labeling Procedure}
 We design a fast constructive heuristic sequencer to generate proxy labels $\tilde{C}_{\max}(\mathbf{x})$ for training. The sequencer maintains the ready set of operations whose predecessors have completed, applies the implemented dispatching rules, and returns the best resulting makespan with deterministic tie-breaking. The implementation performs no backtracking or insertion; its runtime is measured empirically rather than assigned an overly specific asymptotic bound.
 
-Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. The preserved formal runs were audited for zero cross-pool assignment intersection, and the current runner enforces the same invariant before scoring.
+Training and test pools are generated using different deterministic seeds and deduplicated within each pool. Labels are fitted from the training pool only. The supplementary audit saves the assignments and checks that training and test pools do not intersect before fitting.
 
 \subsection{Active-Learning Surrogate}
-The initial RF-H model is trained on the cheap heuristic labels. We then select $q$ training assignments from the low-heuristic-score region, solve their fixed-assignment sequencing problems with the same MIP model, and fit a second Random Forest directly to the feasible incumbent makespans. This active model, denoted AL-RF, is trained only on calibration assignments and is used to score the independent test pool. The calibration set is deliberately concentrated near the predicted frontier, where ranking errors matter most. If fewer than five feasible labels are returned, AL-RF falls back to RF-H and records the event.
+RF-H is trained on cheap heuristic labels. For AL-RF, we sort the training assignments by these labels and select $q$ evenly spaced rank positions across the full ranking, including its endpoints. Their time-limited MIP incumbent makespans train a separate Random Forest \cite{Breiman2001}, which scores the independent test pool. Thus, the implementation uses one batch of deliberately selected labels, rather than iterative uncertainty-based acquisition. All feasible calibration incumbents are accepted. With fewer than five feasible labels, the scorer returns their mean; if none is available, all scores are $+\infty$ and the implementation's ordering resolves the ties.
 
-\subsection{Budget-Matched Candidate Screening}
+\subsection{Candidate Screening and Budget Accounting}
 The final comparison uses a common test pool. LB, RF-H, AL-RF, HeurSeq, and Random score exactly the same candidates and each submit $K$ candidates to the fixed-assignment MIP. AL-RF has an explicit calibration cost of $q$ MIP calls; this cost is reported separately from the final screening budget. All methods receive the same final $K$ verifications, so the comparison answers whether active calibration improves the quality of the final shortlist.
 
 \begin{algorithm}[htbp]\caption{Active-Learning Candidate Screening}\label{alg:beam}
 \begin{algorithmic}[1]
 \State \textbf{Input:} Instance, training pool $\mathcal{T}$, test pool $\mathcal{V}$, calibration size $q$, top-$K$
 \State Generate heuristic labels on $\mathcal{T}$ and fit the initial RF-H model
-\State Select $q$ low-heuristic-score assignments from $\mathcal{T}$ and verify them with the fixed-assignment MIP
-\State Fit AL-RF on the feasible MIP incumbents; fall back to RF-H if fewer than five labels are available
-\For{each scorer $s\in\{LB, RF\mbox{-}H, AL\mbox{-}RF, HeurSeq, Random\}$}
+\State Select $q$ evenly spaced positions in the heuristic ranking of $\mathcal{T}$ and verify them with the fixed-assignment MIP
+\State Fit AL-RF on feasible MIP incumbents; use their mean if fewer than five labels are available (all $+\infty$ if none)
+\For{each of the five scorers $s$}
     \State Score the common test pool $\mathcal{V}$
     \State Select the same number $K$ of lowest-scoring assignments
     \State Verify selected assignments with the identical final MIP budget
 \EndFor
-\State Report incumbent, bound, status, gap, feasibility, calibration calls, and wall time
+\State Report final and calibration incumbents separately; charge calibration and final solver calls
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{MIP-Based Sequencing Verification}
-Top-$K$ candidates and calibration assignments are verified by solving $\operatorname{SEQ}(\mathbf{x})$ with Gurobi 10.0 and a fixed five-second time limit. We record incumbent makespan, best bound, solver status, MIP gap, and wall time. A time-limited feasible incumbent is not treated as a proof of optimality; all reported improvements therefore refer to feasible incumbent quality under the declared budget.
+Top-$K$ candidates and calibration assignments are verified by solving $\operatorname{SEQ}(\mathbf{x})$ with Gurobi and a five-second limit per call. The supplementary audit saves incumbent, bound, status, gap, elapsed time and a validated schedule for every feasible solve. A time-limited incumbent is not a proof of optimality; reported quality therefore refers to feasible solutions under the declared budget.
 
 \section{Computational Experiments}
 
 \subsection{Experimental Setup}
-\textit{Instances.} We evaluate on the Brandimarte MK01--MK10 benchmark \cite{Brandimarte1993}, comprising 10 instances with sizes from $10\times6$ (55 operations) to $20\times15$ (240 operations). Table~\ref{tab:instances} summarizes instance characteristics and best-known solutions (BKS) sourced from FJSPLib (accessed June 2026).
+\textit{Instances.} We evaluate on Brandimarte MK01--MK10 \cite{Brandimarte1993}, with 55--240 operations. Table~\ref{tab:instances} reports counts and average eligible machines per operation recomputed from the benchmark files; reference BKS values are retained from the original development setup. MK06 has 10 machines. Its historical input declared 15, adding five unused machine feature groups; the supplementary audit examines this correction separately.
 
 \begin{table}[htbp]\centering\caption{Instance characteristics.}\label{tab:instances}
-\begin{tabular}{lrrrrrr}\toprule
-Instance & $n$ & $m$ & $N$ & Avg.\ flex. & BKS & Status \\ \midrule
-mk01 & 10 & 6  & 55 & 2.0 & 40 & closed \\
-mk02 & 10 & 6  & 58 & 2.0 & 26 & closed \\
-mk03 & 15 & 8  & 150 & 3.0 & 204 & closed \\
-mk04 & 15 & 8  & 90 & 3.0 & 60 & closed \\
-mk05 & 15 & 4  & 106 & 2.0 & 172 & closed \\
-mk06 & 10 & 15 & 150 & 8.0 & 58 & closed \\
-mk07 & 20 & 5  & 100 & 2.0 & 139 & closed \\
-mk08 & 20 & 10 & 225 & 3.0 & 523 & closed \\
-mk09 & 20 & 10 & 240 & 3.0 & 307 & closed \\
-mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
+\begin{tabular}{lrrrrr}\toprule
+Instance & $n$ & $m$ & $N$ & Avg.\ flex. & BKS \\ \midrule
+mk01 & 10 & 6 & 55 & 2.09 & 40 \\
+mk02 & 10 & 6 & 58 & 4.10 & 26 \\
+mk03 & 15 & 8 & 150 & 3.01 & 204 \\
+mk04 & 15 & 8 & 90 & 1.91 & 60 \\
+mk05 & 15 & 4 & 106 & 1.71 & 172 \\
+mk06 & 10 & 10 & 150 & 3.27 & 58 \\
+mk07 & 20 & 5 & 100 & 2.83 & 139 \\
+mk08 & 20 & 10 & 225 & 1.43 & 523 \\
+mk09 & 20 & 10 & 240 & 2.52 & 307 \\
+mk10 & 20 & 15 & 240 & 2.98 & 198 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\textit{Implementation.} The rerun used Gurobi 10.0 on an Intel Core Ultra 5 125H (16 GB RAM) with scikit-learn RF models (100 trees, depth 12, minimum leaf size 5). For each instance and seed, the protocol generated 200 training assignments and 100 independent test assignments, requested 30 calibration labels, selected $K=5$, and gave every calibration and final selected assignment a five-second MIP verification budget. The active-learning development protocol was evaluated with seeds 42 and 43. The complete candidate-level output is released as JSON; earlier single-seed beam-search files are retained only as historical exploratory context.
+\textit{Implementation.} Each run uses 200 training and 100 test assignments, requests 30 calibration labels, selects $K=5$, and allows five seconds per MIP call. The original evaluation uses seeds 42 and 43; the equal-call comparison uses seeds 42--46. Both RF models use 100 trees and depth 12; minimum leaf sizes are 2 for AL-RF and 5 for RF-H. The new runs use an Intel Core i5-14600KF, Gurobi 10.0.1 and scikit-learn 1.6.1. Gurobi retains its default automatic thread setting; RF fitting uses one worker. The original summaries and new run records are kept separate.
 
 \textit{Baselines.} We compare scorers under a common candidate pool and verification budget:
 \begin{itemize}[leftmargin=1.2em]
@@ -201,54 +201,56 @@ mk10 & 20 & 15 & 240 & 5.0 & 198 & open \\ \bottomrule
 \item \textbf{HeurSeq} and \textbf{Random}: direct heuristic and seeded random rankings of the same test pool.
 \end{itemize}
 
-\textit{Metrics.} The main table reports the mean best selected feasible incumbent across seeds. The released candidate-level records additionally contain standard deviation, feasible ratio, low-gap ratio, mean feasible gap, solver status, and end-to-end wall time. Because several large-instance candidates have no feasible incumbent within five seconds, missing values are retained rather than imputed. BKS gaps are reported only as descriptive context. The two-seed-per-instance table is treated as a development evaluation; no claim of universal dominance or statistical significance is made.
+\textit{Metrics.} The original table reports the mean best final feasible incumbent over two seeds. The new comparison counts AL-RF's best calibration or final incumbent against the best of 35 heuristic-ranked test candidates. We average five seeds within each instance, then apply a two-sided paired Wilcoxon signed-rank test \cite{Demsar2006}; differences below $10^{-3}$ count as ties. Calls without a valid incumbent remain charged but contribute no solution.
 
 \subsection{Active-Learning Development Evaluation}
-Table~\ref{tab:active} and Fig.~\ref{fig:active-comparison} report the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. The gain is largest on MK03, MK06, MK08, and MK10; MK09 remains a difficult case where the direct heuristic or RF-H can be better. These results motivate the active calibration mechanism while preserving a transparent failure case.
+Table~\ref{tab:active} and Fig.~\ref{fig:active-comparison} report the two-seed-per-instance development evaluation. Each row averages two independent runs with the same candidate-pool size, calibration size, final $K$, and five-second MIP limit. AL-RF has the lowest or tied-lowest mean in six of ten instances and the lowest overall mean across the 20 instance--seed runs. Its mean best feasible makespan is 211.7, compared with 214.2 for RF-H, 214.6 for LB, 212.8 for HeurSeq, and 217.9 for Random. Relative to HeurSeq, gains occur on MK03, MK05--MK07 and MK10, while HeurSeq is better on MK08 and MK09. These results motivate examining calibration cost, rather than establish an equal-total-budget advantage.
 
 \input{active_tables.tex}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{active_method_comparison.png}
-\caption{Normalized mean best feasible makespan across Brandimarte instances. Values are divided by the instance BKS; lower is better. AL-RF is highlighted as the active-learning method.}
+\caption{Original two-seed development results, normalized by each instance's BKS. Each method receives five final verifications; AL-RF calibration calls are excluded. Lower is better.}
 \label{fig:active-comparison}
 \end{figure}
 
-The calibration phase used 30 heuristic-ranked training assignments per run. The complete JSON output records how many labels were feasible and the wall time for every phase. The method therefore exposes its trade-off: it spends additional MIP calls before final screening, then uses the learned ranking to select five final candidates under the same final budget as every baseline. We do not pool these development runs with the earlier one-second historical rerun because the solver budget and calibration protocol differ.
+The original release contains summary outcomes but not all calibration incumbents. We therefore run a separate equal-call comparison rather than infer those solutions from the original table. AL-RF retains its best solution from 30 calibration and five final calls; HeurSeq verifies 35 test-pool assignments. This controls requested solver calls, not end-to-end wall-clock time.
+
+\input{minor_revision_evidence.tex}
 
 \section{Discussion}
 
-\subsection{What Did the Surrogate Learn?}
-The initial model receives workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. AL-RF adds a small set of MIP-verified labels near the heuristic frontier. Training, calibration, and test assignments are generated from disjoint pools, and the relevant evidence is the common-pool Top-$K$ outcome and solver status rather than in-sample fit.
+\subsection{Role of the Surrogate}
+The models receive workload, assignment-usage, operation-count, imbalance, dispersion, and maximum job-time summaries. AL-RF is fitted directly to a small set of MIP-verified incumbents sampled across the heuristic ranking. Its role is to rank independent test assignments; this experiment does not establish a causal interpretation of feature importance.
 
-\subsection{When Is Learned Guidance Better Than Simple Scoring?}
-AL-RF improves the average shortlist quality in the five-second development evaluation, but the instance-level variation shows why the lower-bound and direct heuristic controls remain useful. The practical recommendation is to use active calibration when a small extra MIP budget is available and to retain RF-H, LB, and HeurSeq as inexpensive controls when that budget is unavailable.
+\subsection{Calibration Cost and Search Quality}
+AL-RF has a lower historical Top-5 mean, but its calibration uses 30 additional calls. When both methods receive 35 calls, AL-RF improves the instance mean on five cases and worsens it on five. A scheduler choosing between the methods would need to account for those calls, not only the final shortlist.
 
-\subsection{Why Does the Method Fail on Certain Instances?}
-The evaluation exposes two measurable failure modes: time-limited MIP verification becomes inconclusive on larger instances, and active calibration can spend substantial time without improving a particular instance. These observations are protocol-level limitations rather than causal explanations of precedence conflicts or feature sparsity.
+\subsection{Instance-Level Variation}
+The five-seed comparison shows gains on MK01--MK04 and MK07, but losses on the other five instances. MK10 has the largest mean loss for AL-RF, at 6.0 makespan units; MK03 has its largest gain, at 5.0. These differences describe where this calibration helped, without identifying a structural cause.
 
 \subsection{Practical Implications}
-The workflow is useful when a scheduler needs an auditable shortlist of machine assignments and can reserve a fixed solver budget for final checks. Its feature vector is easy to inspect, and its candidate-level status and gap records expose when the shortlist is not certified. Deployment should keep a simple lower-bound or heuristic control and should not interpret a time-limited incumbent as an optimal production plan.
+The workflow produces a shortlist of machine assignments for fixed-assignment MIP checks. Its calibration runs can themselves produce useful schedules, so their incumbents should be retained. Heuristic ranking remains a strong low-cost control, and neither method's time-limited incumbent is a proven optimum.
 
 \subsection{Limitations and Future Work}
-Several limitations remain. The feature set is intentionally low-dimensional and omits explicit precedence interactions. Large instances can still return feasible incumbents with nonzero gaps or no incumbent within the five-second budget. Active calibration adds solver calls and its benefit varies by instance; the current evaluation uses two seeds per instance and one benchmark family. Cross-benchmark transfer, larger calibration pools, longer budgets, and comparisons with established metaheuristics remain future work.
+Aggregate features omit explicit precedence interactions, and five-second solves can return nonoptimal incumbents or no solution. The original table uses two seeds and the new budget comparison five; both use one benchmark family, and the added seeds are not an independent holdout. Equal call limits also leave differences in preprocessing and actual solver time. Broader benchmarks and end-to-end time budgets remain future work.
 
 % ═══════════════════════════ 7. CONCLUSION ═══════════════════════════
 \section{Conclusion}
 
-We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. A small set of MIP-verified assignments corrects heuristic labels before a Random Forest ranks a common test pool, and every final shortlist receives the same verification budget. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF achieves the best overall mean feasible incumbent among the tested screeners, with a lower mean than the original RF-H, lower-bound, direct heuristic, and random controls. The candidate-level release makes calibration cost, feasibility, and solver gaps visible for reproduction.
+We have presented an active-learning-assisted candidate-screening workflow for Flexible Job Shop Scheduling. An RF fitted to a small set of MIP-verified assignments ranks a common test pool. Across Brandimarte MK01--MK10 with two seeds per instance, AL-RF has the lowest mean best feasible incumbent among the tested screeners when all receive five final verifications. This result concerns shortlist quality; it does not include the 30 calibration calls.
 
-The method is designed as a decision-support component for intelligent manufacturing. Its strongest use case is a scheduler with a small calibration budget and a strict final verification budget; when calibration time is unavailable, the simpler controls remain appropriate.
+In the five-seed comparison that counts all 35 calls, heuristic ranking has a slightly lower overall mean. Calibration helps on some instances, but this experiment does not show a consistent equal-call advantage for AL-RF. The method remains a candidate-screening option, not a replacement for a complete FJSP optimizer.
 
 \section*{Funding}
 This work received no external funding.
 
 \section*{Conflict of Interest}
-The author declares no conflict of interest.
+The authors declare no conflict of interest.
 
 \section*{Data Availability}
-The code, benchmark instances (Brandimarte MK01--MK10, sourced from FJSPLib), formal JSON results, and Markdown summaries are available in the public repository at \url{https://github.com/thex1e2001-del/fjsp-active-learning}. The earlier one-second historical files are retained separately from the active-learning development results. Benchmark values are taken from the local JSON files and should be checked against the cited FJSPLib release before submission.
+Code, benchmark files, development summaries, and the five-seed records and protocol are available at \url{https://github.com/thex1e2001-del/fjsp-active-learning}. The original source revision is \texttt{8606fae}.
 
 % ═══════════════════════════ REFERENCES ═══════════════════════════
 \begin{thebibliography}{99}

@@ -1,0 +1,36 @@
+\input{minor_revision_statistics.tex}
+
+\textit{Equal-call comparison.} Table~\ref{tab:budget} reports a separate five-seed experiment. AL-RF may retain its best solution from 30 calibration and five final calls; HeurSeq-35 verifies 35 test-pool assignments. Each entry is the mean best feasible makespan over seeds 42--46. The training and test pools are disjoint.
+
+\begin{table}[t]\centering\small
+\caption{Five-seed, 35-call comparison. Lower makespan is better.}
+\label{tab:budget}
+\begin{tabular}{lrrr}\toprule
+Instance & AL-RF & HeurSeq-35 & Difference \\ \midrule
+mk01 & 42.6 & 44.8 & $-2.2$ \\
+mk02 & 40.2 & 40.8 & $-0.6$ \\
+mk03 & 228.0 & 233.0 & $-5.0$ \\
+mk04 & 67.8 & 69.0 & $-1.2$ \\
+mk05 & 186.2 & 186.0 & $+0.2$ \\
+mk06 & 106.2 & 104.0 & $+2.2$ \\
+mk07 & 205.6 & 206.6 & $-1.0$ \\
+mk08 & 529.4 & 525.0 & $+4.4$ \\
+mk09 & 368.2 & 367.4 & $+0.8$ \\
+mk10 & 312.8 & 306.8 & $+6.0$ \\ \midrule
+Mean & 208.70 & 208.34 & $+0.36$ \\ \bottomrule
+\end{tabular}
+\end{table}
+
+AL-RF wins on five instances and HeurSeq-35 on five; the paired signed-rank test gives $p=0.943$. Their mean charged optimization times are 162.9 and 149.0 seconds per run, respectively. Twelve invalid incumbents are excluded from the results but their calls remain charged. The comparison controls requested calls, not total wall-clock time.
+
+\textit{Full FJSP reference.} To put the harder instances in context, Table~\ref{tab:cp-reference} gives results from a standard CP-SAT model with a 175-second deadline and one worker. This model optimizes routing and sequencing jointly; the screening methods solve only fixed-assignment sequencing problems.
+
+\begin{table}[t]\centering\small
+\caption{Full FJSP CP-SAT reference, seeds 42 and 43.}
+\label{tab:cp-reference}
+\begin{tabular}{lrrr}\toprule
+Instance & Seed 42 & Seed 43 & Mean gap to BKS \\ \midrule
+mk06 & 60.0 & 59.0 & 2.6\% \\
+mk10 & 233.0 & 231.0 & 17.2\% \\ \bottomrule
+\end{tabular}
+\end{table}
