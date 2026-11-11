@@ -57,6 +57,12 @@ The paper uses the IEEEtran conference class and compiles with pdfLaTeX.
 
 ## Data and code availability
 
+The [five-seed equal-call supplement](fjsp/results/camera_ready_full_five_seed_20261111/README.md)
+contains the complete per-candidate audit, a 30+5 versus Top-35 comparison,
+protocol and provenance files, and scripts to recompute the analysis. These
+new results do not establish an overall equal-total-call advantage for AL-RF;
+the paper's original two-seed development results remain separately identified.
+
 The source code is released for research and educational use. The benchmark instances originate from public FJSP benchmark collections; users should follow the terms and citation requirements of the corresponding source collections. The reported JSON results and generation scripts are included for auditability.
 
 ## Citation

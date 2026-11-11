@@ -1,0 +1,68 @@
+{
+  "source_manifest_sha256": "1ab037c95e3ceb55bf775b28b7c33d9004dbbf0ad951a7b09296430d2d2a40f6",
+  "source_runner_identity": {
+    "protocol_sha256": "6f5477c342b977870b5795789c933b9a6db13e2a33dc20fcab9461b241120612",
+    "runner_sha256": "5a0fcadb0cb0493c8a12c2ae42722a0f4a2024594c58bf5275952cdb0e5dafd2",
+    "source_hashes": {
+      "active_screening_dev.py": "ee952fbf756c58627287a6f7be29091287fc584b797a26402d47e8ac2f5f9d34",
+      "assignment_generators.py": "0374e27df7e73b634b75ffc6dce6f2dbcafc9585b60c167ab95c924810dcc5ef",
+      "audit_screening_pools.py": "25f99f5b73349909c0ddbaeb6738b4f0dc1cf17e84d8f391dc183d600cd0853f",
+      "batch_experiment.py": "5d0ba3bd666e302349647ec0e49a411d23d07fe36fd7261e8085168e899146c2",
+      "calibrated_screening.py": "16bea3c6b7673c1f53fea83981012e162487ecd6576491401dc9f43fcc5cbb48",
+      "complete_experiments.py": "58104cf755f4ff7a7ed5f20fe2deecc8359ef9ad407860e1b945517a94c9fa8c",
+      "experiment_runner.py": "0fad2d2628f834e527db10267b47c9cee5a48979c7f1109b2f08cbbe1a689e41",
+      "experiments_final.py": "d3bf06d0cb29de266c6ea644cd3b16fed70d39bdf82bcec5251f98ea4f880806",
+      "fast_experiment.py": "fb96d583f1b4dc3c983330700fd648f9e3589c79b9158fccc538642bdb494616",
+      "final_experiments.py": "10f5c4edae0c03c97bf21b8ca277ee8e64f2306d51f5e8336f40e2c06dd0f9ab",
+      "fjsp_baseline.py": "1c4b88eead14652720b77f3f900a80e69d7401a1cc219f99ab1ec24ac92b726f",
+      "heuristic_sequencer.py": "21ae5c814bf209e1d938d2746cb8908156617c2628eb294538c6ad487eba8f54",
+      "iterative_learning.py": "b749daf5a05ed46a4f28f081e80622674e18f6ab8f59a1abf20f07dee934e347",
+      "merge_screening_results.py": "a197b20de12505a4d2a77b439459073b38a5073aa3f02fff137bf0d56c4e3b20",
+      "phase1_fixes.py": "c18f772ddc23644c13dccc5920504528e061d043befe9ee25f1afb13c94b3276",
+      "phase2_fair.py": "a8330829254a6b2078a8ea13a22261f0e807392e6eaf1b206976c31cda4667e2",
+      "phase5_experiments.py": "366da54cc80e7dd0ecf8875c81fec993dbfd1790a218bc06898aa8dc9bbba54d",
+      "phase_all_finish.py": "d6aae77be756f7ca88a3ada2d593e2e1067f63eadb0c999c2d1af7528f90729e",
+      "print_table.py": "251d59181de6803f1fc70e5ff0d4fe7714a2ef212e00baab5f73a805aceb0340",
+      "quick_summary.py": "4dee935a2b523e34bdf5e0ad6b62c976963100e891bb156ad745c78fd5fc58bd",
+      "reproduce_audit.py": "e92aacf9e499d626a2cb2b23432a8881158acb0b471a2b19f224ee8c650b63e2",
+      "rf_assignment_search.py": "1063bbaff3440667af5f38d56be41bd2ea2f664e772b30705bf6a58e5c719d0f",
+      "rf_embedded_mip.py": "1b2b3b9afd2e9511aad81af2ee7ad5de68757d25edee476345767f0e5bbcc6ba",
+      "rf_train.py": "1517a272a64dd113a31c841f812c807a03bebf38b708f3a7eaa7ea81e468f375",
+      "rf_vs_heuristics.py": "0afb0e4d958a02fd286790b60d4c39b460e04abc78b916af4836f6b0c27dea63",
+      "schedule_generator.py": "41763a0a213fe42538881aa5e5eb43231fb9798fa6d8a9fdcde232b0c2a23ca9",
+      "summarize_calibrated.py": "2e97d6ba9ee303fc277999d5694c411a4d666abb66584820c4df24f1b7d70c65"
+    },
+    "archive_sha256": "bdf14659fce1f9c62579d8d9bc34cdf2d64e1602f9fab147ab43d41bf2041d8d",
+    "validator_sha256": "442f079e9afd313b983c942c97cbb37096c205e8bde1a7ff1f308e28b4873195",
+    "numpy": "2.0.2",
+    "sklearn": "1.6.1",
+    "gurobi": [
+      10,
+      0,
+      1
+    ],
+    "python": "3.10.16"
+  },
+  "cases": [
+    {
+      "instance": "mk06",
+      "seed": 42,
+      "source": "results\\camera_ready_mk06_audit_20261111\\mk06_seed42",
+      "files": {
+        "prepared.json": "2b406f349735dd854538b043fc71fdb17bb99594fb608b02eb642b8c52990ede",
+        "result.json": "584dc7e59bf239188a5481095b47bb2454e172f5e13d8ed4478b22ca141a2538",
+        "solves.jsonl": "0efc0b5ca4ebc689e9e4359eb2652856cc3f0495b763e56de417d4c78c2e63b3"
+      }
+    },
+    {
+      "instance": "mk06",
+      "seed": 43,
+      "source": "results\\camera_ready_mk06_audit_20261111\\mk06_seed43",
+      "files": {
+        "prepared.json": "43104e6e5a97aeda0906a10064a36a381a938e7fc505539282d4e840c608c33c",
+        "result.json": "6675e36b4cbc2d61248dea26b1b423230431e2e81bd4b410db8234cfa776cd6c",
+        "solves.jsonl": "bb8c7fb86e752c68e9461d5b8003d04746b2b350d9ac37d7097ea772f6b89e4a"
+      }
+    }
+  ]
+}

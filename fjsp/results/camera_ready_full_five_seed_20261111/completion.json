@@ -1,0 +1,8 @@
+{
+  "status": "complete",
+  "completed_cases": 50,
+  "runner_exit_code": 0,
+  "analysis": "analysis.json",
+  "report": "REPORT.md",
+  "note": "The earlier needs_attention status described a stopped attempt, superseded by the successful resume. Its original record is retained in archives/camera_ready_runner_recovery_20261111/."
+}

@@ -1,0 +1,815 @@
+{
+  "complete": true,
+  "completed_cases": 50,
+  "expected_cases": 50,
+  "missing_cases": [],
+  "physical_unique_solves": 3484,
+  "validated_schedules": 3468,
+  "no_incumbent_solves": 4,
+  "invalid_incumbents_rejected": 12,
+  "case_checks": [
+    {
+      "instance": "mk01",
+      "seed": 42,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 32,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 197.03098070000124
+    },
+    {
+      "instance": "mk01",
+      "seed": 43,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 23,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 117.38445360000333
+    },
+    {
+      "instance": "mk01",
+      "seed": 44,
+      "unique_solves": 68,
+      "feasible": 64,
+      "validated": 64,
+      "timeouts": 23,
+      "no_incumbent": 0,
+      "invalid_incumbents": 4,
+      "invocation_seconds": 147.78564069999993
+    },
+    {
+      "instance": "mk01",
+      "seed": 45,
+      "unique_solves": 69,
+      "feasible": 66,
+      "validated": 66,
+      "timeouts": 22,
+      "no_incumbent": 0,
+      "invalid_incumbents": 3,
+      "invocation_seconds": 136.34730420000415
+    },
+    {
+      "instance": "mk01",
+      "seed": 46,
+      "unique_solves": 73,
+      "feasible": 72,
+      "validated": 72,
+      "timeouts": 22,
+      "no_incumbent": 0,
+      "invalid_incumbents": 1,
+      "invocation_seconds": 143.1651400999981
+    },
+    {
+      "instance": "mk02",
+      "seed": 42,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 23,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 178.7373191000006
+    },
+    {
+      "instance": "mk02",
+      "seed": 43,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 25,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 200.29274290000467
+    },
+    {
+      "instance": "mk02",
+      "seed": 44,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 26,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 217.51466459999938
+    },
+    {
+      "instance": "mk02",
+      "seed": 45,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 25,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 209.3757454000006
+    },
+    {
+      "instance": "mk02",
+      "seed": 46,
+      "unique_solves": 72,
+      "feasible": 72,
+      "validated": 72,
+      "timeouts": 38,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 255.58271999999852
+    },
+    {
+      "instance": "mk03",
+      "seed": 42,
+      "unique_solves": 73,
+      "feasible": 73,
+      "validated": 73,
+      "timeouts": 73,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 472.91554900000483
+    },
+    {
+      "instance": "mk03",
+      "seed": 43,
+      "unique_solves": 74,
+      "feasible": 74,
+      "validated": 74,
+      "timeouts": 74,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 472.63399989999743
+    },
+    {
+      "instance": "mk03",
+      "seed": 44,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 457.64563030000136
+    },
+    {
+      "instance": "mk03",
+      "seed": 45,
+      "unique_solves": 72,
+      "feasible": 72,
+      "validated": 72,
+      "timeouts": 72,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 498.9554263000027
+    },
+    {
+      "instance": "mk03",
+      "seed": 46,
+      "unique_solves": 73,
+      "feasible": 73,
+      "validated": 73,
+      "timeouts": 73,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 494.30250160000287
+    },
+    {
+      "instance": "mk04",
+      "seed": 42,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 54,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 358.75459460000275
+    },
+    {
+      "instance": "mk04",
+      "seed": 43,
+      "unique_solves": 70,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 1,
+      "invocation_seconds": 397.344580099998
+    },
+    {
+      "instance": "mk04",
+      "seed": 44,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 399.84565309999743
+    },
+    {
+      "instance": "mk04",
+      "seed": 45,
+      "unique_solves": 68,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 59,
+      "no_incumbent": 0,
+      "invalid_incumbents": 1,
+      "invocation_seconds": 352.16783099999884
+    },
+    {
+      "instance": "mk04",
+      "seed": 46,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 61,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 343.27282849999756
+    },
+    {
+      "instance": "mk05",
+      "seed": 42,
+      "unique_solves": 69,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 69,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 373.8163917999991
+    },
+    {
+      "instance": "mk05",
+      "seed": 43,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 384.2089500000002
+    },
+    {
+      "instance": "mk05",
+      "seed": 44,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 378.110053700002
+    },
+    {
+      "instance": "mk05",
+      "seed": 45,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 71,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 400.3998955999996
+    },
+    {
+      "instance": "mk05",
+      "seed": 46,
+      "unique_solves": 72,
+      "feasible": 72,
+      "validated": 72,
+      "timeouts": 72,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 414.86714349999966
+    },
+    {
+      "instance": "mk06",
+      "seed": 42,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 464.97978510000394
+    },
+    {
+      "instance": "mk06",
+      "seed": 43,
+      "unique_solves": 74,
+      "feasible": 74,
+      "validated": 74,
+      "timeouts": 73,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 502.14129539999703
+    },
+    {
+      "instance": "mk06",
+      "seed": 44,
+      "unique_solves": 71,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 63,
+      "no_incumbent": 0,
+      "invalid_incumbents": 1,
+      "invocation_seconds": 499.54964960000507
+    },
+    {
+      "instance": "mk06",
+      "seed": 45,
+      "unique_solves": 69,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 69,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 460.7858894000019
+    },
+    {
+      "instance": "mk06",
+      "seed": 46,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 65,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 385.0030679000047
+    },
+    {
+      "instance": "mk07",
+      "seed": 42,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 381.8076295999999
+    },
+    {
+      "instance": "mk07",
+      "seed": 43,
+      "unique_solves": 68,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 1,
+      "invocation_seconds": 386.5915989999994
+    },
+    {
+      "instance": "mk07",
+      "seed": 44,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 71,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 378.665224700002
+    },
+    {
+      "instance": "mk07",
+      "seed": 45,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 373.8342905000027
+    },
+    {
+      "instance": "mk07",
+      "seed": 46,
+      "unique_solves": 68,
+      "feasible": 68,
+      "validated": 68,
+      "timeouts": 68,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 406.7953422000064
+    },
+    {
+      "instance": "mk08",
+      "seed": 42,
+      "unique_solves": 69,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 69,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 651.3824599
+    },
+    {
+      "instance": "mk08",
+      "seed": 43,
+      "unique_solves": 69,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 69,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 598.6242805000002
+    },
+    {
+      "instance": "mk08",
+      "seed": 44,
+      "unique_solves": 69,
+      "feasible": 69,
+      "validated": 69,
+      "timeouts": 69,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 663.0252222999989
+    },
+    {
+      "instance": "mk08",
+      "seed": 45,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 678.2414427999975
+    },
+    {
+      "instance": "mk08",
+      "seed": 46,
+      "unique_solves": 71,
+      "feasible": 71,
+      "validated": 71,
+      "timeouts": 71,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 582.0130843999941
+    },
+    {
+      "instance": "mk09",
+      "seed": 42,
+      "unique_solves": 66,
+      "feasible": 66,
+      "validated": 66,
+      "timeouts": 66,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 664.603366299998
+    },
+    {
+      "instance": "mk09",
+      "seed": 43,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 700.9249714000034
+    },
+    {
+      "instance": "mk09",
+      "seed": 44,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 655.1881689000002
+    },
+    {
+      "instance": "mk09",
+      "seed": 45,
+      "unique_solves": 70,
+      "feasible": 70,
+      "validated": 70,
+      "timeouts": 70,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 667.6534714000009
+    },
+    {
+      "instance": "mk09",
+      "seed": 46,
+      "unique_solves": 67,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 67,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 646.8869997000002
+    },
+    {
+      "instance": "mk10",
+      "seed": 42,
+      "unique_solves": 67,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 67,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 611.0161678000004
+    },
+    {
+      "instance": "mk10",
+      "seed": 43,
+      "unique_solves": 74,
+      "feasible": 74,
+      "validated": 74,
+      "timeouts": 74,
+      "no_incumbent": 0,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 766.9722068999981
+    },
+    {
+      "instance": "mk10",
+      "seed": 44,
+      "unique_solves": 68,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 68,
+      "no_incumbent": 1,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 694.6227772000129
+    },
+    {
+      "instance": "mk10",
+      "seed": 45,
+      "unique_solves": 68,
+      "feasible": 67,
+      "validated": 67,
+      "timeouts": 68,
+      "no_incumbent": 1,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 658.9635433999938
+    },
+    {
+      "instance": "mk10",
+      "seed": 46,
+      "unique_solves": 66,
+      "feasible": 64,
+      "validated": 64,
+      "timeouts": 66,
+      "no_incumbent": 2,
+      "invalid_incumbents": 0,
+      "invocation_seconds": 510.8942668999953
+    }
+  ],
+  "primary": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "endpoint": "combined_mip_best",
+    "baseline": "HeurSeq-35",
+    "included": [
+      {
+        "instance": "mk01",
+        "AL-RF": 42.59999999735997,
+        "HeurSeq-35": 44.799999996295696,
+        "difference": -2.1999999989357235
+      },
+      {
+        "instance": "mk02",
+        "AL-RF": 40.19999999747988,
+        "HeurSeq-35": 40.79999859659679,
+        "difference": -0.5999985991169083
+      },
+      {
+        "instance": "mk03",
+        "AL-RF": 227.99999999087441,
+        "HeurSeq-35": 232.999999990471,
+        "difference": -4.999999999596582
+      },
+      {
+        "instance": "mk04",
+        "AL-RF": 67.7999999301457,
+        "HeurSeq-35": 68.9999977071997,
+        "difference": -1.1999977770539942
+      },
+      {
+        "instance": "mk05",
+        "AL-RF": 186.1999999222913,
+        "HeurSeq-35": 185.99999999241368,
+        "difference": 0.19999992987763449
+      },
+      {
+        "instance": "mk06",
+        "AL-RF": 106.19999999559987,
+        "HeurSeq-35": 103.99999999365994,
+        "difference": 2.2000000019399266
+      },
+      {
+        "instance": "mk07",
+        "AL-RF": 205.59999998331168,
+        "HeurSeq-35": 206.5999999749551,
+        "difference": -0.9999999916434206
+      },
+      {
+        "instance": "mk08",
+        "AL-RF": 529.3999999893135,
+        "HeurSeq-35": 524.9999999893988,
+        "difference": 4.399999999914712
+      },
+      {
+        "instance": "mk09",
+        "AL-RF": 368.19999999264076,
+        "HeurSeq-35": 367.39999999989146,
+        "difference": 0.7999999927492922
+      },
+      {
+        "instance": "mk10",
+        "AL-RF": 312.7999999999659,
+        "HeurSeq-35": 306.79999999997256,
+        "difference": 5.999999999993349
+      }
+    ],
+    "excluded": [],
+    "signed_rank": {
+      "n_instances": 10,
+      "nonzero_pairs": 10,
+      "statistic": 26.5,
+      "p_two_sided": 0.943359375,
+      "wins": 5,
+      "ties": 0,
+      "losses": 5,
+      "mean_difference": 0.3600003558128286,
+      "note": "Instance is the unit; exact sign enumeration, average tied ranks; zero tolerance 0.001; rank magnitudes rounded to 0.001 to remove numerical solver noise"
+    }
+  },
+  "secondary": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "endpoint": "test_best",
+    "baseline": "HeurSeq",
+    "included": [
+      {
+        "instance": "mk01",
+        "AL-RF": 44.799999997278846,
+        "HeurSeq": 45.799999997994604,
+        "difference": -1.0000000007157581
+      },
+      {
+        "instance": "mk02",
+        "AL-RF": 41.599999996619445,
+        "HeurSeq": 41.399999996533346,
+        "difference": 0.2000000000860993
+      },
+      {
+        "instance": "mk03",
+        "AL-RF": 236.19999999027596,
+        "HeurSeq": 234.39999999046995,
+        "difference": 1.7999999998060048
+      },
+      {
+        "instance": "mk04",
+        "AL-RF": 68.99999993002189,
+        "HeurSeq": 69.79999977770288,
+        "difference": -0.7999998476809935
+      },
+      {
+        "instance": "mk05",
+        "AL-RF": 187.19999991855042,
+        "HeurSeq": 188.1999999924984,
+        "difference": -1.000000073947973
+      },
+      {
+        "instance": "mk06",
+        "AL-RF": 107.19999999554,
+        "HeurSeq": 105.59999999579995,
+        "difference": 1.5999999997400494
+      },
+      {
+        "instance": "mk07",
+        "AL-RF": 207.39999997885585,
+        "HeurSeq": 209.9999999815293,
+        "difference": -2.600000002673454
+      },
+      {
+        "instance": "mk08",
+        "AL-RF": 534.3999999999244,
+        "HeurSeq": 534.1999999890742,
+        "difference": 0.20000001085020358
+      },
+      {
+        "instance": "mk09",
+        "AL-RF": 372.99999999984846,
+        "HeurSeq": 376.79999999986603,
+        "difference": -3.800000000017576
+      },
+      {
+        "instance": "mk10",
+        "AL-RF": 316.5999999999668,
+        "HeurSeq": 313.3999999999156,
+        "difference": 3.2000000000512046
+      }
+    ],
+    "excluded": [],
+    "signed_rank": {
+      "n_instances": 10,
+      "nonzero_pairs": 10,
+      "statistic": 25.0,
+      "p_two_sided": 0.828125,
+      "wins": 5,
+      "ties": 0,
+      "losses": 5,
+      "mean_difference": -0.2199999914502193,
+      "note": "Instance is the unit; exact sign enumeration, average tied ranks; zero tolerance 0.001; rank magnitudes rounded to 0.001 to remove numerical solver noise"
+    }
+  },
+  "added_three_descriptive": {
+    "seeds": [
+      44,
+      45,
+      46
+    ],
+    "endpoint": "combined_mip_best",
+    "baseline": "HeurSeq-35",
+    "included": [
+      {
+        "instance": "mk01",
+        "AL-RF": 42.999999997033306,
+        "HeurSeq-35": 44.66666666213325,
+        "difference": -1.666666665099946
+      },
+      {
+        "instance": "mk02",
+        "AL-RF": 41.66666666379984,
+        "HeurSeq-35": 41.666666662397006,
+        "difference": 1.4028316286385234e-09
+      },
+      {
+        "instance": "mk03",
+        "AL-RF": 225.33333331812742,
+        "HeurSeq-35": 228.99999999242368,
+        "difference": -3.666666674296266
+      },
+      {
+        "instance": "mk04",
+        "AL-RF": 67.66666655484285,
+        "HeurSeq-35": 67.66666333082938,
+        "difference": 3.2240134686389865e-06
+      },
+      {
+        "instance": "mk05",
+        "AL-RF": 186.99999999358644,
+        "HeurSeq-35": 186.99999999359102,
+        "difference": -4.575895218295045e-12
+      },
+      {
+        "instance": "mk06",
+        "AL-RF": 104.33333333333316,
+        "HeurSeq-35": 101.66666665966663,
+        "difference": 2.6666666736665263
+      },
+      {
+        "instance": "mk07",
+        "AL-RF": 205.3333333126884,
+        "HeurSeq-35": 208.33333330526207,
+        "difference": -2.999999992573663
+      },
+      {
+        "instance": "mk08",
+        "AL-RF": 530.3333333332248,
+        "HeurSeq-35": 525.9999999824105,
+        "difference": 4.333333350814314
+      },
+      {
+        "instance": "mk09",
+        "AL-RF": 370.9999999997965,
+        "HeurSeq-35": 364.33333333320115,
+        "difference": 6.666666666595347
+      },
+      {
+        "instance": "mk10",
+        "AL-RF": 309.99999999996,
+        "HeurSeq-35": 303.3333333333041,
+        "difference": 6.666666666655885
+      }
+    ],
+    "excluded": [],
+    "signed_rank": {
+      "n_instances": 10,
+      "nonzero_pairs": 7,
+      "statistic": 8.0,
+      "p_two_sided": 0.359375,
+      "wins": 3,
+      "ties": 3,
+      "losses": 4,
+      "mean_difference": 1.2000000025762199,
+      "note": "Instance is the unit; exact sign enumeration, average tied ranks; zero tolerance 0.001; rank magnitudes rounded to 0.001 to remove numerical solver noise"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "protocol_id": "icima-all-instances-five-seed-budget-v1",
+  "role": "Full benchmark supplementary development evaluation; five seeds, equal requested MIP calls",
+  "source_commit": "8606faee9a834d591c7532fe8920b2d454c3f8f4",
+  "source_dir": "tmp/github_review/extracted/fjsp-active-learning-main/fjsp",
+  "instances": [
+    "mk01",
+    "mk02",
+    "mk03",
+    "mk04",
+    "mk05",
+    "mk06",
+    "mk07",
+    "mk08",
+    "mk09",
+    "mk10"
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "n_train": 200,
+  "n_test": 100,
+  "calibration": 30,
+  "top_k": 5,
+  "baseline_k": 35,
+  "verify_seconds": 5.0,
+  "solver_seed": 0,
+  "solver_threads": 0,
+  "mip_gap": 0.0,
+  "variant_policy": "legacy versus num_machines-only correction; retain legacy horizon to isolate feature dimensionality",
+  "calibration_policy": "original argsort heuristic, evenly spaced rank positions including both endpoints; all feasible incumbents accepted",
+  "fallback_policy": "original mean feasible calibration labels; infinity if none",
+  "rf": {
+    "trees": 100,
+    "depth": 12,
+    "al_min_leaf": 2,
+    "rf_h_min_leaf": 5,
+    "n_jobs": 1
+  },
+  "tie_policy": "original numpy.argsort default; environment version recorded",
+  "baseline_policy": "HeurSeq Top-35 from identical independent test pool, no calibration labels",
+  "cache_policy": "shared evaluation bank for identical instance/assignment/parameters; charge each method its own unique requests and all calibration calls; report physical cache hits separately",
+  "outcome_policy": "report calibration best, final Top-5 best, combined MIP best and heuristic-only best separately; no end-to-end wall-clock matching claim",
+  "model_check": "compare Gurobi model fingerprints for legacy/corrected versions for every unique solved assignment",
+  "validation": "independent operation coverage, assignment, duration, precedence, nonoverlap and objective checks for each feasible MIP schedule",
+  "expansion_gate": "protocol parity, complete records and schedule validity; do not gate expansion on method winning",
+  "limitations": [
+    "five development seeds on one benchmark family",
+    "5-second incumbents vary with hardware and timing",
+    "automatic Gurobi thread count depends on machine",
+    "shared bank is a paired replay, not independently timed method execution",
+    "legacy horizon retained; only MK06 machine count corrected",
+    "MK06 seeds42/43 reused from archived pilot with matching code, environment and per-case settings"
+  ],
+  "analysis_plan": {
+    "primary": "Corrected AL-RF best over calibration+Top-5 versus HeurSeq Top-35, averaged within each instance across five seeds",
+    "secondary": "Corrected AL-RF final Top-5 versus HeurSeq Top-5; label calibration overhead explicitly",
+    "statistics": "Two-sided signed-rank test on instance means, average tied ranks, exact sign enumeration, numerical tie tolerance 0.001; primary and secondary reported separately",
+    "missing": "Keep no-incumbent outcomes and feasibility counts; no imputation; paired means/tests only on instances with all five paired finite outcomes, listing exclusions",
+    "reporting": "All ten instances and all five predetermined seeds, per-seed raw rows, means, sample SDs, win/tie/loss, solver cost and unique calls; full-five and added-three results separately",
+    "claims": "Seeds 42-46 overlap historical development work; no independent confirmation or holdout claim. No equal end-to-end wall-clock claim."
+  }
+}

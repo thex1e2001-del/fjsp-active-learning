@@ -1,0 +1,10 @@
+{
+  "reason": "First batch stopped on independently rejected MK01 seed43 train109 incumbent. Reject-and-record invalid incumbents instead of aborting the entire batch.",
+  "previous_runner_sha256": "5a0fcadb0cb0493c8a12c2ae42722a0f4a2024594c58bf5275952cdb0e5dafd2",
+  "new_runner_sha256": "ae2e8fdb2a4b34478a8b9b18e5635134a807f17da2dc7e51950bcbcbf291a388",
+  "unchanged": "Solver settings, seeds, candidate pools, RF models, 5-second budgets, schedule-validation tolerance 0.0001. Prior completed and persisted solves are retained.",
+  "policy": "Save raw incumbent and validation error. Invalid incumbent has_solution=false, makespan=null; exclude from training and best-solution comparisons. Charge attempted solver call; do not retry invalid solves.",
+  "recovery": "The original failing call was not persisted; it must be executed once on resume. One diagnostic rerun is archived separately and excluded from experimental outcomes. Never choose best of repeated outcomes.",
+  "physical_overhead_not_in_method_budget": "Original crashed unsaved call plus one five-second diagnostic call; retain as recovery overhead, not as method results.",
+  "parity_note": "Original run_one replay checks selections/aggregation using the independently validated evaluation bank; it is not equality to unvalidated Gurobi results."
+}
